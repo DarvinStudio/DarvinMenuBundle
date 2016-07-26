@@ -19,6 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Menu
  *
  * @ORM\Entity
+ *
+ * @method bool   isEnabled()
+ * @method string getTitle()
  */
 class Menu
 {
@@ -48,6 +51,14 @@ class Menu
     public function __construct()
     {
         $this->items = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->getTitle();
     }
 
     /**

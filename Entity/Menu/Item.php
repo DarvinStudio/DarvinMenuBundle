@@ -19,6 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="menu_item")
+ *
+ * @method bool   isEnabled()
+ * @method string getTitle()
  */
 class Item
 {
@@ -44,6 +47,14 @@ class Item
      * @Assert\NotBlank
      */
     private $menu;
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string) $this->getTitle();
+    }
 
     /**
      * @return int
