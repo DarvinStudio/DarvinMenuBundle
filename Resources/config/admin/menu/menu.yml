@@ -1,0 +1,2 @@
+child_entities:
+    - Darvin\MenuBundle\Entity\Menu\Item
