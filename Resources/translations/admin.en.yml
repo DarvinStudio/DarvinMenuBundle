@@ -1,0 +1,9 @@
+configuration:
+    darvin_menu_security:
+        parameter:
+            permissions: Permissions
+        title: The "Menu" module security configuration
+
+securable:
+    menu:      Menu
+    menu_item: Menu item

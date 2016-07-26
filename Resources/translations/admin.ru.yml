@@ -1,0 +1,9 @@
+configuration:
+    darvin_menu_security:
+        parameter:
+            permissions: Права
+        title: Настройки безопасности модуля «Меню»
+
+securable:
+    menu:      Меню
+    menu_item: Элемент меню
