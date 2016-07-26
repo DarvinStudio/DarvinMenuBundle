@@ -1,21 +1,10 @@
 parameters:
-    darvin_menu.admin.metadata.menu.entity: Darvin\MenuBundle\Entity\Menu\Menu
-    darvin_menu.admin.metadata.menu.config: "@@DarvinMenuBundle/Resources/config/admin/menu/menu.yml"
-
     darvin_menu.admin.metadata.menu_item.entity: Darvin\MenuBundle\Entity\Menu\Item
     darvin_menu.admin.metadata.menu_item.config: "@@DarvinMenuBundle/Resources/config/admin/menu/item.yml"
 
     darvin_menu.admin.security_configuration.class: Darvin\MenuBundle\Admin\Security\Configuration
 
 services:
-    darvin_menu.admin.metadata.menu:
-        parent: darvin_admin.metadata.abstract
-        arguments:
-            - "%darvin_menu.admin.metadata.menu.entity%"
-            - "%darvin_menu.admin.metadata.menu.config%"
-        tags:
-            - { name: darvin_admin.metadata }
-
     darvin_menu.admin.metadata.menu_item:
         parent: darvin_admin.metadata.abstract
         arguments:

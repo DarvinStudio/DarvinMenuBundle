@@ -39,16 +39,6 @@ class Item
     private $id;
 
     /**
-     * @var \Darvin\MenuBundle\Entity\Menu\Menu
-     *
-     * @ORM\ManyToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\Menu", inversedBy="items")
-     * @ORM\JoinColumn(nullable=false)
-     *
-     * @Assert\NotBlank
-     */
-    private $menu;
-
-    /**
      * @return string
      */
     public function __toString()
@@ -62,25 +52,5 @@ class Item
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Menu $menu menu
-     *
-     * @return Item
-     */
-    public function setMenu(Menu $menu = null)
-    {
-        $this->menu = $menu;
-
-        return $this;
-    }
-
-    /**
-     * @return \Darvin\MenuBundle\Entity\Menu\Menu
-     */
-    public function getMenu()
-    {
-        return $this->menu;
     }
 }

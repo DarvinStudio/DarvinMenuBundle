@@ -5,5 +5,4 @@ configuration:
         title: The "Menu" module security configuration
 
 securable:
-    menu:      Menu
     menu_item: Menu item

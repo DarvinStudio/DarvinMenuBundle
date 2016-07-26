@@ -12,7 +12,6 @@ namespace Darvin\MenuBundle\Admin\Security;
 
 use Darvin\AdminBundle\Security\Configuration\AbstractSecurityConfiguration;
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\MenuBundle\Entity\Menu\Menu;
 
 /**
  * Admin security configuration
@@ -33,7 +32,6 @@ class Configuration extends AbstractSecurityConfiguration
     protected function getSecurableObjectClasses()
     {
         return [
-            'menu'      => Menu::MENU_CLASS,
             'menu_item' => Item::ITEM_CLASS,
         ];
     }
