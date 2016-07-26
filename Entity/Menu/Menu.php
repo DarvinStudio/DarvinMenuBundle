@@ -21,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Menu
 {
+    const MENU_CLASS = __CLASS__;
+
     /**
      * @var int
      *

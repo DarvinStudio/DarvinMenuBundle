@@ -21,6 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Item
 {
+    const ITEM_CLASS = __CLASS__;
+
     /**
      * @var int
      *
