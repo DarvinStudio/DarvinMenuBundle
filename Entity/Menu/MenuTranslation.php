@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Entity\Menu;
 
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model\Translatable\Translation;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Menu translation
@@ -21,4 +22,68 @@ use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 class MenuTranslation
 {
     use Translation;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     *
+     * @Assert\NotBlank
+     */
+    private $title;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->enabled = true;
+    }
+
+    /**
+     * @param boolean $enabled enabled
+     *
+     * @return MenuTranslation
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param string $title title
+     *
+     * @return MenuTranslation
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 }

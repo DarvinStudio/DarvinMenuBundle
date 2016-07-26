@@ -22,4 +22,66 @@ use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 class ItemTranslation
 {
     use Translation;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $title;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->enabled = true;
+    }
+
+    /**
+     * @param boolean $enabled enabled
+     *
+     * @return ItemTranslation
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param string $title title
+     *
+     * @return ItemTranslation
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 }

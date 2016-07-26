@@ -40,6 +40,7 @@ class Item
      *
      * @ORM\ManyToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\Menu", inversedBy="items")
      * @ORM\JoinColumn(nullable=false)
+     *
      * @Assert\NotBlank
      */
     private $menu;
