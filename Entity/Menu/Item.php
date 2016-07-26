@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Entity\Menu;
 
+use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Item
 {
+    use TranslatableTrait;
+
     const ITEM_CLASS = __CLASS__;
 
     /**
