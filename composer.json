@@ -1,0 +1,19 @@
+{
+    "name":        "darvinstudio/darvin-menu-bundle",
+    "description": "This bundle provides menu management functionality for Symfony-based applications.",
+    "keywords":    ["menu"],
+    "type":        "symfony-bundle",
+    "license":     "MIT",
+    "authors": [
+        {
+            "name":     "Darvin Studio",
+            "email":    "info@darvin-studio.ru",
+            "homepage": "https://www.darvin-studio.ru"
+        }
+    ],
+    "require": {
+    },
+    "autoload": {
+        "psr-4": { "Darvin\\MenuBundle\\": "" }
+    }
+}
