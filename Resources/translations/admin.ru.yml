@@ -1,7 +1,5 @@
 configuration:
     darvin_menu_security:
-        parameter:
-            permissions: Права
         title: Настройки безопасности модуля «Меню»
 
 securable:

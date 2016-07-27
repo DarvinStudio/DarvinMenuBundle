@@ -1,7 +1,5 @@
 configuration:
     darvin_menu_security:
-        parameter:
-            permissions: Permissions
         title: The "Menu" module security configuration
 
 securable:
