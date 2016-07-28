@@ -15,6 +15,7 @@ services:
         class: "%darvin_menu.admin.form_type.associated.class%"
         arguments:
             - "@darvin_menu.configuration.association"
+            - "@doctrine.orm.entity_manager"
         tags:
             - { name: form.type }
 

@@ -11,6 +11,8 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\MenuBundle\Configuration\AssociationConfiguration;
+use Darvin\MenuBundle\Form\DataTransformer\Admin\AssociatedTransformer;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -26,11 +28,18 @@ class AssociatedType extends AbstractType
     private $associationConfig;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\AssociationConfiguration $associationConfig Association configuration
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
-    public function __construct(AssociationConfiguration $associationConfig)
+    private $om;
+
+    /**
+     * @param \Darvin\MenuBundle\Configuration\AssociationConfiguration $associationConfig Association configuration
+     * @param \Doctrine\Common\Persistence\ObjectManager                $om                Object manager
+     */
+    public function __construct(AssociationConfiguration $associationConfig, ObjectManager $om)
     {
         $this->associationConfig = $associationConfig;
+        $this->om = $om;
     }
 
     /**
@@ -38,18 +47,18 @@ class AssociatedType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('alias', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
-            'choices'           => $this->buildAliasChoices(),
-            'choices_as_values' => true,
-            'constraints'       => new NotBlank(),
-            'mapped'            => false,
-        ]);
+        $builder
+            ->add('alias', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
+                'choices'           => $this->buildAliasChoices(),
+                'choices_as_values' => true,
+                'constraints'       => new NotBlank(),
+            ])
+            ->addModelTransformer(new AssociatedTransformer($this->associationConfig, $this->om));
 
         foreach ($this->associationConfig->getAssociations() as $association) {
             $builder->add('associated_'.$association->getAlias(), 'Symfony\Bridge\Doctrine\Form\Type\EntityType', [
-                'label'  => $association->getTitle(),
-                'class'  => $association->getClass(),
-                'mapped' => false,
+                'label' => $association->getTitle(),
+                'class' => $association->getClass(),
             ]);
         }
     }

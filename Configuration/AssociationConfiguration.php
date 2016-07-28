@@ -18,19 +18,49 @@ class AssociationConfiguration
     /**
      * @var \Darvin\MenuBundle\Configuration\Association[]
      */
-    private $associations;
+    private $associationByAliases;
+
+    /**
+     * @var \Darvin\MenuBundle\Configuration\Association[]
+     */
+    private $associationByClasses;
 
     /**
      * @param array $configs Configs
      */
     public function __construct(array $configs)
     {
-        $this->associations = [];
+        $this->associationByAliases = $this->associationByClasses = [];
 
         foreach ($configs as $config) {
             $alias = $config['alias'];
-            $this->associations[$alias] = new Association($alias, $config['class'], $config['route']['name'], $config['route']['params']);
+            $class = $config['class'];
+
+            $association = new Association($alias, $class, $config['route']['name'], $config['route']['params']);
+
+            $this->associationByAliases[$alias] = $association;
+            $this->associationByClasses[$class] = $association;
         }
+    }
+
+    /**
+     * @param string $alias Alias
+     *
+     * @return \Darvin\MenuBundle\Configuration\Association
+     */
+    public function getAssociationByAlias($alias)
+    {
+        return $this->associationByAliases[$alias];
+    }
+
+    /**
+     * @param string $class Class
+     *
+     * @return \Darvin\MenuBundle\Configuration\Association
+     */
+    public function getAssociationByClass($class)
+    {
+        return $this->associationByClasses[$class];
     }
 
     /**
@@ -38,6 +68,6 @@ class AssociationConfiguration
      */
     public function getAssociations()
     {
-        return $this->associations;
+        return $this->associationByAliases;
     }
 }
