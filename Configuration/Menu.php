@@ -18,7 +18,7 @@ class Menu
     /**
      * @var string
      */
-    private $label;
+    private $alias;
 
     /**
      * @var string
@@ -26,20 +26,20 @@ class Menu
     private $title;
 
     /**
-     * @param string $label Label
+     * @param string $alias Alias
      */
-    public function __construct($label)
+    public function __construct($alias)
     {
-        $this->label = $label;
-        $this->title = 'menu.'.$label;
+        $this->alias = $alias;
+        $this->title = 'menu.'.$alias;
     }
 
     /**
      * @return string
      */
-    public function getLabel()
+    public function getAlias()
     {
-        return $this->label;
+        return $this->alias;
     }
 
     /**

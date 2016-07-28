@@ -21,12 +21,12 @@ class MenuConfiguration
     private $menus;
 
     /**
-     * @param string[] $menuLabels Menu labels
+     * @param string[] $menuAliases Menu aliases
      */
-    public function __construct(array $menuLabels)
+    public function __construct(array $menuAliases)
     {
-        foreach ($menuLabels as $label) {
-            $this->menus[] = new Menu($label);
+        foreach ($menuAliases as $alias) {
+            $this->menus[] = new Menu($alias);
         }
     }
 
