@@ -56,6 +56,14 @@ class Item
     }
 
     /**
+     * @return string
+     */
+    public function getMenuTitle()
+    {
+        return 'menu.'.$this->menu;
+    }
+
+    /**
      * @return int
      */
     public function getId()

@@ -1,2 +1,54 @@
+index_view_new_form: true
 menu:
     skip: true
+sortable_fields:
+    menuTitle: menu
+    enabled:   translations.enabled
+    title:     translations.title
+view:
+    index:
+        fields:
+            menuTitle: ~
+            enabled:   ~
+            title:     ~
+form:
+    index:
+        fields:
+            enabled:
+                type: Symfony\Component\Form\Extension\Core\Type\CheckboxType
+            title: ~
+    filter:
+        fields:
+            menu:
+                type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+            enabled: ~
+            title:
+                compare_strict: false
+    edit:
+        fields:
+            menu:
+                type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+            translations:
+                type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
+                options:
+                    label: false
+                    fields:
+                        enabled: ~
+                        title:
+                            attr:
+                                autofocus: true
+                                required:  true
+    new:
+        fields:
+            menu:
+                type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+            translations:
+                type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
+                options:
+                    label: false
+                    fields:
+                        enabled: ~
+                        title:
+                            attr:
+                                autofocus: true
+                                required:  true
