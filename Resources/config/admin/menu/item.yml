@@ -1,6 +1,9 @@
 index_view_new_form: true
 menu:
     skip: true
+order_by:
+    menu:     asc
+    position: asc
 sortable_fields:
     menuTitle: menu
     enabled:   translations.enabled
@@ -8,17 +11,21 @@ sortable_fields:
 view:
     index:
         fields:
+            position:  ~
             menuTitle: ~
             enabled:   ~
             title:     ~
 form:
     index:
         fields:
+            position: ~
             enabled:
                 type: Symfony\Component\Form\Extension\Core\Type\CheckboxType
             title: ~
     filter:
         fields:
+            positionFrom: ~
+            positionTo:   ~
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             enabled: ~

@@ -45,20 +45,22 @@ class Item
      * @ORM\Column(type="string")
      *
      * @Assert\NotBlank
+     *
+     * @Gedmo\SortableGroup
      */
     private $menu;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $entityClass;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $entityId;
 
