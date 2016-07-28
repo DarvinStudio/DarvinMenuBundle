@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Entity\Menu;
 
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -46,6 +47,29 @@ class Item
      * @Assert\NotBlank
      */
     private $menu;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $entityClass;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $entityId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     *
+     * @Gedmo\SortablePosition
+     */
+    private $position;
 
     /**
      * @return string
@@ -89,5 +113,65 @@ class Item
     public function getMenu()
     {
         return $this->menu;
+    }
+
+    /**
+     * @param string $entityClass entityClass
+     *
+     * @return Item
+     */
+    public function setEntityClass($entityClass)
+    {
+        $this->entityClass = $entityClass;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityClass()
+    {
+        return $this->entityClass;
+    }
+
+    /**
+     * @param string $entityId entityId
+     *
+     * @return Item
+     */
+    public function setEntityId($entityId)
+    {
+        $this->entityId = $entityId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
+    }
+
+    /**
+     * @param int $position position
+     *
+     * @return Item
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 }
