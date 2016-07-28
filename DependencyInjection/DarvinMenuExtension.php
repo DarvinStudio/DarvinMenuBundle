@@ -34,6 +34,7 @@ class DarvinMenuExtension extends Extension
 
         foreach ([
             'admin',
+            'configuration',
         ] as $resource) {
             $loader->load($resource.'.yml');
         }
