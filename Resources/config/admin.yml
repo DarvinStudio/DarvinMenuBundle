@@ -1,4 +1,6 @@
 parameters:
+    darvin_menu.admin.form_type.associated.class: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
+
     darvin_menu.admin.form_type.menu.class: Darvin\MenuBundle\Form\Type\Admin\MenuType
 
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
@@ -9,6 +11,13 @@ parameters:
     darvin_menu.admin.security_configuration.class: Darvin\MenuBundle\Admin\Security\Configuration
 
 services:
+    darvin_menu.admin.form_type.associated:
+        class: "%darvin_menu.admin.form_type.associated.class%"
+        arguments:
+            - "@darvin_menu.configuration.association"
+        tags:
+            - { name: form.type }
+
     darvin_menu.admin.form_type.menu:
         class: "%darvin_menu.admin.form_type.menu.class%"
         arguments:

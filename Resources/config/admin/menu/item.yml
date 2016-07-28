@@ -35,6 +35,8 @@ form:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+            associated:
+                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
             translations:
                 type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
                 options:
@@ -49,6 +51,8 @@ form:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+            associated:
+                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
             translations:
                 type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
                 options:

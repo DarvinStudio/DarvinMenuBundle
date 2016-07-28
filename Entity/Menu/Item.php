@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Entity\Menu;
 
 use Darvin\ContentBundle\Traits\TranslatableTrait;
+use Darvin\MenuBundle\Association\Associated;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -87,6 +88,27 @@ class Item
     public function getMenuTitle()
     {
         return 'menu.'.$this->menu;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Association\Associated $associated Associated
+     *
+     * @return Item
+     */
+    public function setAssociated(Associated $associated)
+    {
+        $this->associatedClass = $associated->getClass();
+        $this->associatedId = $associated->getId();
+
+        return $this;
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Association\Associated
+     */
+    public function getAssociated()
+    {
+        return new Associated($this->associatedClass, $this->associatedId);
     }
 
     /**
