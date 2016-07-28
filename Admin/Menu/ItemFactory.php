@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Admin\Menu;
 
 use Darvin\AdminBundle\Menu\ItemFactoryInterface;
+use Darvin\AdminBundle\Metadata\MetadataManager;
 use Darvin\AdminBundle\Route\AdminRouter;
 use Darvin\MenuBundle\Configuration\Menu;
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
@@ -32,13 +33,20 @@ class ItemFactory implements ItemFactoryInterface
     private $menuConfig;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouter              $adminRouter Admin router
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig  Menu configuration
+     * @var \Darvin\AdminBundle\Metadata\MetadataManager
      */
-    public function __construct(AdminRouter $adminRouter, MenuConfiguration $menuConfig)
+    private $metadataManager;
+
+    /**
+     * @param \Darvin\AdminBundle\Route\AdminRouter              $adminRouter     Admin router
+     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig      Menu configuration
+     * @param \Darvin\AdminBundle\Metadata\MetadataManager       $metadataManager Metadata manager
+     */
+    public function __construct(AdminRouter $adminRouter, MenuConfiguration $menuConfig, MetadataManager $metadataManager)
     {
         $this->adminRouter = $adminRouter;
         $this->menuConfig = $menuConfig;
+        $this->metadataManager = $metadataManager;
     }
 
     /**
@@ -48,24 +56,27 @@ class ItemFactory implements ItemFactoryInterface
     {
         $items = [];
 
+        $filterFormTypeName = $this->metadataManager->getMetadata(Item::ITEM_CLASS)->getFilterFormTypeName();
+
         foreach ($this->menuConfig->getMenus() as $menu) {
-            $items[] = $this->createItem($menu);
+            $items[] = $this->createItem($menu, $filterFormTypeName);
         }
 
         return $items;
     }
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\Menu $menu Menu
+     * @param \Darvin\MenuBundle\Configuration\Menu $menu               Menu
+     * @param string                                $filterFormTypeName Filter form type name
      *
      * @return \Darvin\AdminBundle\Menu\Item
      */
-    private function createItem(Menu $menu)
+    private function createItem(Menu $menu, $filterFormTypeName)
     {
         return (new \Darvin\AdminBundle\Menu\Item('menu_'.$menu->getLabel()))
             ->setIndexTitle($menu->getTitle())
             ->setIndexUrl($this->adminRouter->generate(null, Item::ITEM_CLASS, AdminRouter::TYPE_INDEX, [
-                'menu' => $menu->getLabel(),
+                $filterFormTypeName.'[menu]' => $menu->getLabel(),
             ]))
             ->setAssociatedObject(Item::ITEM_CLASS)
             ->setParentName('menu');

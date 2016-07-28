@@ -21,6 +21,7 @@ services:
         arguments:
             - "@darvin_admin.route.router"
             - "@darvin_menu.configuration.menu"
+            - "@darvin_admin.metadata.manager"
         tags:
             - { name: darvin_admin.menu_item_factory }
 
