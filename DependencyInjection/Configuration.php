@@ -33,7 +33,23 @@ class Configuration implements ConfigurationInterface
         // more information on that topic.
         $rootNode
             ->children()
-                ->arrayNode('menus')->prototype('scalar');
+                ->arrayNode('menus')->prototype('scalar')->cannotBeEmpty()->end()->end()
+                ->arrayNode('objects')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('class')->isRequired()->cannotBeEmpty()
+                                ->validate()
+                                    ->ifTrue(function ($class) {
+                                        return !class_exists($class);
+                                    })
+                                    ->thenInvalid('Object class %s does not exist.')
+                                ->end()
+                            ->end()
+                            ->arrayNode('route')->isRequired()
+                                ->children()
+                                    ->scalarNode('name')->isRequired()->cannotBeEmpty()->end()
+                                    ->arrayNode('params')->isRequired()->requiresAtLeastOneElement()->prototype('scalar')->cannotBeEmpty();
 
         return $treeBuilder;
     }
