@@ -39,6 +39,15 @@ class Item
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     *
+     * @Assert\NotBlank
+     */
+    private $menu;
+
+    /**
      * @return string
      */
     public function __toString()
@@ -52,5 +61,25 @@ class Item
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param string $menu menu
+     *
+     * @return Item
+     */
+    public function setMenu($menu)
+    {
+        $this->menu = $menu;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMenu()
+    {
+        return $this->menu;
     }
 }
