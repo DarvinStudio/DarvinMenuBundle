@@ -1,4 +1,6 @@
 parameters:
+    darvin_menu.admin.form_type.menu.class: Darvin\MenuBundle\Form\Type\Admin\MenuType
+
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
 
     darvin_menu.admin.metadata.menu_item.entity: Darvin\MenuBundle\Entity\Menu\Item
@@ -7,11 +9,18 @@ parameters:
     darvin_menu.admin.security_configuration.class: Darvin\MenuBundle\Admin\Security\Configuration
 
 services:
+    darvin_menu.admin.form_type.menu:
+        class: "%darvin_menu.admin.form_type.menu.class%"
+        arguments:
+            - "@darvin_menu.configuration.menu"
+        tags:
+            - { name: form.type }
+
     darvin_menu.admin.menu_item_factory:
         class: "%darvin_menu.admin.menu_item_factory.class%"
         arguments:
             - "@darvin_admin.route.router"
-            - "%darvin_menu.menus%"
+            - "@darvin_menu.configuration.menu"
         tags:
             - { name: darvin_admin.menu_item_factory }
 

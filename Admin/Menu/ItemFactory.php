@@ -12,6 +12,8 @@ namespace Darvin\MenuBundle\Admin\Menu;
 
 use Darvin\AdminBundle\Menu\ItemFactoryInterface;
 use Darvin\AdminBundle\Route\AdminRouter;
+use Darvin\MenuBundle\Configuration\Menu;
+use Darvin\MenuBundle\Configuration\MenuConfiguration;
 use Darvin\MenuBundle\Entity\Menu\Item;
 
 /**
@@ -25,18 +27,18 @@ class ItemFactory implements ItemFactoryInterface
     private $adminRouter;
 
     /**
-     * @var string[]
+     * @var \Darvin\MenuBundle\Configuration\MenuConfiguration
      */
-    private $menuLabels;
+    private $menuConfig;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouter $adminRouter Admin router
-     * @param string[]                              $menuLabels  Menu labels
+     * @param \Darvin\AdminBundle\Route\AdminRouter              $adminRouter Admin router
+     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig  Menu configuration
      */
-    public function __construct(AdminRouter $adminRouter, array $menuLabels)
+    public function __construct(AdminRouter $adminRouter, MenuConfiguration $menuConfig)
     {
         $this->adminRouter = $adminRouter;
-        $this->menuLabels = $menuLabels;
+        $this->menuConfig = $menuConfig;
     }
 
     /**
@@ -46,24 +48,24 @@ class ItemFactory implements ItemFactoryInterface
     {
         $items = [];
 
-        foreach ($this->menuLabels as $label) {
-            $items[] = $this->createItem($label);
+        foreach ($this->menuConfig->getMenus() as $menu) {
+            $items[] = $this->createItem($menu);
         }
 
         return $items;
     }
 
     /**
-     * @param string $menuLabel Menu label
+     * @param \Darvin\MenuBundle\Configuration\Menu $menu Menu
      *
      * @return \Darvin\AdminBundle\Menu\Item
      */
-    private function createItem($menuLabel)
+    private function createItem(Menu $menu)
     {
-        return (new \Darvin\AdminBundle\Menu\Item('menu_'.$menuLabel))
-            ->setIndexTitle('menu.'.$menuLabel)
+        return (new \Darvin\AdminBundle\Menu\Item('menu_'.$menu->getLabel()))
+            ->setIndexTitle($menu->getTitle())
             ->setIndexUrl($this->adminRouter->generate(null, Item::ITEM_CLASS, AdminRouter::TYPE_INDEX, [
-                'menu' => $menuLabel,
+                'menu' => $menu->getLabel(),
             ]))
             ->setAssociatedObject(Item::ITEM_CLASS)
             ->setParentName('menu');
