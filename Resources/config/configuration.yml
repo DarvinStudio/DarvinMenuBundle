@@ -1,0 +1,8 @@
+parameters:
+    darvin_menu.configuration.menu.class: Darvin\MenuBundle\Configuration\MenuConfiguration
+
+services:
+    darvin_menu.configuration.menu:
+        class: "%darvin_menu.configuration.menu.class%"
+        arguments:
+            - "%darvin_menu.menus%"
