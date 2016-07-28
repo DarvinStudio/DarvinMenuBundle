@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('menus')->prototype('scalar')->cannotBeEmpty()->end()->end()
-                ->arrayNode('objects')
+                ->arrayNode('associations')
                     ->prototype('array')
                         ->children()
                             ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()

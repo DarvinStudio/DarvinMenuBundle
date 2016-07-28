@@ -1,15 +1,15 @@
 parameters:
+    darvin_menu.configuration.association.class: Darvin\MenuBundle\Configuration\AssociationConfiguration
+
     darvin_menu.configuration.menu.class: Darvin\MenuBundle\Configuration\MenuConfiguration
 
-    darvin_menu.configuration.menu_object.class: Darvin\MenuBundle\Configuration\MenuObjectConfiguration
-
 services:
+    darvin_menu.configuration.association:
+        class: "%darvin_menu.configuration.association.class%"
+        arguments:
+            - "%darvin_menu.associations%"
+
     darvin_menu.configuration.menu:
         class: "%darvin_menu.configuration.menu.class%"
         arguments:
             - "%darvin_menu.menus%"
-
-    darvin_menu.configuration.menu_object:
-        class: "%darvin_menu.configuration.menu_object.class%"
-        arguments:
-            - "%darvin_menu.objects%"

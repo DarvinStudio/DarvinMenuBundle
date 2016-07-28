@@ -11,32 +11,33 @@
 namespace Darvin\MenuBundle\Configuration;
 
 /**
- * Menu object configuration
+ * Association configuration
  */
-class MenuObjectConfiguration
+class AssociationConfiguration
 {
     /**
-     * @var \Darvin\MenuBundle\Configuration\MenuObject[]
+     * @var \Darvin\MenuBundle\Configuration\Association[]
      */
-    private $menuObjects;
+    private $associations;
 
     /**
      * @param array $configs Configs
      */
     public function __construct(array $configs)
     {
-        $this->menuObjects = [];
+        $this->associations = [];
 
         foreach ($configs as $config) {
-            $this->menuObjects[] = new MenuObject($config['alias'], $config['class'], $config['route']['name'], $config['route']['params']);
+            $alias = $config['alias'];
+            $this->associations[$alias] = new Association($alias, $config['class'], $config['route']['name'], $config['route']['params']);
         }
     }
 
     /**
-     * @return \Darvin\MenuBundle\Configuration\MenuObject[]
+     * @return \Darvin\MenuBundle\Configuration\Association[]
      */
-    public function getMenuObjects()
+    public function getAssociations()
     {
-        return $this->menuObjects;
+        return $this->associations;
     }
 }

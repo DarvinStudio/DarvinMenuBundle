@@ -11,9 +11,9 @@
 namespace Darvin\MenuBundle\Configuration;
 
 /**
- * Menu object
+ * Association
  */
-class MenuObject
+class Association
 {
     /**
      * @var string
@@ -53,7 +53,7 @@ class MenuObject
         $this->routeName = $routeName;
         $this->routeParams = $routeParams;
 
-        $this->title = 'menu_object.'.$alias;
+        $this->title = 'menu_association.'.$alias;
     }
 
     /**

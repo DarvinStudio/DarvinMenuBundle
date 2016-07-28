@@ -55,14 +55,14 @@ class Item
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $objectClass;
+    private $associatedClass;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $objectId;
+    private $associatedId;
 
     /**
      * @var int
@@ -118,13 +118,13 @@ class Item
     }
 
     /**
-     * @param string $objectClass objectClass
+     * @param string $associatedClass associatedClass
      *
      * @return Item
      */
-    public function setObjectClass($objectClass)
+    public function setAssociatedClass($associatedClass)
     {
-        $this->objectClass = $objectClass;
+        $this->associatedClass = $associatedClass;
 
         return $this;
     }
@@ -132,19 +132,19 @@ class Item
     /**
      * @return string
      */
-    public function getObjectClass()
+    public function getAssociatedClass()
     {
-        return $this->objectClass;
+        return $this->associatedClass;
     }
 
     /**
-     * @param string $objectId objectId
+     * @param string $associatedId associatedId
      *
      * @return Item
      */
-    public function setObjectId($objectId)
+    public function setAssociatedId($associatedId)
     {
-        $this->objectId = $objectId;
+        $this->associatedId = $associatedId;
 
         return $this;
     }
@@ -152,9 +152,9 @@ class Item
     /**
      * @return string
      */
-    public function getObjectId()
+    public function getAssociatedId()
     {
-        return $this->objectId;
+        return $this->associatedId;
     }
 
     /**
