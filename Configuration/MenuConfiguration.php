@@ -25,6 +25,8 @@ class MenuConfiguration
      */
     public function __construct(array $menuAliases)
     {
+        $this->menus = [];
+
         foreach ($menuAliases as $alias) {
             $this->menus[] = new Menu($alias);
         }

@@ -31,6 +31,7 @@ class Menu
     public function __construct($alias)
     {
         $this->alias = $alias;
+
         $this->title = 'menu.'.$alias;
     }
 
