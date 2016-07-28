@@ -52,6 +52,9 @@ class AssociatedType extends AbstractType
                 'choices'           => $this->buildAliasChoices(),
                 'choices_as_values' => true,
                 'constraints'       => new NotBlank(),
+                'attr'              => [
+                   'class' => 'alias',
+                ],
             ])
             ->addModelTransformer(new AssociatedTransformer($this->associationConfig, $this->om));
 
@@ -59,6 +62,11 @@ class AssociatedType extends AbstractType
             $builder->add('associated_'.$association->getAlias(), 'Symfony\Bridge\Doctrine\Form\Type\EntityType', [
                 'label' => $association->getTitle(),
                 'class' => $association->getClass(),
+                'attr'  => [
+                    'class'        => 'slave_input',
+                    'data-master'  => '.alias',
+                    'data-show-on' => $association->getAlias(),
+                ],
             ]);
         }
     }
