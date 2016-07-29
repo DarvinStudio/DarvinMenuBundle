@@ -27,6 +27,8 @@ class AssociationConfiguration
 
     /**
      * @param array[] $configs Configs
+     *
+     * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
      */
     public function __construct(array $configs)
     {
@@ -35,6 +37,13 @@ class AssociationConfiguration
         foreach ($configs as $config) {
             $alias = $config['alias'];
             $class = $config['class'];
+
+            if (isset($this->associationByAliases[$alias])) {
+                throw new ConfigurationException(sprintf('Association with alias "%s" already exists.', $alias));
+            }
+            if (isset($this->associationByClasses[$class])) {
+                throw new ConfigurationException(sprintf('Association with class "%s" already exists.', $class));
+            }
 
             $association = new Association($alias, $class, $config['form_type'], $config['route']['name'], $config['route']['params']);
 
