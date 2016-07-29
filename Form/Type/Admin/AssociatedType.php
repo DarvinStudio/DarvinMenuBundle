@@ -18,7 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Admin associated form type
+ * Associated admin form type
  */
 class AssociatedType extends AbstractType
 {
