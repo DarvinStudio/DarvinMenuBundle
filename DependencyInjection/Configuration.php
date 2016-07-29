@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('associations')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('alias')->defaultNull()->end()
                             ->scalarNode('class')->isRequired()->cannotBeEmpty()
                                 ->validate()
                                     ->ifTrue(function ($class) {

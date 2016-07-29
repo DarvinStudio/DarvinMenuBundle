@@ -10,11 +10,18 @@
 
 namespace Darvin\MenuBundle\Configuration;
 
+use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
+
 /**
  * Association configuration
  */
 class AssociationConfiguration
 {
+    /**
+     * @var \Darvin\AdminBundle\EntityNamer\EntityNamerInterface
+     */
+    private $entityNamer;
+
     /**
      * @var \Darvin\MenuBundle\Configuration\Association[]
      */
@@ -26,17 +33,20 @@ class AssociationConfiguration
     private $associationByClasses;
 
     /**
-     * @param array[] $configs Configs
+     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface $entityNamer Entity namer
+     * @param array[]                                              $configs     Configs
      *
      * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
      */
-    public function __construct(array $configs)
+    public function __construct(EntityNamerInterface $entityNamer, array $configs)
     {
+        $this->entityNamer = $entityNamer;
+
         $this->associationByAliases = $this->associationByClasses = [];
 
         foreach ($configs as $config) {
-            $alias = $config['alias'];
             $class = $config['class'];
+            $alias = !empty($config['alias']) ? $config['alias'] : $this->entityNamer->name($class);
 
             if (isset($this->associationByAliases[$alias])) {
                 throw new ConfigurationException(sprintf('Association with alias "%s" already exists.', $alias));

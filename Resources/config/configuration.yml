@@ -7,6 +7,7 @@ services:
     darvin_menu.configuration.association:
         class: "%darvin_menu.configuration.association.class%"
         arguments:
+            - "@darvin_admin.entity_namer"
             - "%darvin_menu.associations%"
 
     darvin_menu.configuration.menu:
