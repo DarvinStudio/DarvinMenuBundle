@@ -43,7 +43,7 @@ class Configuration implements ConfigurationInterface
                                     ->ifTrue(function ($class) {
                                         return !class_exists($class);
                                     })
-                                    ->thenInvalid('Object class %s does not exist.')
+                                    ->thenInvalid('Association class %s does not exist.')
                                 ->end()
                             ->end()
                             ->scalarNode('form_type')->defaultValue('Symfony\Bridge\Doctrine\Form\Type\EntityType')->end()
