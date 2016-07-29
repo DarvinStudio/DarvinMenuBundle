@@ -46,7 +46,6 @@ form:
                         title:
                             attr:
                                 autofocus: true
-                                required:  true
     new:
         fields:
             menu:
@@ -62,4 +61,3 @@ form:
                         title:
                             attr:
                                 autofocus: true
-                                required:  true
