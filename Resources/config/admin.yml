@@ -47,5 +47,4 @@ services:
         class:  "%darvin_menu.admin.security_configuration.class%"
         public: false
         tags:
-            - { name: darvin_config.configuration }
             - { name: darvin_admin.security_configuration }
