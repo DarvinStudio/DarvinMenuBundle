@@ -36,7 +36,7 @@ class AssociationConfiguration
             $alias = $config['alias'];
             $class = $config['class'];
 
-            $association = new Association($alias, $class, $config['route']['name'], $config['route']['params']);
+            $association = new Association($alias, $class, $config['form_type'], $config['route']['name'], $config['route']['params']);
 
             $this->associationByAliases[$alias] = $association;
             $this->associationByClasses[$class] = $association;

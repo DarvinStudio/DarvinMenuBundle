@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                                     ->thenInvalid('Object class %s does not exist.')
                                 ->end()
                             ->end()
+                            ->scalarNode('form_type')->defaultValue('Symfony\Bridge\Doctrine\Form\Type\EntityType')->end()
                             ->arrayNode('route')->isRequired()
                                 ->children()
                                     ->scalarNode('name')->isRequired()->cannotBeEmpty()->end()

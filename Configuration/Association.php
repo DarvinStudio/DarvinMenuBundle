@@ -28,6 +28,11 @@ class Association
     /**
      * @var string
      */
+    private $formType;
+
+    /**
+     * @var string
+     */
     private $routeName;
 
     /**
@@ -43,13 +48,15 @@ class Association
     /**
      * @param string $alias       Alias
      * @param string $class       Class
+     * @param string $formType    Form type
      * @param string $routeName   Route name
      * @param array  $routeParams Route parameters
      */
-    public function __construct($alias, $class, $routeName, array $routeParams)
+    public function __construct($alias, $class, $formType, $routeName, array $routeParams)
     {
         $this->alias = $alias;
         $this->class = $class;
+        $this->formType = $formType;
         $this->routeName = $routeName;
         $this->routeParams = $routeParams;
 
@@ -70,6 +77,14 @@ class Association
     public function getClass()
     {
         return $this->class;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormType()
+    {
+        return $this->formType;
     }
 
     /**
