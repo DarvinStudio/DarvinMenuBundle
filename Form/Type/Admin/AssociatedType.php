@@ -15,6 +15,7 @@ use Darvin\MenuBundle\Form\DataTransformer\Admin\AssociatedTransformer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -71,6 +72,14 @@ class AssociatedType extends AbstractType
                 ],
             ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefault('label', false);
     }
 
     /**

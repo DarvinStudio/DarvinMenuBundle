@@ -1,0 +1,9 @@
+parameters:
+    darvin_menu.abstract_builder.class: Darvin\MenuBundle\Builder\Builder
+
+services:
+    darvin_menu.abstract_builder:
+        class:    "%darvin_menu.abstract_builder.class%"
+        abstract: true
+        arguments:
+            - "@knp_menu.factory"

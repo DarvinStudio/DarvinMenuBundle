@@ -10,6 +10,9 @@
 
 namespace Darvin\MenuBundle;
 
+use Darvin\MenuBundle\DependencyInjection\Compiler\CreateBuildersPass;
+use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuBuilderPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -17,5 +20,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class DarvinMenuBundle extends Bundle
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container
+            ->addCompilerPass(new CreateBuildersPass())
+            ->addCompilerPass(new MenuBuilderPass());
+    }
 }

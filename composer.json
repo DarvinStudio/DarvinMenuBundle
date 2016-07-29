@@ -12,6 +12,8 @@
         }
     ],
     "require": {
+        "knplabs/knp-menu-bundle":          "2.1.*",
+
         "darvinstudio/darvin-admin-bundle": "dev-master@dev"
     },
     "require-dev": {
