@@ -7,3 +7,4 @@ services:
         abstract: true
         arguments:
             - "@knp_menu.factory"
+            - "@darvin_menu.repository.menu_item"

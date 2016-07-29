@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Menu item
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\Menu\ItemRepository")
  * @ORM\Table(name="menu_item")
  *
  * @method bool   isEnabled()

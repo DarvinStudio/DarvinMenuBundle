@@ -27,7 +27,8 @@ services:
             - { name: form.type }
 
     darvin_menu.admin.menu_item_factory:
-        class: "%darvin_menu.admin.menu_item_factory.class%"
+        class:  "%darvin_menu.admin.menu_item_factory.class%"
+        public: false
         arguments:
             - "@darvin_admin.route.router"
             - "@darvin_menu.configuration.menu"

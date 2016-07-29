@@ -5,12 +5,14 @@ parameters:
 
 services:
     darvin_menu.configuration.association:
-        class: "%darvin_menu.configuration.association.class%"
+        class:  "%darvin_menu.configuration.association.class%"
+        public: false
         arguments:
             - "@darvin_admin.entity_namer"
             - "%darvin_menu.associations%"
 
     darvin_menu.configuration.menu:
-        class: "%darvin_menu.configuration.menu.class%"
+        class:  "%darvin_menu.configuration.menu.class%"
+        public: false
         arguments:
             - "%darvin_menu.menus%"
