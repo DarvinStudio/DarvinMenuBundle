@@ -47,9 +47,14 @@ class AssociationConfiguration
      * @param string $alias Alias
      *
      * @return \Darvin\MenuBundle\Configuration\Association
+     * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
      */
     public function getAssociationByAlias($alias)
     {
+        if (!isset($this->associationByAliases[$alias])) {
+            throw new ConfigurationException(sprintf('Unable to find association by alias "%s".', $alias));
+        }
+
         return $this->associationByAliases[$alias];
     }
 
@@ -57,9 +62,14 @@ class AssociationConfiguration
      * @param string $class Class
      *
      * @return \Darvin\MenuBundle\Configuration\Association
+     * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
      */
     public function getAssociationByClass($class)
     {
+        if (!isset($this->associationByClasses[$class])) {
+            throw new ConfigurationException(sprintf('Unable to find association by class "%s".', $class));
+        }
+
         return $this->associationByClasses[$class];
     }
 
