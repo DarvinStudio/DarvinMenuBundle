@@ -26,7 +26,7 @@ class AssociationConfiguration
     private $associationByClasses;
 
     /**
-     * @param array $configs Configs
+     * @param array[] $configs Configs
      */
     public function __construct(array $configs)
     {

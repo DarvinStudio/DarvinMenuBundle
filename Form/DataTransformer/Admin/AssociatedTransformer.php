@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Form\DataTransformer\Admin;
 
 use Darvin\MenuBundle\Association\Associated;
 use Darvin\MenuBundle\Configuration\AssociationConfiguration;
+use Darvin\MenuBundle\Form\Type\Admin\AssociatedType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 
@@ -60,7 +61,10 @@ class AssociatedTransformer implements DataTransformerInterface
         ];
 
         if (null !== $associated->getId()) {
-            $transformed['associated_'.$association->getAlias()] = $this->om->find($associated->getClass(), $associated->getId());
+            $transformed[AssociatedType::ENTITY_FIELD_PREFIX.$association->getAlias()] = $this->om->find(
+                $associated->getClass(),
+                $associated->getId()
+            );
         }
 
         return $transformed;
@@ -75,7 +79,7 @@ class AssociatedTransformer implements DataTransformerInterface
 
         $associated = new Associated($association->getClass());
 
-        $object = $value['associated_'.$value['alias']];
+        $object = $value[AssociatedType::ENTITY_FIELD_PREFIX.$value['alias']];
 
         if (empty($object)) {
             return $associated;

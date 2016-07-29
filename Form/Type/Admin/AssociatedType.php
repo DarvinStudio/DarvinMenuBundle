@@ -22,6 +22,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class AssociatedType extends AbstractType
 {
+    const ENTITY_FIELD_PREFIX = 'associated_';
+
     /**
      * @var \Darvin\MenuBundle\Configuration\AssociationConfiguration
      */
@@ -59,7 +61,7 @@ class AssociatedType extends AbstractType
             ->addModelTransformer(new AssociatedTransformer($this->associationConfig, $this->om));
 
         foreach ($this->associationConfig->getAssociations() as $association) {
-            $builder->add('associated_'.$association->getAlias(), 'Symfony\Bridge\Doctrine\Form\Type\EntityType', [
+            $builder->add(self::ENTITY_FIELD_PREFIX.$association->getAlias(), 'Symfony\Bridge\Doctrine\Form\Type\EntityType', [
                 'label' => $association->getTitle(),
                 'class' => $association->getClass(),
                 'attr'  => [
