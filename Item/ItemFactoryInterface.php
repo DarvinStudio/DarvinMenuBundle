@@ -19,8 +19,9 @@ interface ItemFactoryInterface
      * @param object $associated  Associated
      * @param bool   $addChildren Whether to add child items
      * @param string $locale      Locale
+     * @param int    $depth       Menu depth
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function createItem($associated, $addChildren, $locale);
+    public function createItem($associated, $addChildren, $locale, $depth = null);
 }

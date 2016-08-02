@@ -17,6 +17,7 @@ use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Builder
@@ -96,11 +97,13 @@ class Builder
     }
 
     /**
+     * @param array $options Options
+     *
      * @return \Knp\Menu\ItemInterface
      *
      * @throws \Darvin\MenuBundle\Builder\BuilderException
      */
-    public function buildMenu()
+    public function buildMenu(array $options)
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -110,23 +113,40 @@ class Builder
 
         $locale = $request->getLocale();
 
+        $optionsResolver = new OptionsResolver();
+        $this->configureOptions($optionsResolver);
+        $options = $optionsResolver->resolve($options);
+
         $root = $this->genericItemFactory->createItem($this->menuAlias);
 
+        if (null !== $options['depth'] && $options['depth'] <= 0) {
+            return $root;
+        }
         foreach ($this->getMenuItems($locale) as $menuItem) {
             $associated = $menuItem->getAssociatedInstance();
 
-            if (!empty($associated)
-                && isset($this->itemFactories[$menuItem->getAssociatedClass()])
-                && null !== $item = $this->itemFactories[$menuItem->getAssociatedClass()]->createItem($associated, $menuItem->isShowChildren(), $locale)
-            ) {
-                $title = $menuItem->getTitle();
-
-                if (!empty($title)) {
-                    $item->setName($title);
-                }
-
-                $root->addChild($item->setDisplayChildren($menuItem->isShowChildren()));
+            if (empty($associated) || !isset($this->itemFactories[$menuItem->getAssociatedClass()])) {
+                continue;
             }
+
+            $item = $this->itemFactories[$menuItem->getAssociatedClass()]->createItem(
+                $associated,
+                $menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1),
+                $locale,
+                $options['depth']
+            );
+
+            if (empty($item)) {
+                continue;
+            }
+
+            $title = $menuItem->getTitle();
+
+            if (!empty($title)) {
+                $item->setName($title);
+            }
+
+            $root->addChild($item);
         }
 
         return $root;
@@ -150,5 +170,18 @@ class Builder
         });
 
         return $menuItems;
+    }
+
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
+     */
+    private function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefault('depth', null)
+            ->setAllowedTypes('depth', [
+                'integer',
+                'null',
+            ]);
     }
 }
