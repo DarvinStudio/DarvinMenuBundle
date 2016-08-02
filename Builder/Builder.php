@@ -129,17 +129,18 @@ class Builder
                 continue;
             }
 
-            $item = $this->itemFactories[$menuItem->getAssociatedClass()]->createItem(
+            $itemFactory = $this->itemFactories[$menuItem->getAssociatedClass()];
+
+            if (!$itemFactory->canCreateItem($associated)) {
+                continue;
+            }
+
+            $item = $itemFactory->createItem(
                 $associated,
                 $menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1),
                 $locale,
                 $options['depth']
             );
-
-            if (empty($item)) {
-                continue;
-            }
-
             $title = $menuItem->getTitle();
 
             if (!empty($title)) {

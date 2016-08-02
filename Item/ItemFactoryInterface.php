@@ -24,4 +24,11 @@ interface ItemFactoryInterface
      * @return \Knp\Menu\ItemInterface
      */
     public function createItem($associated, $addChildren, $locale, $depth = null);
+
+    /**
+     * @param object $associated Associated
+     *
+     * @return bool
+     */
+    public function canCreateItem($associated);
 }
