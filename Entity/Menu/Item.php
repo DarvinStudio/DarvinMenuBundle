@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Entity\Menu;
 
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Darvin\MenuBundle\Association\Associated;
+use Darvin\Utils\Mapping\Annotation as Darvin;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -73,6 +74,13 @@ class Item
      * @Gedmo\SortablePosition
      */
     private $position;
+
+    /**
+     * @var object
+     *
+     * @Darvin\CustomObject(classPropertyPath="associatedClass", initPropertyValuePath="associatedId")
+     */
+    private $associatedInstance;
 
     /**
      * @return string
@@ -197,5 +205,25 @@ class Item
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * @param object $associatedInstance associatedInstance
+     *
+     * @return Item
+     */
+    public function setAssociatedInstance($associatedInstance)
+    {
+        $this->associatedInstance = $associatedInstance;
+
+        return $this;
+    }
+
+    /**
+     * @return object
+     */
+    public function getAssociatedInstance()
+    {
+        return $this->associatedInstance;
     }
 }

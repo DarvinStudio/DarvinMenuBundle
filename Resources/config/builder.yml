@@ -6,5 +6,6 @@ services:
         class:    "%darvin_menu.abstract_builder.class%"
         abstract: true
         arguments:
+            - "@darvin_utils.custom_object.loader"
             - "@knp_menu.factory"
             - "@darvin_menu.repository.menu_item"

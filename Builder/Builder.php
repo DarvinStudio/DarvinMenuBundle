@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Builder;
 
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
+use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Knp\Menu\FactoryInterface;
 
 /**
@@ -19,6 +20,11 @@ use Knp\Menu\FactoryInterface;
 class Builder
 {
     const BUILD_METHOD = 'buildMenu';
+
+    /**
+     * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
+     */
+    private $customObjectLoader;
 
     /**
      * @var \Knp\Menu\FactoryInterface
@@ -36,12 +42,18 @@ class Builder
     private $menuAlias;
 
     /**
-     * @param \Knp\Menu\FactoryInterface                        $itemFactory        Item factory
-     * @param \Darvin\MenuBundle\Repository\Menu\ItemRepository $menuItemRepository Menu item entity repository
-     * @param string                                            $menuAlias          Menu alias
+     * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface $customObjectLoader Custom object loader
+     * @param \Knp\Menu\FactoryInterface                             $itemFactory        Item factory
+     * @param \Darvin\MenuBundle\Repository\Menu\ItemRepository      $menuItemRepository Menu item entity repository
+     * @param string                                                 $menuAlias          Menu alias
      */
-    public function __construct(FactoryInterface $itemFactory, ItemRepository $menuItemRepository, $menuAlias)
-    {
+    public function __construct(
+        CustomObjectLoaderInterface $customObjectLoader,
+        FactoryInterface $itemFactory,
+        ItemRepository $menuItemRepository,
+        $menuAlias
+    ) {
+        $this->customObjectLoader = $customObjectLoader;
         $this->itemFactory = $itemFactory;
         $this->menuItemRepository = $menuItemRepository;
         $this->menuAlias = $menuAlias;
@@ -70,6 +82,10 @@ class Builder
      */
     private function getMenuItems()
     {
-        return $this->menuItemRepository->getByMenuEnabledBuilder($this->menuAlias)->getQuery()->getResult();
+        $menuItems = $this->menuItemRepository->getByMenuEnabledBuilder($this->menuAlias)->getQuery()->getResult();
+
+        $this->customObjectLoader->loadCustomObjects($menuItems);
+
+        return $menuItems;
     }
 }
