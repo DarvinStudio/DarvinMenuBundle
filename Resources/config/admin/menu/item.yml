@@ -15,7 +15,12 @@ view:
             menuTitle:    ~
             enabled:      ~
             showChildren: ~
-            title:        ~
+            associatedInstance:
+                widget:
+                    alias: show_link
+                    options:
+                        property: associatedInstance
+            title: ~
 form:
     index:
         fields:
