@@ -9,3 +9,4 @@ services:
             - "@darvin_utils.custom_object.loader"
             - "@knp_menu.factory"
             - "@darvin_menu.repository.menu_item"
+            - "@darvin_content.translatable.translation_joiner"
