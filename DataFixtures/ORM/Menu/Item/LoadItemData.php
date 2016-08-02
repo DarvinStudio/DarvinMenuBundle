@@ -81,12 +81,15 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
      */
     private function createMenuItem(array $fakerLocales, $menuAlias)
     {
-        $item = new Item();
+        $faker = $this->getFaker();
+
+        $item = (new Item())
+            ->setShowChildren($faker->boolean());
 
         foreach ($fakerLocales as $locale => $fakerLocale) {
             $item->addTranslation($this->createMenuItemTranslation($locale, $fakerLocale));
         }
-        if ($this->getFaker()->boolean(80)) {
+        if ($faker->boolean(80)) {
             $item->setAssociated($this->getRandomAssociated());
         }
 

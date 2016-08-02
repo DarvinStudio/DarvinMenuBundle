@@ -53,6 +53,13 @@ class Item
     private $menu;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $showChildren;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
@@ -81,6 +88,14 @@ class Item
      * @Darvin\CustomObject(classPropertyPath="associatedClass", initPropertyValuePath="associatedId")
      */
     private $associatedInstance;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->showChildren = false;
+    }
 
     /**
      * @return string
@@ -145,6 +160,26 @@ class Item
     public function getMenu()
     {
         return $this->menu;
+    }
+
+    /**
+     * @param boolean $showChildren showChildren
+     *
+     * @return Item
+     */
+    public function setShowChildren($showChildren)
+    {
+        $this->showChildren = $showChildren;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isShowChildren()
+    {
+        return $this->showChildren;
     }
 
     /**
