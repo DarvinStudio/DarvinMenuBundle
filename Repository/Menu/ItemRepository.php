@@ -19,18 +19,20 @@ use Doctrine\ORM\QueryBuilder;
 class ItemRepository extends EntityRepository
 {
     /**
-     * @param string $menu Menu alias
+     * @param string $menu   Menu alias
+     * @param string $locale Locale
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getByMenuEnabledBuilder($menu)
+    public function getByMenuEnabledBuilder($menu, $locale)
     {
         $qb = $this->createDefaultQueryBuilder()
             ->addSelect('translation')
             ->innerJoin('o.translations', 'translation');
         $this
             ->addMenuFilter($qb, $menu)
-            ->addTranslationEnabledFilter($qb);
+            ->addTranslationEnabledFilter($qb)
+            ->addTranslationLocaleFilter($qb, $locale);
 
         return $qb;
     }
@@ -56,6 +58,19 @@ class ItemRepository extends EntityRepository
     private function addTranslationEnabledFilter(QueryBuilder $qb)
     {
         $qb->andWhere('translation.enabled = :translation_enabled')->setParameter('translation_enabled', true);
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
+     * @param string                     $locale Locale
+     *
+     * @return ItemRepository
+     */
+    private function addTranslationLocaleFilter(QueryBuilder $qb, $locale)
+    {
+        $qb->andWhere('translation.locale = :translation_locale')->setParameter('translation_locale', $locale);
 
         return $this;
     }
