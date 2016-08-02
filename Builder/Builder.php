@@ -90,9 +90,17 @@ class Builder
     /**
      * @param string                                       $associationClass Association class
      * @param \Darvin\MenuBundle\Item\ItemFactoryInterface $itemFactory      Item factory
+     *
+     * @throws \Darvin\MenuBundle\Builder\BuilderException
      */
     public function addItemFactory($associationClass, ItemFactoryInterface $itemFactory)
     {
+        if (isset($this->itemFactories[$associationClass])) {
+            throw new BuilderException(
+                sprintf('Item factory for association class "%s" already added to builder.', $associationClass)
+            );
+        }
+
         $this->itemFactories[$associationClass] = $itemFactory;
     }
 
