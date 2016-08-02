@@ -11,15 +11,18 @@ sortable_fields:
 view:
     index:
         fields:
-            position:  ~
-            menuTitle: ~
-            enabled:   ~
-            title:     ~
+            position:     ~
+            menuTitle:    ~
+            enabled:      ~
+            showChildren: ~
+            title:        ~
 form:
     index:
         fields:
             position: ~
             enabled:
+                type: Symfony\Component\Form\Extension\Core\Type\CheckboxType
+            showChildren:
                 type: Symfony\Component\Form\Extension\Core\Type\CheckboxType
             title: ~
     filter:
