@@ -16,9 +16,11 @@ namespace Darvin\MenuBundle\Item;
 interface ItemFactoryInterface
 {
     /**
-     * @param object $associated Associated
+     * @param object $associated  Associated
+     * @param bool   $addChildren Whether to add child items
+     * @param string $locale      Locale
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function createItem($associated);
+    public function createItem($associated, $addChildren, $locale);
 }

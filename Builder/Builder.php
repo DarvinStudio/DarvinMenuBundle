@@ -117,7 +117,7 @@ class Builder
 
             if (!empty($associated)
                 && isset($this->itemFactories[$menuItem->getAssociatedClass()])
-                && null !== $item = $this->itemFactories[$menuItem->getAssociatedClass()]->createItem($associated)
+                && null !== $item = $this->itemFactories[$menuItem->getAssociatedClass()]->createItem($associated, true, $locale)
             ) {
                 $title = $menuItem->getTitle();
 
