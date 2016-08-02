@@ -27,6 +27,8 @@ class CreateBuildersPass implements CompilerPassInterface
 
     const PARENT_ID = 'darvin_menu.abstract_builder';
 
+    const TAG_BUILDER = 'darvin_menu.builder';
+
     /**
      * {@inheritdoc}
      */
@@ -40,7 +42,8 @@ class CreateBuildersPass implements CompilerPassInterface
                 ->addTag('knp_menu.menu_builder', [
                     'method' => Builder::BUILD_METHOD,
                     'alias'  => self::ALIAS_PREFIX.$menu->getAlias(),
-                ]);
+                ])
+                ->addTag(self::TAG_BUILDER);
         }
 
         $container->addDefinitions($definitions);

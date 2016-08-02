@@ -28,17 +28,12 @@ class Association
     /**
      * @var string
      */
-    private $formType;
+    private $itemFactory;
 
     /**
      * @var string
      */
-    private $routeName;
-
-    /**
-     * @var array
-     */
-    private $routeParams;
+    private $formType;
 
     /**
      * @var string
@@ -48,17 +43,15 @@ class Association
     /**
      * @param string $alias       Alias
      * @param string $class       Class
+     * @param string $itemFactory Item factory
      * @param string $formType    Form type
-     * @param string $routeName   Route name
-     * @param array  $routeParams Route parameters
      */
-    public function __construct($alias, $class, $formType, $routeName, array $routeParams)
+    public function __construct($alias, $class, $itemFactory, $formType)
     {
         $this->alias = $alias;
         $this->class = $class;
+        $this->itemFactory = $itemFactory;
         $this->formType = $formType;
-        $this->routeName = $routeName;
-        $this->routeParams = $routeParams;
 
         $this->title = 'menu_association.'.$alias;
     }
@@ -82,25 +75,17 @@ class Association
     /**
      * @return string
      */
-    public function getFormType()
+    public function getItemFactory()
     {
-        return $this->formType;
+        return $this->itemFactory;
     }
 
     /**
      * @return string
      */
-    public function getRouteName()
+    public function getFormType()
     {
-        return $this->routeName;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRouteParams()
-    {
-        return $this->routeParams;
+        return $this->formType;
     }
 
     /**

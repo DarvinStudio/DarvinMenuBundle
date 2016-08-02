@@ -46,11 +46,8 @@ class Configuration implements ConfigurationInterface
                                     ->thenInvalid('Association class %s does not exist.')
                                 ->end()
                             ->end()
-                            ->scalarNode('form_type')->defaultValue('Symfony\Bridge\Doctrine\Form\Type\EntityType')->end()
-                            ->arrayNode('route')->isRequired()
-                                ->children()
-                                    ->scalarNode('name')->isRequired()->cannotBeEmpty()->end()
-                                    ->arrayNode('params')->isRequired()->requiresAtLeastOneElement()->prototype('scalar')->cannotBeEmpty();
+                            ->scalarNode('item_factory')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('form_type')->defaultValue('Symfony\Bridge\Doctrine\Form\Type\EntityType');
 
         return $treeBuilder;
     }

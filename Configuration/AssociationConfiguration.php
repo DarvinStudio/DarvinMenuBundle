@@ -55,7 +55,7 @@ class AssociationConfiguration
                 throw new ConfigurationException(sprintf('Association with class "%s" already exists.', $class));
             }
 
-            $association = new Association($alias, $class, $config['form_type'], $config['route']['name'], $config['route']['params']);
+            $association = new Association($alias, $class, $config['item_factory'], $config['form_type']);
 
             $this->associationByAliases[$alias] = $association;
             $this->associationByClasses[$class] = $association;
