@@ -10,9 +10,11 @@
 
 namespace Darvin\MenuBundle\Builder;
 
+use Darvin\MenuBundle\Configuration\AssociationConfiguration;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Builder
@@ -20,6 +22,11 @@ use Knp\Menu\FactoryInterface;
 class Builder
 {
     const BUILD_METHOD = 'buildMenu';
+
+    /**
+     * @var \Darvin\MenuBundle\Configuration\AssociationConfiguration
+     */
+    private $associationConfig;
 
     /**
      * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
@@ -37,25 +44,36 @@ class Builder
     private $menuItemRepository;
 
     /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
+     */
+    private $propertyAccessor;
+
+    /**
      * @var string
      */
     private $menuAlias;
 
     /**
-     * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface $customObjectLoader Custom object loader
-     * @param \Knp\Menu\FactoryInterface                             $itemFactory        Item factory
-     * @param \Darvin\MenuBundle\Repository\Menu\ItemRepository      $menuItemRepository Menu item entity repository
-     * @param string                                                 $menuAlias          Menu alias
+     * @param \Darvin\MenuBundle\Configuration\AssociationConfiguration   $associationConfig  Association configuration
+     * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface      $customObjectLoader Custom object loader
+     * @param \Knp\Menu\FactoryInterface                                  $itemFactory        Item factory
+     * @param \Darvin\MenuBundle\Repository\Menu\ItemRepository           $menuItemRepository Menu item entity repository
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor   Property accessor
+     * @param string                                                      $menuAlias          Menu alias
      */
     public function __construct(
+        AssociationConfiguration $associationConfig,
         CustomObjectLoaderInterface $customObjectLoader,
         FactoryInterface $itemFactory,
         ItemRepository $menuItemRepository,
+        PropertyAccessorInterface $propertyAccessor,
         $menuAlias
     ) {
+        $this->associationConfig = $associationConfig;
         $this->customObjectLoader = $customObjectLoader;
         $this->itemFactory = $itemFactory;
         $this->menuItemRepository = $menuItemRepository;
+        $this->propertyAccessor = $propertyAccessor;
         $this->menuAlias = $menuAlias;
     }
 
@@ -69,9 +87,25 @@ class Builder
         foreach ($this->getMenuItems() as $menuItem) {
             $title = $menuItem->getTitle();
 
-            if (!empty($title)) {
-                $root->addChild($this->itemFactory->createItem($title));
+            if (empty($title)) {
+                continue;
             }
+
+            $options = [];
+
+            $associated = $menuItem->getAssociatedInstance();
+
+            if (!empty($associated)) {
+                $association = $this->associationConfig->getAssociationByClass($menuItem->getAssociatedClass());
+                $options['route'] = $association->getRouteName();
+                $options['routeParameters'] = [];
+
+                foreach ($association->getRouteParams() as $param => $property) {
+                    $options['routeParameters'][$param] = $this->propertyAccessor->getValue($associated, $property);
+                }
+            }
+
+            $root->addChild($this->itemFactory->createItem($title, $options));
         }
 
         return $root;
