@@ -64,7 +64,7 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
     {
         $fakerLocales = $this->getFakerLocales();
 
-        foreach ($this->getMenuConfiguration()->getMenus() as $menu) {
+        foreach ($this->getMenuConfig()->getMenus() as $menu) {
             for ($i = 0; $i < self::COUNT; $i++) {
                 $manager->persist($this->createMenuItem($fakerLocales, $menu->getAlias()));
             }
@@ -146,7 +146,7 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
      */
     private function getRandomAssociated()
     {
-        $associations = $this->getAssociationConfiguration()->getAssociations();
+        $associations = $this->getAssociationConfig()->getAssociations();
         $association = $associations[array_rand($associations)];
         $class = $association->getClass();
 
@@ -168,7 +168,7 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
     /**
      * @return \Darvin\MenuBundle\Configuration\AssociationConfiguration
      */
-    private function getAssociationConfiguration()
+    private function getAssociationConfig()
     {
         return $this->container->get('darvin_menu.configuration.association');
     }
@@ -184,7 +184,7 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
     /**
      * @return \Darvin\MenuBundle\Configuration\MenuConfiguration
      */
-    private function getMenuConfiguration()
+    private function getMenuConfig()
     {
         return $this->container->get('darvin_menu.configuration.menu');
     }
