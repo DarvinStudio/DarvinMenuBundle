@@ -33,7 +33,14 @@ class Configuration implements ConfigurationInterface
         // more information on that topic.
         $rootNode
             ->children()
-                ->arrayNode('menus')->prototype('scalar')->cannotBeEmpty()->end()->end()
+                ->arrayNode('menus')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
+                            ->booleanNode('breadcrumbs')->defaultFalse()->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('associations')
                     ->prototype('array')
                         ->children()

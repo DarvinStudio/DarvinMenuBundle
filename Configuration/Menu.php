@@ -21,16 +21,23 @@ class Menu
     private $alias;
 
     /**
+     * @var bool
+     */
+    private $breadcrumbsEnabled;
+
+    /**
      * @var string
      */
     private $title;
 
     /**
-     * @param string $alias Alias
+     * @param string $alias              Alias
+     * @param bool   $breadcrumbsEnabled Is breadcrumbs functionality enabled
      */
-    public function __construct($alias)
+    public function __construct($alias, $breadcrumbsEnabled)
     {
         $this->alias = $alias;
+        $this->breadcrumbsEnabled = $breadcrumbsEnabled;
 
         $this->title = 'menu.'.$alias;
     }
@@ -41,6 +48,14 @@ class Menu
     public function getAlias()
     {
         return $this->alias;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isBreadcrumbsEnabled()
+    {
+        return $this->breadcrumbsEnabled;
     }
 
     /**

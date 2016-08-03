@@ -45,11 +45,14 @@ class CreateBuildersPass implements CompilerPassInterface
                 $menu,
                 self::GENERIC_ALIAS_PREFIX
             );
-            $definitions[self::BREADCRUMBS_ID_PREFIX.$menu->getAlias()] = $this->buildDefinition(
-                self::BREADCRUMBS_PARENT_ID,
-                $menu,
-                self::BREADCRUMBS_ALIAS_PREFIX
-            );
+
+            if ($menu->isBreadcrumbsEnabled()) {
+                $definitions[self::BREADCRUMBS_ID_PREFIX.$menu->getAlias()] = $this->buildDefinition(
+                    self::BREADCRUMBS_PARENT_ID,
+                    $menu,
+                    self::BREADCRUMBS_ALIAS_PREFIX
+                );
+            }
         }
 
         $container->addDefinitions($definitions);
