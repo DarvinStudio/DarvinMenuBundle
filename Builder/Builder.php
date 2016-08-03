@@ -18,6 +18,7 @@ use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -109,6 +110,7 @@ class Builder
      * @param array $options Options
      *
      * @return \Knp\Menu\ItemInterface
+     * @throws \Darvin\MenuBundle\Builder\BuilderException
      */
     public function buildMenu(array $options = [])
     {
@@ -116,8 +118,12 @@ class Builder
 
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
-        $options = $resolver->resolve($options);
 
+        try {
+            $options = $resolver->resolve($options);
+        } catch (InvalidArgumentException $ex) {
+            throw new BuilderException(sprintf('Menu "%s" builder options are invalid: "%s".', $this->menuAlias, $ex->getMessage()));
+        }
         if (null !== $options['depth'] && $options['depth'] <= 0) {
             return $root;
         }
