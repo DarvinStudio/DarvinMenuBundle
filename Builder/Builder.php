@@ -108,28 +108,19 @@ class Builder
      * @param array $options Options
      *
      * @return \Knp\Menu\ItemInterface
-     *
-     * @throws \Darvin\MenuBundle\Builder\BuilderException
      */
     public function buildMenu(array $options)
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (empty($request)) {
-            throw new BuilderException('Unable to build menu: current request is empty.');
-        }
-
-        $locale = $request->getLocale();
-
-        $optionsResolver = new OptionsResolver();
-        $this->configureOptions($optionsResolver);
-        $options = $optionsResolver->resolve($options);
-
         $root = $this->genericItemFactory->createItem($this->menuAlias);
+
+        $options = $this->configureOptions(new OptionsResolver())->resolve($options);
 
         if (null !== $options['depth'] && $options['depth'] <= 0) {
             return $root;
         }
+
+        $locale = $this->getLocale();
+
         foreach ($this->getMenuItems($locale) as $menuItem) {
             $associated = $menuItem->getAssociatedInstance();
 
@@ -182,11 +173,28 @@ class Builder
     }
 
     /**
+     * @return string
+     * @throws \Darvin\MenuBundle\Builder\BuilderException
+     */
+    private function getLocale()
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (empty($request)) {
+            throw new BuilderException('Unable to build menu: current request is empty.');
+        }
+
+        return $request->getLocale();
+    }
+
+    /**
      * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
+     *
+     * @return \Symfony\Component\OptionsResolver\OptionsResolver
      */
     private function configureOptions(OptionsResolver $resolver)
     {
-        $resolver
+        return $resolver
             ->setDefault('depth', null)
             ->setAllowedTypes('depth', [
                 'integer',
