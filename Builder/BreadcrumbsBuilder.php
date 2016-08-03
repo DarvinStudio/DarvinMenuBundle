@@ -38,10 +38,21 @@ class BreadcrumbsBuilder extends Builder
     public function buildMenu(array $options = [])
     {
         $breadcrumbs = parent::buildMenu();
-        $currentItems = $this->getCurrentItems($breadcrumbs);
+        $item = $this->getCurrentItem($breadcrumbs);
         $breadcrumbs->setChildren([]);
 
-        foreach ($currentItems as $item) {
+        if (empty($item)) {
+            return $breadcrumbs;
+        }
+
+        $items = [];
+
+        while ($item !== $breadcrumbs) {
+            $items[] = $item;
+            $item = $item->getParent();
+        }
+        /** @var \Knp\Menu\ItemInterface $item */
+        foreach (array_reverse($items) as $item) {
             $item
                 ->setChildren([])
                 ->setParent(null);
@@ -64,20 +75,19 @@ class BreadcrumbsBuilder extends Builder
     /**
      * @param \Knp\Menu\ItemInterface $item Item
      *
-     * @return \Knp\Menu\ItemInterface[]
+     * @return \Knp\Menu\ItemInterface
      */
-    private function getCurrentItems(ItemInterface $item)
+    private function getCurrentItem(ItemInterface $item)
     {
-        $currentItems = [];
-
         foreach ($item->getChildren() as $child) {
-            if ($this->matcher->isAncestor($child) || $this->matcher->isCurrent($child)) {
-                $currentItems[] = $child;
+            if ($this->matcher->isAncestor($child)) {
+                return $this->getCurrentItem($child);
             }
-
-            $currentItems = array_merge($currentItems, $this->getCurrentItems($child));
+            if ($this->matcher->isCurrent($child)) {
+                return $child;
+            }
         }
 
-        return $currentItems;
+        return null;
     }
 }
