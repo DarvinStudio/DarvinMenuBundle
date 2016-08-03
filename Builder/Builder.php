@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Builder;
 
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
+use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Item\ItemFactoryInterface;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
@@ -122,34 +123,58 @@ class Builder
         $locale = $this->getLocale();
 
         foreach ($this->getMenuItems($locale) as $menuItem) {
-            $associated = $menuItem->getAssociatedInstance();
+            $item = $this->createItem($menuItem, $locale, $options['depth']);
 
-            if (empty($associated) || !isset($this->itemFactories[$menuItem->getAssociatedClass()])) {
-                continue;
+            if (!empty($item)) {
+                $root->addChild($item);
             }
-
-            $itemFactory = $this->itemFactories[$menuItem->getAssociatedClass()];
-
-            if (!$itemFactory->canCreateItem($associated)) {
-                continue;
-            }
-
-            $item = $itemFactory->createItem(
-                $associated,
-                $menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1),
-                $locale,
-                $options['depth']
-            );
-            $title = $menuItem->getTitle();
-
-            if (!empty($title)) {
-                $item->setName($title);
-            }
-
-            $root->addChild($item);
         }
 
         return $root;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
+     * @param string                              $locale   Locale
+     * @param int                                 $depth    Menu depth
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function createItem(Item $menuItem, $locale, $depth)
+    {
+        $title = $menuItem->getTitle();
+        $url = $menuItem->getUrl();
+
+        if (!empty($url)) {
+            return $this->genericItemFactory->createItem(!empty($title) ? $title : $url, [
+                'uri' => $url,
+            ]);
+        }
+
+        $associated = $menuItem->getAssociatedInstance();
+
+        if (empty($associated) || !isset($this->itemFactories[$menuItem->getAssociatedClass()])) {
+            return null;
+        }
+
+        $itemFactory = $this->itemFactories[$menuItem->getAssociatedClass()];
+
+        if (!$itemFactory->canCreateItem($associated)) {
+            return null;
+        }
+
+        $item = $itemFactory->createItem(
+            $associated,
+            $menuItem->isShowChildren() && (null === $depth || $depth > 1),
+            $locale,
+            $depth
+        );
+
+        if (!empty($title)) {
+            $item->setName($title);
+        }
+
+        return $item;
     }
 
     /**

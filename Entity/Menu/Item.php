@@ -25,6 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @method bool   isEnabled()
  * @method string getTitle()
+ * @method string getUrl()
  */
 class Item
 {
