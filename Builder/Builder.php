@@ -30,37 +30,37 @@ class Builder
     /**
      * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
      */
-    private $customObjectLoader;
+    protected $customObjectLoader;
 
     /**
      * @var \Knp\Menu\FactoryInterface
      */
-    private $genericItemFactory;
+    protected $genericItemFactory;
 
     /**
      * @var \Darvin\MenuBundle\Repository\Menu\ItemRepository
      */
-    private $menuItemRepository;
+    protected $menuItemRepository;
 
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
      */
-    private $translationJoiner;
+    protected $translationJoiner;
 
     /**
      * @var string
      */
-    private $menuAlias;
+    protected $menuAlias;
 
     /**
      * @var \Darvin\MenuBundle\Item\ItemFactoryInterface[]
      */
-    private $itemFactories;
+    protected $itemFactories;
 
     /**
      * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface        $customObjectLoader Custom object loader
@@ -114,7 +114,9 @@ class Builder
     {
         $root = $this->genericItemFactory->createItem($this->menuAlias);
 
-        $options = $this->configureOptions(new OptionsResolver())->resolve($options);
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+        $options = $resolver->resolve($options);
 
         if (null !== $options['depth'] && $options['depth'] <= 0) {
             return $root;
@@ -140,7 +142,7 @@ class Builder
      *
      * @return \Knp\Menu\ItemInterface
      */
-    private function createItem(Item $menuItem, $locale, $depth)
+    protected function createItem(Item $menuItem, $locale, $depth)
     {
         $title = $menuItem->getTitle();
         $url = $menuItem->getUrl();
@@ -182,7 +184,7 @@ class Builder
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    private function getMenuItems($locale)
+    protected function getMenuItems($locale)
     {
         $menuItems = $this->menuItemRepository->getByMenuEnabledBuilder($this->menuAlias, $locale)->getQuery()->getResult();
 
@@ -201,7 +203,7 @@ class Builder
      * @return string
      * @throws \Darvin\MenuBundle\Builder\BuilderException
      */
-    private function getLocale()
+    protected function getLocale()
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -214,12 +216,10 @@ class Builder
 
     /**
      * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
-     *
-     * @return \Symfony\Component\OptionsResolver\OptionsResolver
      */
-    private function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver)
     {
-        return $resolver
+        $resolver
             ->setDefault('depth', null)
             ->setAllowedTypes('depth', [
                 'integer',
