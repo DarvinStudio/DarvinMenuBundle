@@ -2,5 +2,18 @@ configuration:
     darvin_menu_security:
         title: The "Menu" module security configuration
 
+menu_item:
+    entity:
+        associated_instance: Object
+        enabled:             Enabled
+        menu:                Menu
+        menu_title:          Menu
+        position:            Position
+        position_from:       Position (from)
+        position_to:         Position (to)
+        show_children:       Show children
+        title:               Title
+        url:                 URL
+
 securable:
     menu_item: Menu item

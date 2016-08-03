@@ -2,5 +2,18 @@ configuration:
     darvin_menu_security:
         title: Настройки безопасности модуля «Меню»
 
+menu_item:
+    entity:
+        associated_instance: Объект
+        enabled:             Активен
+        menu:                Меню
+        menu_title:          Меню
+        position:            Позиция
+        position_from:       Позиция (с)
+        position_to:         Позиция (по)
+        show_children:       Показывать потомков
+        title:               Название
+        url:                 Ссылка
+
 securable:
     menu_item: Элемент меню

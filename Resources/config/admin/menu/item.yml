@@ -21,6 +21,7 @@ view:
                     options:
                         property: associatedInstance
             title: ~
+            url:   ~
 form:
     index:
         fields:
@@ -30,14 +31,18 @@ form:
             showChildren:
                 type: Symfony\Component\Form\Extension\Core\Type\CheckboxType
             title: ~
+            url:   ~
     filter:
         fields:
             positionFrom: ~
             positionTo:   ~
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
-            enabled: ~
+            enabled:      ~
+            showChildren: ~
             title:
+                compare_strict: false
+            url:
                 compare_strict: false
     edit:
         fields:
