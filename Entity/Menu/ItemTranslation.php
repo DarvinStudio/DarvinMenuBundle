@@ -38,6 +38,13 @@ class ItemTranslation
     private $title;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $url;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -83,5 +90,25 @@ class ItemTranslation
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @param string $url url
+     *
+     * @return ItemTranslation
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 }

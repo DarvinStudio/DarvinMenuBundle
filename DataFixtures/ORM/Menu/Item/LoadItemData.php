@@ -109,6 +109,7 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
         return (new ItemTranslation())
             ->setEnabled($faker->boolean(80))
             ->setTitle($faker->boolean() ? $faker->realText(30) : null)
+            ->setUrl($faker->boolean() ? $faker->url : null)
             ->setLocale($locale);
     }
 
