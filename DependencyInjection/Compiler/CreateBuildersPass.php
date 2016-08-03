@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
 use Darvin\MenuBundle\Builder\Builder;
+use Darvin\MenuBundle\Configuration\Menu;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,11 +22,13 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
  */
 class CreateBuildersPass implements CompilerPassInterface
 {
-    const ALIAS_PREFIX = 'darvin_menu_';
+    const BREADCRUMBS_ALIAS_PREFIX = 'darvin_breadcrumbs_';
+    const BREADCRUMBS_ID_PREFIX    = 'darvin_menu.breadcrumbs_builder.';
+    const BREADCRUMBS_PARENT_ID    = 'darvin_menu.abstract_breadcrumbs_builder';
 
-    const ID_PREFIX = 'darvin_menu.builder.';
-
-    const PARENT_ID = 'darvin_menu.abstract_builder';
+    const GENERIC_ALIAS_PREFIX = 'darvin_menu_';
+    const GENERIC_ID_PREFIX    = 'darvin_menu.builder.';
+    const GENERIC_PARENT_ID    = 'darvin_menu.abstract_builder';
 
     const TAG_BUILDER = 'darvin_menu.builder';
 
@@ -36,17 +39,38 @@ class CreateBuildersPass implements CompilerPassInterface
     {
         $definitions = [];
 
-        foreach ($this->getMenuConfiguration($container)->getMenus() as $menu) {
-            $definitions[self::ID_PREFIX.$menu->getAlias()] = (new DefinitionDecorator(self::PARENT_ID))
-                ->addArgument($menu->getAlias())
-                ->addTag('knp_menu.menu_builder', [
-                    'method' => Builder::BUILD_METHOD,
-                    'alias'  => self::ALIAS_PREFIX.$menu->getAlias(),
-                ])
-                ->addTag(self::TAG_BUILDER);
+        foreach ($this->getMenuConfig($container)->getMenus() as $menu) {
+            $definitions[self::GENERIC_ID_PREFIX.$menu->getAlias()] = $this->buildDefinition(
+                self::GENERIC_PARENT_ID,
+                $menu,
+                self::GENERIC_ALIAS_PREFIX
+            );
+            $definitions[self::BREADCRUMBS_ID_PREFIX.$menu->getAlias()] = $this->buildDefinition(
+                self::BREADCRUMBS_PARENT_ID,
+                $menu,
+                self::BREADCRUMBS_ALIAS_PREFIX
+            );
         }
 
         $container->addDefinitions($definitions);
+    }
+
+    /**
+     * @param string                                $parentId    Parent service ID
+     * @param \Darvin\MenuBundle\Configuration\Menu $menu        Menu
+     * @param string                                $aliasPrefix Alias prefix
+     *
+     * @return \Symfony\Component\DependencyInjection\Definition
+     */
+    private function buildDefinition($parentId, Menu $menu, $aliasPrefix)
+    {
+        return (new DefinitionDecorator($parentId))
+            ->addArgument($menu->getAlias())
+            ->addTag('knp_menu.menu_builder', [
+                'method' => Builder::BUILD_METHOD,
+                'alias'  => $aliasPrefix.$menu->getAlias(),
+            ])
+            ->addTag(self::TAG_BUILDER);
     }
 
     /**
@@ -54,7 +78,7 @@ class CreateBuildersPass implements CompilerPassInterface
      *
      * @return \Darvin\MenuBundle\Configuration\MenuConfiguration
      */
-    private function getMenuConfiguration(ContainerInterface $container)
+    private function getMenuConfig(ContainerInterface $container)
     {
         return $container->get('darvin_menu.configuration.menu');
     }

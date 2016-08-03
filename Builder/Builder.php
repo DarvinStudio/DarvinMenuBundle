@@ -110,7 +110,7 @@ class Builder
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function buildMenu(array $options)
+    public function buildMenu(array $options = [])
     {
         $root = $this->genericItemFactory->createItem($this->menuAlias);
 
