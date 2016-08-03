@@ -17,18 +17,19 @@ interface ItemFactoryInterface
 {
     /**
      * @param object $associated  Associated
-     * @param bool   $addChildren Whether to add child items
      * @param string $locale      Locale
-     * @param int    $depth       Menu depth
+     * @param bool   $addChildren Whether to add child items
+     * @param array  $options     Options
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function createItem($associated, $addChildren, $locale, $depth = null);
+    public function createItem($associated, $locale, $addChildren = false, array $options = []);
 
     /**
      * @param object $associated Associated
+     * @param array  $options    Options
      *
      * @return bool
      */
-    public function canCreateItem($associated);
+    public function canCreateItem($associated, array $options = []);
 }

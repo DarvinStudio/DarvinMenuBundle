@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Builder;
 
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\MatcherInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Breadcrumbs builder
@@ -48,6 +49,16 @@ class BreadcrumbsBuilder extends Builder
         }
 
         return $breadcrumbs;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefault('hidden_items', true);
     }
 
     /**

@@ -125,7 +125,7 @@ class Builder
         $locale = $this->getLocale();
 
         foreach ($this->getMenuItems($locale) as $menuItem) {
-            $item = $this->createItem($menuItem, $locale, $options['depth']);
+            $item = $this->createItem($menuItem, $locale, $options);
 
             if (!empty($item)) {
                 $root->addChild($item);
@@ -138,11 +138,11 @@ class Builder
     /**
      * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
      * @param string                              $locale   Locale
-     * @param int                                 $depth    Menu depth
+     * @param array                               $options  Options
      *
      * @return \Knp\Menu\ItemInterface
      */
-    protected function createItem(Item $menuItem, $locale, $depth)
+    protected function createItem(Item $menuItem, $locale, array $options)
     {
         $title = $menuItem->getTitle();
         $url = $menuItem->getUrl();
@@ -161,15 +161,15 @@ class Builder
 
         $itemFactory = $this->itemFactories[$menuItem->getAssociatedClass()];
 
-        if (!$itemFactory->canCreateItem($associated)) {
+        if (!$itemFactory->canCreateItem($associated, $options)) {
             return null;
         }
 
         $item = $itemFactory->createItem(
             $associated,
-            $menuItem->isShowChildren() && (null === $depth || $depth > 1),
             $locale,
-            $depth
+            $menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1),
+            $options
         );
 
         if (!empty($title)) {
@@ -220,10 +220,14 @@ class Builder
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefault('depth', null)
+            ->setDefaults([
+                'depth'        => null,
+                'hidden_items' => false,
+            ])
             ->setAllowedTypes('depth', [
                 'integer',
                 'null',
-            ]);
+            ])
+            ->setAllowedTypes('hidden_items', 'boolean');
     }
 }
