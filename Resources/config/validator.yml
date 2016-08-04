@@ -1,0 +1,11 @@
+parameters:
+    darvin_menu.validator.unique_menu_item.class: Darvin\MenuBundle\Validator\Menu\UniqueItemValidator
+
+services:
+    darvin_menu.validator.unique_menu_item:
+        class:  "%darvin_menu.validator.unique_menu_item.class%"
+        parent: doctrine.orm.validator.unique
+        calls:
+            - [ setAssociationConfig, [ "@darvin_menu.configuration.association" ] ]
+        tags:
+            - { name: validator.constraint_validator, alias: darvin_menu.unique_menu_item }

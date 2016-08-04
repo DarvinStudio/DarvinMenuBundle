@@ -15,6 +15,7 @@ use Darvin\MenuBundle\Association\Associated;
 use Darvin\Utils\Mapping\Annotation as Darvin;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints as Doctrine;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,6 +23,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\Menu\ItemRepository")
  * @ORM\Table(name="menu_item")
+ *
+ * @Doctrine\UniqueEntity(fields={"menu", "associatedClass", "associatedId"}, service="darvin_menu.unique_menu_item")
  *
  * @method bool   isEnabled()
  * @method string getTitle()

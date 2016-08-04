@@ -37,6 +37,7 @@ class DarvinMenuExtension extends Extension
             'builder',
             'configuration',
             'repository',
+            'validator',
         ] as $resource) {
             $loader->load($resource.'.yml');
         }
