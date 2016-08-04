@@ -1,11 +1,20 @@
 parameters:
+    darvin_menu.hide.property_accessor.class: Darvin\MenuBundle\Hide\HidePropertyAccessor
+
     darvin_menu.hide.property_sync_listener.class: Darvin\MenuBundle\EventListener\SyncHidePropertyListener
 
 services:
+    darvin_menu.hide.property_accessor:
+        class: "%darvin_menu.hide.property_accessor.class%"
+        arguments:
+            - "@darvin_menu.configuration.association.provider"
+            - "@property_accessor"
+
     darvin_menu.hide.property_sync_listener:
         class:  "%darvin_menu.hide.property_sync_listener.class%"
         public: false
         arguments:
             - "@darvin_menu.configuration.association.provider"
+            - "@darvin_menu.hide.property_accessor"
         tags:
             - { name: doctrine.event_listener, event: onFlush }

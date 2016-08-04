@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\EventListener;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Hide\HidePropertyAccessor;
 use Darvin\Utils\Service\ServiceProviderInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
@@ -25,6 +26,11 @@ class SyncHidePropertyListener
     private $associationConfigProvider;
 
     /**
+     * @var \Darvin\MenuBundle\Hide\HidePropertyAccessor
+     */
+    private $hidePropertyAccessor;
+
+    /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
@@ -36,10 +42,12 @@ class SyncHidePropertyListener
 
     /**
      * @param \Darvin\Utils\Service\ServiceProviderInterface $associationConfigProvider Association configuration provider
+     * @param \Darvin\MenuBundle\Hide\HidePropertyAccessor   $hidePropertyAccessor      Hide property accessor
      */
-    public function __construct(ServiceProviderInterface $associationConfigProvider)
+    public function __construct(ServiceProviderInterface $associationConfigProvider, HidePropertyAccessor $hidePropertyAccessor)
     {
         $this->associationConfigProvider = $associationConfigProvider;
+        $this->hidePropertyAccessor = $hidePropertyAccessor;
 
         $this->em = $this->uow = null;
     }
@@ -87,6 +95,11 @@ class SyncHidePropertyListener
                 return;
             }
         }
+
+        $this->hidePropertyAccessor->setHidden($associated, !$menuItem->isEnabled());
+
+        $this->uow->computeChangeSets();
+        $this->uow->recomputeSingleEntityChangeSet($this->em->getClassMetadata($associatedClass), $associated);
     }
 
     /**
