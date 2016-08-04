@@ -16,5 +16,6 @@ services:
         arguments:
             - "@darvin_menu.configuration.association.provider"
             - "@darvin_menu.hide.property_accessor"
+            - "@darvin_content.translatable.manager.provider"
         tags:
             - { name: doctrine.event_listener, event: onFlush }

@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\EventListener;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Hide\HidePropertyAccessor;
 use Darvin\Utils\Service\ServiceProviderInterface;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 
 /**
@@ -31,6 +32,11 @@ class SyncHidePropertyListener
     private $hidePropertyAccessor;
 
     /**
+     * @var \Darvin\Utils\Service\ServiceProviderInterface
+     */
+    private $translatableManagerProvider;
+
+    /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
@@ -41,13 +47,18 @@ class SyncHidePropertyListener
     private $uow;
 
     /**
-     * @param \Darvin\Utils\Service\ServiceProviderInterface $associationConfigProvider Association configuration provider
-     * @param \Darvin\MenuBundle\Hide\HidePropertyAccessor   $hidePropertyAccessor      Hide property accessor
+     * @param \Darvin\Utils\Service\ServiceProviderInterface $associationConfigProvider   Association configuration provider
+     * @param \Darvin\MenuBundle\Hide\HidePropertyAccessor   $hidePropertyAccessor        Hide property accessor
+     * @param \Darvin\Utils\Service\ServiceProviderInterface $translatableManagerProvider Translatable manager provider
      */
-    public function __construct(ServiceProviderInterface $associationConfigProvider, HidePropertyAccessor $hidePropertyAccessor)
-    {
+    public function __construct(
+        ServiceProviderInterface $associationConfigProvider,
+        HidePropertyAccessor $hidePropertyAccessor,
+        ServiceProviderInterface $translatableManagerProvider
+    ) {
         $this->associationConfigProvider = $associationConfigProvider;
         $this->hidePropertyAccessor = $hidePropertyAccessor;
+        $this->translatableManagerProvider = $translatableManagerProvider;
 
         $this->em = $this->uow = null;
     }
@@ -60,6 +71,9 @@ class SyncHidePropertyListener
         $this->em = $em = $args->getEntityManager();
         $this->uow = $uow = $em->getUnitOfWork();
 
+        $associationConfig = $this->getAssociationConfig();
+        $translatableManager = $this->getTranslatableManager();
+
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             if ($entity instanceof Item) {
                 $this->updateAssociated($entity);
@@ -68,6 +82,26 @@ class SyncHidePropertyListener
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof Item) {
                 $this->updateAssociated($entity);
+
+                continue;
+            }
+
+            $class = ClassUtils::getClass($entity);
+
+            if ($associationConfig->hasAssociationClass($class)) {
+                $this->updateMenuItem($entity, $class);
+
+                continue;
+            }
+            if (!$translatableManager->isTranslation($class)) {
+                continue;
+            }
+
+            $class = $translatableManager->getTranslatableClass($class);
+
+            if ($associationConfig->hasAssociationClass($class)) {
+                /** @var \Knp\DoctrineBehaviors\Model\Translatable\Translation $entity */
+                $this->updateMenuItem($entity->getTranslatable(), $class);
             }
         }
     }
@@ -96,10 +130,63 @@ class SyncHidePropertyListener
             }
         }
 
+        $hidden = !$menuItem->isEnabled();
+
+        if ($this->hidePropertyAccessor->isHidden($associated) === $hidden) {
+            return;
+        }
+
         $this->hidePropertyAccessor->setHidden($associated, !$menuItem->isEnabled());
 
         $this->uow->computeChangeSets();
         $this->uow->recomputeSingleEntityChangeSet($this->em->getClassMetadata($associatedClass), $associated);
+    }
+
+    /**
+     * @param object $associated      Associated
+     * @param string $associatedClass Associated class
+     */
+    private function updateMenuItem($associated, $associatedClass)
+    {
+        $ids = $this->em->getClassMetadata($associatedClass)->getIdentifierValues($associated);
+
+        $menuItems = $this->getMenuItemsByAssociated($associatedClass, reset($ids));
+
+        if (count($menuItems) > 1) {
+            return;
+        }
+
+        $menuItem = $menuItems[0];
+
+        $enabled = !$this->hidePropertyAccessor->isHidden($associated);
+
+        if ($menuItem->isEnabled() === $enabled) {
+            return;
+        }
+
+        $menuItem->setEnabled($enabled);
+
+        $this->uow->computeChangeSets();
+    }
+
+
+    /**
+     * @param string $associatedClass Associated class
+     * @param string $associatedId    Associated ID
+     *
+     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     */
+    private function getMenuItemsByAssociated($associatedClass, $associatedId)
+    {
+        return $this->getMenuItemRepository()->getByAssociatedBuilder($associatedClass, $associatedId)->getQuery()->getResult();
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
+     */
+    private function getMenuItemRepository()
+    {
+        return $this->em->getRepository(Item::ITEM_CLASS);
     }
 
     /**
@@ -108,5 +195,13 @@ class SyncHidePropertyListener
     private function getAssociationConfig()
     {
         return $this->associationConfigProvider->getService();
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Translatable\TranslatableManagerInterface
+     */
+    private function getTranslatableManager()
+    {
+        return $this->translatableManagerProvider->getService();
     }
 }

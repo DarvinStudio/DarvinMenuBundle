@@ -19,6 +19,22 @@ use Doctrine\ORM\QueryBuilder;
 class ItemRepository extends EntityRepository
 {
     /**
+     * @param string $associatedClass Associated class
+     * @param string $associatedId    Associated ID
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getByAssociatedBuilder($associatedClass, $associatedId)
+    {
+        $qb = $this->createDefaultQueryBuilder();
+        $this
+            ->addAssociatedClassFilter($qb, $associatedClass)
+            ->addAssociatedIdFilter($qb, $associatedId);
+
+        return $qb;
+    }
+
+    /**
      * @param string $menu   Menu alias
      * @param string $locale Locale
      *
@@ -35,6 +51,32 @@ class ItemRepository extends EntityRepository
             ->addTranslationLocaleFilter($qb, $locale);
 
         return $qb;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb              Query builder
+     * @param string                     $associatedClass Associated class
+     *
+     * @return ItemRepository
+     */
+    private function addAssociatedClassFilter(QueryBuilder $qb, $associatedClass)
+    {
+        $qb->andWhere('o.associatedClass = :associated_class')->setParameter('associated_class', $associatedClass);
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb           Query builder
+     * @param string                     $associatedId Associated ID
+     *
+     * @return ItemRepository
+     */
+    private function addAssociatedIdFilter(QueryBuilder $qb, $associatedId)
+    {
+        $qb->andWhere('o.associatedId = :associated_id')->setParameter('associated_id', $associatedId);
+
+        return $this;
     }
 
     /**

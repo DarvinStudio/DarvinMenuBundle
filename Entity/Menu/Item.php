@@ -26,6 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Doctrine\UniqueEntity(fields={"menu", "associatedClass", "associatedId"}, service="darvin_menu.unique_menu_item")
  *
+ * @method void   setEnabled(\bool $enabled)
  * @method bool   isEnabled()
  * @method string getTitle()
  * @method string getUrl()
