@@ -116,7 +116,11 @@ class SyncHidePropertyListener
         $associatedClass = $menuItem->getAssociatedClass();
         $associatedId = $menuItem->getAssociatedId();
 
-        if (empty($associatedClass) || empty($associatedId) || !$associationConfig->hasAssociationClass($associatedClass)) {
+        if (empty($associatedClass)
+            || empty($associatedId)
+            || !$associationConfig->hasAssociationClass($associatedClass)
+            || $this->getMenuItemRepository()->isAssociatedInOtherMenus($associatedClass, $associatedId, $menuItem->getMenu(), $menuItem->getId())
+        ) {
             return;
         }
 

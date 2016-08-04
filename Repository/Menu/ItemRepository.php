@@ -19,22 +19,6 @@ use Doctrine\ORM\QueryBuilder;
 class ItemRepository extends EntityRepository
 {
     /**
-     * @param string $associatedClass Associated class
-     * @param string $associatedId    Associated ID
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getByAssociatedBuilder($associatedClass, $associatedId)
-    {
-        $qb = $this->createDefaultQueryBuilder();
-        $this
-            ->addAssociatedClassFilter($qb, $associatedClass)
-            ->addAssociatedIdFilter($qb, $associatedId);
-
-        return $qb;
-    }
-
-    /**
      * @param string $menu   Menu alias
      * @param string $locale Locale
      *
@@ -49,6 +33,41 @@ class ItemRepository extends EntityRepository
             ->addMenuFilter($qb, $menu)
             ->addTranslationEnabledFilter($qb)
             ->addTranslationLocaleFilter($qb, $locale);
+
+        return $qb;
+    }
+
+    /**
+     * @param string $associatedClass   Associated class
+     * @param string $associatedId      Associated ID
+     * @param string $currentMenu       Current menu alias
+     * @param int    $currentMenuItemId Current menu item ID
+     *
+     * @return bool
+     */
+    public function isAssociatedInOtherMenus($associatedClass, $associatedId, $currentMenu, $currentMenuItemId)
+    {
+        $qb = $this->getByAssociatedBuilder($associatedClass, $associatedId)
+            ->select('COUNT(o)');
+        $this
+            ->addNotMenuFilter($qb, $currentMenu)
+            ->addNotIdFilter($qb, $currentMenuItemId);
+
+        return $qb->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    /**
+     * @param string $associatedClass Associated class
+     * @param string $associatedId    Associated ID
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getByAssociatedBuilder($associatedClass, $associatedId)
+    {
+        $qb = $this->createDefaultQueryBuilder();
+        $this
+            ->addAssociatedClassFilter($qb, $associatedClass)
+            ->addAssociatedIdFilter($qb, $associatedId);
 
         return $qb;
     }
@@ -88,6 +107,32 @@ class ItemRepository extends EntityRepository
     private function addMenuFilter(QueryBuilder $qb, $menu)
     {
         $qb->andWhere('o.menu = :menu')->setParameter('menu', $menu);
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     * @param int                        $id Menu item ID
+     *
+     * @return ItemRepository
+     */
+    private function addNotIdFilter(QueryBuilder $qb, $id)
+    {
+        $qb->andWhere('o.id != :id')->setParameter('id', $id);
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
+     * @param string                     $menu Menu alias
+     *
+     * @return ItemRepository
+     */
+    private function addNotMenuFilter(QueryBuilder $qb, $menu)
+    {
+        $qb->andWhere('o.menu != :menu')->setParameter('menu', $menu);
 
         return $this;
     }
