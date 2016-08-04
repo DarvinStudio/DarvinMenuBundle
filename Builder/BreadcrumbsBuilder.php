@@ -37,29 +37,30 @@ class BreadcrumbsBuilder extends Builder
      */
     public function buildMenu(array $options = [])
     {
-        $breadcrumbs = parent::buildMenu();
-        $item = $this->getCurrentItem($breadcrumbs);
-        $breadcrumbs->setChildren([]);
+        $root = $this->genericItemFactory->createItem($this->menuAlias);
+
+        $item = $this->getCurrentItem(parent::buildMenu());
 
         if (empty($item)) {
-            return $breadcrumbs;
+            return $root;
         }
 
         $items = [];
 
-        while ($item !== $breadcrumbs) {
+        while ($item) {
             $items[] = $item;
             $item = $item->getParent();
         }
+
+        // Remove menu root
+        array_pop($items);
+
         /** @var \Knp\Menu\ItemInterface $item */
         foreach (array_reverse($items) as $item) {
-            $item
-                ->setChildren([])
-                ->setParent(null);
-            $breadcrumbs->addChild($item);
+            $root->addChild($item->setChildren([])->setParent(null));
         }
 
-        return $breadcrumbs;
+        return $root;
     }
 
     /**
@@ -80,11 +81,14 @@ class BreadcrumbsBuilder extends Builder
     private function getCurrentItem(ItemInterface $item)
     {
         foreach ($item->getChildren() as $child) {
-            if ($this->matcher->isAncestor($child)) {
-                return $this->getCurrentItem($child);
-            }
             if ($this->matcher->isCurrent($child)) {
                 return $child;
+            }
+
+            $current = $this->getCurrentItem($child);
+
+            if (!empty($current)) {
+                return $current;
             }
         }
 
