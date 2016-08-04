@@ -55,7 +55,7 @@ class AssociationConfiguration
                 throw new ConfigurationException(sprintf('Association with class "%s" already exists.', $class));
             }
 
-            $association = new Association($alias, $class, $config['item_factory'], $config['form_type']);
+            $association = new Association($alias, $class, $config['item_factory'], $config['hide_property'], $config['form_type']);
 
             $this->associationByAliases[$alias] = $association;
             $this->associationByClasses[$class] = $association;
@@ -85,11 +85,21 @@ class AssociationConfiguration
      */
     public function getAssociationByClass($class)
     {
-        if (!isset($this->associationByClasses[$class])) {
+        if (!$this->hasAssociationClass($class)) {
             throw new ConfigurationException(sprintf('Unable to find association by class "%s".', $class));
         }
 
         return $this->associationByClasses[$class];
+    }
+
+    /**
+     * @param string $class Association class
+     *
+     * @return bool
+     */
+    public function hasAssociationClass($class)
+    {
+        return isset($this->associationByClasses[$class]);
     }
 
     /**

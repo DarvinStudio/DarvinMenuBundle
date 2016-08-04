@@ -54,6 +54,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->scalarNode('item_factory')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('hide_property')->defaultNull()->end()
                             ->scalarNode('form_type')->defaultValue('Symfony\Bridge\Doctrine\Form\Type\EntityType');
 
         return $treeBuilder;

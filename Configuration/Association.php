@@ -33,6 +33,11 @@ class Association
     /**
      * @var string
      */
+    private $hideProperty;
+
+    /**
+     * @var string
+     */
     private $formType;
 
     /**
@@ -41,16 +46,18 @@ class Association
     private $title;
 
     /**
-     * @param string $alias       Alias
-     * @param string $class       Class
-     * @param string $itemFactory Item factory
-     * @param string $formType    Form type
+     * @param string $alias        Alias
+     * @param string $class        Class
+     * @param string $itemFactory  Item factory
+     * @param string $hideProperty Hide property
+     * @param string $formType     Form type
      */
-    public function __construct($alias, $class, $itemFactory, $formType)
+    public function __construct($alias, $class, $itemFactory, $hideProperty, $formType)
     {
         $this->alias = $alias;
         $this->class = $class;
         $this->itemFactory = $itemFactory;
+        $this->hideProperty = $hideProperty;
         $this->formType = $formType;
 
         $this->title = 'menu_association.'.$alias;
@@ -78,6 +85,14 @@ class Association
     public function getItemFactory()
     {
         return $this->itemFactory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHideProperty()
+    {
+        return $this->hideProperty;
     }
 
     /**

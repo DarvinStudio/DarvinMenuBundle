@@ -9,6 +9,8 @@ services:
         arguments:
             - "@darvin_admin.entity_namer"
             - "%darvin_menu.associations%"
+        tags:
+            - { name: darvin_utils.providable }
 
     darvin_menu.configuration.menu:
         class: "%darvin_menu.configuration.menu.class%"

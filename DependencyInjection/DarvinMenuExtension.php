@@ -36,6 +36,7 @@ class DarvinMenuExtension extends Extension
             'admin',
             'builder',
             'configuration',
+            'hide',
             'repository',
             'validator',
         ] as $resource) {

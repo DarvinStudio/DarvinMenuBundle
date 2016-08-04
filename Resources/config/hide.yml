@@ -1,0 +1,11 @@
+parameters:
+    darvin_menu.hide.property_sync_listener.class: Darvin\MenuBundle\EventListener\SyncHidePropertyListener
+
+services:
+    darvin_menu.hide.property_sync_listener:
+        class:  "%darvin_menu.hide.property_sync_listener.class%"
+        public: false
+        arguments:
+            - "@darvin_menu.configuration.association.provider"
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
