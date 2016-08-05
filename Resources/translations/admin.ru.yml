@@ -27,16 +27,17 @@ menu_item:
         update_property:
             success: Значение успешно изменено
     entity:
-        associated:    Объект
-        enabled:       Активен
-        menu:          Меню
-        menu_title:    Меню
-        position:      Позиция
-        position_from: Позиция (с)
-        position_to:   Позиция (по)
-        show_children: Показывать потомков
-        title:         Название
-        url:           Ссылка
+        associated:       Объект
+        associated_class: Объект
+        enabled:          Активен
+        menu:             Меню
+        menu_title:       Меню
+        position:         Позиция
+        position_from:    Позиция (с)
+        position_to:      Позиция (по)
+        show_children:    Показывать потомков
+        title:            Название
+        url:              Ссылка
 
 securable:
     menu_item: Элемент меню

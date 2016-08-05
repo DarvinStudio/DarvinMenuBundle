@@ -54,6 +54,8 @@ form:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             enabled:      ~
             showChildren: ~
+            associatedClass:
+                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedClassType
             title:
                 compare_strict: false
             url:

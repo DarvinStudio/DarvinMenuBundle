@@ -1,6 +1,8 @@
 parameters:
     darvin_menu.admin.form_type.associated.class: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
 
+    darvin_menu.admin.form_type.associated_class.class: Darvin\MenuBundle\Form\Type\Admin\AssociatedClassType
+
     darvin_menu.admin.form_type.menu.class: Darvin\MenuBundle\Form\Type\Admin\MenuType
 
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
@@ -18,6 +20,13 @@ services:
         arguments:
             - "@darvin_menu.configuration.association"
             - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: form.type }
+
+    darvin_menu.admin.form_type.associated_class:
+        class: "%darvin_menu.admin.form_type.associated_class.class%"
+        arguments:
+            - "@darvin_menu.configuration.association"
         tags:
             - { name: form.type }
 

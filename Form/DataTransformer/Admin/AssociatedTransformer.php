@@ -17,7 +17,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 
 /**
- * Admin associated data transformer
+ * Associated admin data transformer
  */
 class AssociatedTransformer implements DataTransformerInterface
 {
