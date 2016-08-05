@@ -88,7 +88,5 @@ form:
                     label: false
                     fields:
                         enabled: ~
-                        title:
-                            attr:
-                                autofocus: true
-                        url: ~
+                        title:   ~
+                        url:     ~
