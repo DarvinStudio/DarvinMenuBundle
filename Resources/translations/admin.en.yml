@@ -27,17 +27,16 @@ menu_item:
         update_property:
             success: Value successfully updated
     entity:
-        associated:          Object
-        associated_instance: Object
-        enabled:             Enabled
-        menu:                Menu
-        menu_title:          Menu
-        position:            Position
-        position_from:       Position (from)
-        position_to:         Position (to)
-        show_children:       Show children
-        title:               Title
-        url:                 URL
+        associated:    Object
+        enabled:       Enabled
+        menu:          Menu
+        menu_title:    Menu
+        position:      Position
+        position_from: Position (from)
+        position_to:   Position (to)
+        show_children: Show children
+        title:         Title
+        url:           URL
 
 securable:
     menu_item: Menu item

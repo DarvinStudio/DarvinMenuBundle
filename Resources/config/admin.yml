@@ -10,6 +10,8 @@ parameters:
 
     darvin_menu.admin.security_configuration.class: Darvin\MenuBundle\Admin\Security\Configuration
 
+    darvin_menu.admin.view_widget.associated.class: Darvin\MenuBundle\Admin\View\AssociatedWidget
+
 services:
     darvin_menu.admin.form_type.associated:
         class: "%darvin_menu.admin.form_type.associated.class%"
@@ -49,3 +51,12 @@ services:
         public: false
         tags:
             - { name: darvin_admin.security_configuration }
+
+    darvin_menu.admin.view_widget.associated:
+        class:  "%darvin_menu.admin.view_widget.associated.class%"
+        parent: darvin_admin.view.widget.abstract
+        calls:
+            - [ setAssociationConfig, [ "@darvin_menu.configuration.association" ] ]
+            - [ setShowLinkWidget,    [ "@darvin_admin.view.widget.show_link" ] ]
+        tags:
+            - { name: darvin_admin.view_widget }

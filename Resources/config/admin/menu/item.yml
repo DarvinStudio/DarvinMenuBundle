@@ -9,6 +9,7 @@ sortable_fields:
     menuTitle:    menu
     enabled:      translations.enabled
     showChildren: ~
+    associated:   associatedClass
     title:        translations.title
     url:          translations.url
 view:
@@ -18,11 +19,9 @@ view:
             menuTitle:    ~
             enabled:      ~
             showChildren: ~
-            associatedInstance:
+            associated:
                 widget:
-                    alias: show_link
-                    options:
-                        property: associatedInstance
+                    alias: menu_associated
             title: ~
             url:   ~
     show:
@@ -30,11 +29,9 @@ view:
             menuTitle:    ~
             enabled:      ~
             showChildren: ~
-            associatedInstance:
+            associated:
                 widget:
-                    alias: show_link
-                    options:
-                        property: associatedInstance
+                    alias: menu_associated
             title: ~
             url:
                 widget:
