@@ -4,6 +4,7 @@ configuration:
 
 menu_item:
     entity:
+        associated:          Объект
         associated_instance: Объект
         enabled:             Активен
         menu:                Меню

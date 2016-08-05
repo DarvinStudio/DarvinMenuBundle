@@ -5,9 +5,12 @@ order_by:
     menu:     asc
     position: asc
 sortable_fields:
-    menuTitle: menu
-    enabled:   translations.enabled
-    title:     translations.title
+    position:     ~
+    menuTitle:    menu
+    enabled:      translations.enabled
+    showChildren: ~
+    title:        translations.title
+    url:          translations.url
 view:
     index:
         fields:
@@ -22,6 +25,20 @@ view:
                         property: associatedInstance
             title: ~
             url:   ~
+    show:
+        fields:
+            menuTitle:    ~
+            enabled:      ~
+            showChildren: ~
+            associatedInstance:
+                widget:
+                    alias: show_link
+                    options:
+                        property: associatedInstance
+            title: ~
+            url:
+                widget:
+                    alias: simple_link
 form:
     index:
         fields:
@@ -50,6 +67,7 @@ form:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             associated:
                 type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
+            showChildren: ~
             translations:
                 type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
                 options:
@@ -59,12 +77,14 @@ form:
                         title:
                             attr:
                                 autofocus: true
+                        url: ~
     new:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             associated:
                 type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
+            showChildren: ~
             translations:
                 type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
                 options:
@@ -74,3 +94,4 @@ form:
                         title:
                             attr:
                                 autofocus: true
+                        url: ~

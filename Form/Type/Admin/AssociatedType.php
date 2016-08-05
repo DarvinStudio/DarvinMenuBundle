@@ -52,6 +52,7 @@ class AssociatedType extends AbstractType
     {
         $builder
             ->add('alias', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
+                'label'             => 'menu_item.entity.associated',
                 'choices'           => $this->buildAliasChoices(),
                 'choices_as_values' => true,
                 'constraints'       => new NotBlank(),
