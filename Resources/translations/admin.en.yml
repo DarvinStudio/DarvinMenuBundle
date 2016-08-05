@@ -3,6 +3,29 @@ configuration:
         title: The "Menu" module security configuration
 
 menu_item:
+    action:
+        delete:
+            confirm: Confirm menu item removal
+            submit:  Remove menu item
+            success: Menu item successfully removed
+        edit:
+            link:    Edit menu item
+            success: Menu item successfully updated
+            title:   Edit menu item "%entity%"
+        filter:
+            reset:  Reset filter
+            submit: Apply filter
+        index:
+            link:  Menu
+            title: Menu items
+        new:
+            link:    Create menu item
+            success: Menu item successfully created
+            title:   New menu item
+        show:
+            title: Menu item "%entity%"
+        update_property:
+            success: Value successfully updated
     entity:
         associated:          Object
         associated_instance: Object

@@ -107,7 +107,20 @@ class Item
      */
     public function __toString()
     {
-        return (string) $this->getTitle();
+        $title = $this->getTitle();
+
+        if (!empty($title)) {
+            return $title;
+        }
+        if (!empty($this->associatedInstance)) {
+            $string = (string) $this->associatedInstance;
+
+            if (!empty($string)) {
+                return $string;
+            }
+        }
+
+        return (string) $this->id;
     }
 
     /**

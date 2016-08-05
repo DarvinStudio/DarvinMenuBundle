@@ -3,6 +3,29 @@ configuration:
         title: Настройки безопасности модуля «Меню»
 
 menu_item:
+    action:
+        delete:
+            confirm: Подтвердите удаление пункта меню
+            submit:  Удалить пункт меню
+            success: Пункт меню успешно удален
+        edit:
+            link:    Изменить пункт меню
+            success: Пункт меню успешно изменен
+            title:   Изменить пункт меню «%entity%»
+        filter:
+            reset:  Сбросить фильтр
+            submit: Применить фильтр
+        index:
+            link:  Меню
+            title: Пункты меню
+        new:
+            link:    Добавить пункт меню
+            success: Пункт меню успешно добавлен
+            title:   Новый пункт меню
+        show:
+            title: Пункт меню «%entity%»
+        update_property:
+            success: Значение успешно изменено
     entity:
         associated:          Объект
         associated_instance: Объект
