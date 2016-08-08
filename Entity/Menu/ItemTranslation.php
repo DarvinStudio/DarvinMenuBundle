@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Entity\Menu;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 
 /**
@@ -18,6 +19,8 @@ use Knp\DoctrineBehaviors\Model\Translatable\Translation;
  *
  * @ORM\Entity
  * @ORM\Table(name="menu_item_translation")
+ *
+ * @Gedmo\Loggable(logEntryClass="Darvin\AdminBundle\Entity\LogEntry")
  */
 class ItemTranslation
 {
@@ -27,6 +30,8 @@ class ItemTranslation
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     *
+     * @Gedmo\Versioned
      */
     private $enabled;
 
@@ -34,6 +39,8 @@ class ItemTranslation
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Gedmo\Versioned
      */
     private $title;
 
@@ -41,6 +48,8 @@ class ItemTranslation
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Gedmo\Versioned
      */
     private $url;
 

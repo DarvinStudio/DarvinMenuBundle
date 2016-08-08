@@ -2,6 +2,10 @@ configuration:
     darvin_menu_security:
         title: Настройки безопасности модуля «Меню»
 
+loggable:
+    menu_item:             Пункт меню
+    menu_item_translation: Пункт меню (перевод)
+
 menu_item:
     action:
         delete:

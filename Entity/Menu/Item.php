@@ -26,6 +26,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Doctrine\UniqueEntity(fields={"menu", "associatedClass", "associatedId"}, service="darvin_menu.unique_menu_item")
  *
+ * @Gedmo\Loggable(logEntryClass="Darvin\AdminBundle\Entity\LogEntry")
+ *
  * @method void   setEnabled(\bool $enabled)
  * @method bool   isEnabled()
  * @method string getTitle()
@@ -54,6 +56,7 @@ class Item
      * @Assert\NotBlank
      *
      * @Gedmo\SortableGroup
+     * @Gedmo\Versioned
      */
     private $menu;
 
@@ -61,6 +64,8 @@ class Item
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     *
+     * @Gedmo\Versioned
      */
     private $showChildren;
 
@@ -68,6 +73,8 @@ class Item
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Gedmo\Versioned
      */
     private $associatedClass;
 
@@ -75,6 +82,8 @@ class Item
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Gedmo\Versioned
      */
     private $associatedId;
 
