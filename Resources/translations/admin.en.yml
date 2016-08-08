@@ -43,5 +43,8 @@ menu_item:
         title:            Title
         url:              URL
 
+searchable:
+    menu_item: Menu items
+
 securable:
     menu_item: Menu item

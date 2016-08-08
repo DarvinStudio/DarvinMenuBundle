@@ -4,6 +4,9 @@ menu:
 order_by:
     menu:     asc
     position: asc
+searchable_fields:
+    - title
+    - url
 sortable_fields:
     position:     ~
     menuTitle:    menu

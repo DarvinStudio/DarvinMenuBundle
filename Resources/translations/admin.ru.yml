@@ -43,5 +43,8 @@ menu_item:
         title:            Название
         url:              Ссылка
 
+searchable:
+    menu_item: Пункты меню
+
 securable:
     menu_item: Элемент меню
