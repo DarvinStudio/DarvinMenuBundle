@@ -156,7 +156,7 @@ class SyncHidePropertyListener
 
         $menuItems = $this->getMenuItemsByAssociated($associatedClass, reset($ids));
 
-        if (count($menuItems) > 1) {
+        if (1 !== count($menuItems)) {
             return;
         }
 
