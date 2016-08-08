@@ -1,4 +1,6 @@
 index_view_new_form: true
+disabled_routes:
+    - copy
 menu:
     skip: true
 order_by:
