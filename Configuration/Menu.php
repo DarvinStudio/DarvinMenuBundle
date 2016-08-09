@@ -28,6 +28,26 @@ class Menu
     /**
      * @var string
      */
+    private $builderId;
+
+    /**
+     * @var string
+     */
+    private $builderAlias;
+
+    /**
+     * @var string
+     */
+    private $breadcrumbsBuilderId;
+
+    /**
+     * @var string
+     */
+    private $breadcrumbsBuilderAlias;
+
+    /**
+     * @var string
+     */
     private $title;
 
     /**
@@ -40,6 +60,10 @@ class Menu
         $this->breadcrumbsEnabled = $breadcrumbsEnabled;
 
         $this->title = 'menu.'.$alias;
+        $this->builderId = 'darvin_menu.builder.'.$alias;
+        $this->builderAlias = 'darvin_menu_'.$alias;
+        $this->breadcrumbsBuilderId = 'darvin_menu.breadcrumbs_builder.'.$alias;
+        $this->breadcrumbsBuilderAlias = 'darvin_breadcrumbs_'.$alias;
     }
 
     /**
@@ -64,5 +88,37 @@ class Menu
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBuilderId()
+    {
+        return $this->builderId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBuilderAlias()
+    {
+        return $this->builderAlias;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBreadcrumbsBuilderId()
+    {
+        return $this->breadcrumbsBuilderId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBreadcrumbsBuilderAlias()
+    {
+        return $this->breadcrumbsBuilderAlias;
     }
 }
