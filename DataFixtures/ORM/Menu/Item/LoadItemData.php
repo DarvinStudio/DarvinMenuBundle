@@ -89,8 +89,8 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
         foreach ($fakerLocales as $locale => $fakerLocale) {
             $item->addTranslation($this->createMenuItemTranslation($locale, $fakerLocale));
         }
-        if ($faker->boolean(80)) {
-            $item->setAssociated($this->getRandomAssociated());
+        if ($faker->boolean(80) && null !== $associated = $this->getRandomAssociated()) {
+            $item->setAssociated($associated);
         }
 
         return $item->setMenu($menuAlias);
@@ -162,7 +162,7 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
 
         $ids = $this->associatedIds[$class];
 
-        return new Associated($class, $ids[array_rand($ids)]);
+        return !empty($ids) ? new Associated($class, $ids[array_rand($ids)]) : null;
     }
 
     /**
