@@ -22,13 +22,21 @@ class MenuConfiguration
 
     /**
      * @param array[] $configs Configs
+     *
+     * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
      */
     public function __construct(array $configs)
     {
         $this->menus = [];
 
         foreach ($configs as $config) {
-            $this->menus[] = new Menu($config['alias'], $config['breadcrumbs']);
+            $alias = $config['alias'];
+
+            if (isset($this->menus[$alias])) {
+                throw new ConfigurationException(sprintf('Menu with alias "%s" already exists.', $alias));
+            }
+
+            $this->menus[$alias] = new Menu($alias, $config['breadcrumbs']);
         }
     }
 
