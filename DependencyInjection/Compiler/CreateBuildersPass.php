@@ -46,7 +46,7 @@ class CreateBuildersPass implements CompilerPassInterface
         }
         foreach ($definitions as $id => $attr) {
             if ($container->hasDefinition($id)) {
-                throw new \InvalidArgumentException(sprintf('Service "%s" already exists. Please change menu alias.', $id));
+                throw new \RuntimeException(sprintf('Service "%s" already exists. Please change menu alias.', $id));
             }
         }
 
