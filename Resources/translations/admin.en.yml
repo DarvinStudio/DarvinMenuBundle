@@ -1,7 +1,3 @@
-configuration:
-    darvin_menu_security:
-        title: The "Menu" module security configuration
-
 loggable:
     menu_item:             Menu item
     menu_item_translation: Menu item (translation)

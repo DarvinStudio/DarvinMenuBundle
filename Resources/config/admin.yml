@@ -7,11 +7,6 @@ parameters:
 
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
 
-    darvin_menu.admin.metadata.menu_item.entity: Darvin\MenuBundle\Entity\Menu\Item
-    darvin_menu.admin.metadata.menu_item.config: "@@DarvinMenuBundle/Resources/config/admin/menu/item.yml"
-
-    darvin_menu.admin.security_configuration.class: Darvin\MenuBundle\Admin\Security\Configuration
-
     darvin_menu.admin.view_widget.associated.class: Darvin\MenuBundle\Admin\View\AssociatedWidget
 
 services:
@@ -46,20 +41,6 @@ services:
             - "@darvin_admin.metadata.manager"
         tags:
             - { name: darvin_admin.menu_item_factory }
-
-    darvin_menu.admin.metadata.menu_item:
-        parent: darvin_admin.metadata.abstract
-        arguments:
-            - "%darvin_menu.admin.metadata.menu_item.entity%"
-            - "%darvin_menu.admin.metadata.menu_item.config%"
-        tags:
-            - { name: darvin_admin.metadata }
-
-    darvin_menu.admin.security_configuration:
-        class:  "%darvin_menu.admin.security_configuration.class%"
-        public: false
-        tags:
-            - { name: darvin_admin.security_configuration }
 
     darvin_menu.admin.view_widget.associated:
         class:  "%darvin_menu.admin.view_widget.associated.class%"

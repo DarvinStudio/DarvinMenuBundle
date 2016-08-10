@@ -10,9 +10,11 @@
 
 namespace Darvin\MenuBundle\DependencyInjection;
 
+use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\Utils\DependencyInjection\ConfigInjector;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -21,7 +23,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class DarvinMenuExtension extends Extension
+class DarvinMenuExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -41,6 +43,25 @@ class DarvinMenuExtension extends Extension
             'validator',
         ] as $resource) {
             $loader->load($resource.'.yml');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (isset($bundles['DarvinAdminBundle'])) {
+            $container->prependExtensionConfig('darvin_admin', [
+                'sections' => [
+                    [
+                        'entity' => Item::ITEM_CLASS,
+                        'config' => __DIR__.'/../Resources/config/admin/menu/item.yml',
+                    ],
+                ],
+            ]);
         }
     }
 }
