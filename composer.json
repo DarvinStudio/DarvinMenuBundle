@@ -17,6 +17,7 @@
         "darvinstudio/darvin-admin-bundle": "dev-master@dev"
     },
     "require-dev": {
+        "andyftw/image-faker":               "1.1.*",
         "doctrine/doctrine-fixtures-bundle": "2.3.*",
         "fzaninotto/faker":                  "1.6.*"
     },
