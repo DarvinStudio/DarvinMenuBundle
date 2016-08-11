@@ -10,9 +10,7 @@
 
 namespace Darvin\MenuBundle;
 
-use Darvin\MenuBundle\DependencyInjection\Compiler\AddItemFactoriesPass;
 use Darvin\MenuBundle\DependencyInjection\Compiler\CreateBuildersPass;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -26,8 +24,6 @@ class DarvinMenuBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container
-            ->addCompilerPass(new AddItemFactoriesPass(), PassConfig::TYPE_BEFORE_REMOVING)
-            ->addCompilerPass(new CreateBuildersPass());
+        $container->addCompilerPass(new CreateBuildersPass());
     }
 }

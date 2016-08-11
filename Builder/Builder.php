@@ -26,6 +26,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class Builder
 {
+    const ADD_ITEM_FACTORY_METHOD = 'addItemFactory';
+
     const BUILD_METHOD = 'buildMenu';
 
     /**
