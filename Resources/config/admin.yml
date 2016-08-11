@@ -48,5 +48,6 @@ services:
         calls:
             - [ setAssociationConfig, [ "@darvin_menu.configuration.association" ] ]
             - [ setShowLinkWidget,    [ "@darvin_admin.view.widget.show_link" ] ]
+            - [ setTranslator,        [ "@translator" ] ]
         tags:
             - { name: darvin_admin.view_widget }

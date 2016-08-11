@@ -15,6 +15,7 @@ use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
 use Darvin\MenuBundle\Configuration\AssociationConfiguration;
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Associated admin view widget
@@ -32,6 +33,11 @@ class AssociatedWidget extends AbstractWidget
     private $showLinkWidget;
 
     /**
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param \Darvin\MenuBundle\Configuration\AssociationConfiguration $associationConfig Association configuration
      */
     public function setAssociationConfig(AssociationConfiguration $associationConfig)
@@ -45,6 +51,14 @@ class AssociatedWidget extends AbstractWidget
     public function setShowLinkWidget(ShowLinkWidget $showLinkWidget)
     {
         $this->showLinkWidget = $showLinkWidget;
+    }
+
+    /**
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator Translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
     }
 
     /**
@@ -70,22 +84,11 @@ class AssociatedWidget extends AbstractWidget
             return null;
         }
 
-        $title = $this->associationConfig->getAssociationByClass($associatedClass)->getTitle();
+        $title = $this->translator->trans($this->associationConfig->getAssociationByClass($associatedClass)->getTitle(), [], 'admin');
 
         $associated = $menuItem->getAssociatedInstance();
 
-        if (empty($associated)) {
-            return $title;
-        }
-
-        $showLink = $this->showLinkWidget->getContent($associated);
-
-        return !empty($showLink)
-            ? $this->render([], [
-                'show_link' => $showLink,
-                'title'     => $title,
-            ])
-            : $title;
+        return !empty($associated) ? $this->showLinkWidget->getContent($associated).$title : $title;
     }
 
     /**
@@ -106,13 +109,5 @@ class AssociatedWidget extends AbstractWidget
         return [
             Permission::VIEW,
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultTemplate()
-    {
-        return 'DarvinMenuBundle:Admin/widget:associated.html.twig';
     }
 }
