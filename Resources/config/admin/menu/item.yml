@@ -44,13 +44,11 @@ view:
 form:
     index:
         fields:
-            position: ~
-            enabled:
-                type: Symfony\Component\Form\Extension\Core\Type\CheckboxType
-            showChildren:
-                type: Symfony\Component\Form\Extension\Core\Type\CheckboxType
-            title: ~
-            url:   ~
+            position:     ~
+            enabled:      ~
+            showChildren: ~
+            title:        ~
+            url:          ~
     filter:
         fields:
             positionFrom: ~
