@@ -21,8 +21,6 @@ menu_item:
             title:   Новый пункт меню
         show:
             title: Пункт меню «%entity%»
-        update_property:
-            success: Значение успешно изменено
     entity:
         associated:       Объект
         associated_class: Объект

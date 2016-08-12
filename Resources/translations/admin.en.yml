@@ -21,8 +21,6 @@ menu_item:
             title:   New menu item
         show:
             title: Menu item "%entity%"
-        update_property:
-            success: Value successfully updated
     entity:
         associated:       Object
         associated_class: Object
