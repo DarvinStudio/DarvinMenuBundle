@@ -12,9 +12,6 @@ menu_item:
             link:    Edit menu item
             success: Menu item successfully updated
             title:   Edit menu item "%entity%"
-        filter:
-            reset:  Reset filter
-            submit: Apply filter
         index:
             link:  Menu
             title: Menu items

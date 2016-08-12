@@ -12,9 +12,6 @@ menu_item:
             link:    Изменить пункт меню
             success: Пункт меню успешно изменен
             title:   Изменить пункт меню «%entity%»
-        filter:
-            reset:  Сбросить фильтр
-            submit: Применить фильтр
         index:
             link:  Меню
             title: Пункты меню
