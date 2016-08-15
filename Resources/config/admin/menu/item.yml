@@ -69,7 +69,9 @@ form:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             associated:
                 type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
-            showChildren: ~
+            showChildren:
+                options:
+                    required: false
             translations:
                 type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
                 options:
@@ -86,7 +88,9 @@ form:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             associated:
                 type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
-            showChildren: ~
+            showChildren:
+                options:
+                    required: false
             translations:
                 type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
                 options:
