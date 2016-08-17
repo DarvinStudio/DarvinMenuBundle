@@ -58,7 +58,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
                 'sections' => [
                     [
                         'entity' => Item::ITEM_CLASS,
-                        'config' => __DIR__.'/../Resources/config/admin/menu/item.yml',
+                        'config' => '@DarvinMenuBundle/Resources/config/admin/menu/item.yml',
                     ],
                 ],
             ]);
