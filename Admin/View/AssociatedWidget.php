@@ -88,7 +88,7 @@ class AssociatedWidget extends AbstractWidget
 
         $associated = $menuItem->getAssociatedInstance();
 
-        return !empty($associated) ? $this->showLinkWidget->getContent($associated).$title : $title;
+        return $title.(!empty($associated) ? $this->showLinkWidget->getContent($associated, ['text_link' => true]) : '');
     }
 
     /**
