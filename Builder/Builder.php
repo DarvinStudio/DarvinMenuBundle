@@ -176,7 +176,7 @@ class Builder
         $item = $itemFactory->createItem(
             $associated,
             $locale,
-            $menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1),
+            $options['force_add_children'] || ($menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1)),
             $options
         );
 
@@ -229,8 +229,9 @@ class Builder
     {
         $resolver
             ->setDefaults([
-                'depth'        => null,
-                'hidden_items' => false,
+                'depth'              => null,
+                'force_add_children' => false,
+                'hidden_items'       => false,
             ])
             ->setAllowedTypes('depth', [
                 'integer',

@@ -70,7 +70,10 @@ class BreadcrumbsBuilder extends Builder
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefault('hidden_items', true);
+        $resolver->setDefaults([
+            'force_add_children' => true,
+            'hidden_items'       => true,
+        ]);
     }
 
     /**
