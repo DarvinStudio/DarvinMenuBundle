@@ -54,14 +54,6 @@ class MenuType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'darvin_menu_admin_menu';
-    }
-
-    /**
      * @return array
      */
     private function buildChoices()
