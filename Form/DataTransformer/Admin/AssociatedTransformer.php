@@ -75,6 +75,10 @@ class AssociatedTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
+        if (empty($value['alias'])) {
+            return null;
+        }
+
         $association = $this->associationConfig->getAssociationByAlias($value['alias']);
 
         $associated = new Associated($association->getClass());

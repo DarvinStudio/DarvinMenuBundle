@@ -16,7 +16,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Associated admin form type
@@ -55,10 +54,10 @@ class AssociatedType extends AbstractType
                 'label'             => 'menu_item.entity.associated',
                 'choices'           => $this->buildAliasChoices(),
                 'choices_as_values' => true,
-                'constraints'       => new NotBlank(),
                 'attr'              => [
                    'class' => 'alias',
                 ],
+                'required' => false,
             ])
             ->addModelTransformer(new AssociatedTransformer($this->associationConfig, $this->om));
 

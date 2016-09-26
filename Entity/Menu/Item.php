@@ -145,10 +145,10 @@ class Item
      *
      * @return Item
      */
-    public function setAssociated(Associated $associated)
+    public function setAssociated(Associated $associated = null)
     {
-        $this->associatedClass = $associated->getClass();
-        $this->associatedId = $associated->getId();
+        $this->associatedClass = !empty($associated) ? $associated->getClass() : null;
+        $this->associatedId = !empty($associated) ? $associated->getId() : null;
 
         return $this;
     }
