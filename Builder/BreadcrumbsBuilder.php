@@ -95,6 +95,42 @@ class BreadcrumbsBuilder extends Builder
             }
         }
 
+        return $this->getAncestorItem($item);
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface $item Item
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function getAncestorItem(ItemInterface $item)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (empty($request)) {
+            return null;
+        }
+
+        $requestUri = $request->getRequestUri();
+
+        foreach ($item->getChildren() as $child) {
+            $uri = $child->getUri();
+
+            if (!empty($uri)) {
+                $uri = preg_replace('/(.html|\/+)$/', '', $uri).'/';
+
+                if (0 === strpos($requestUri, $uri) && substr_count($uri, '/') === substr_count($requestUri, '/')) {
+                    return $child;
+                }
+            }
+
+            $ancestor = $this->getAncestorItem($child);
+
+            if (!empty($ancestor)) {
+                return $ancestor;
+            }
+        }
+
         return null;
     }
 }
