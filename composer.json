@@ -12,14 +12,14 @@
         }
     ],
     "require": {
-        "knplabs/knp-menu-bundle":          "2.1.*",
+        "knplabs/knp-menu-bundle":          "^2.1",
 
-        "darvinstudio/darvin-admin-bundle": "dev-master@dev"
+        "darvinstudio/darvin-admin-bundle": "@dev"
     },
     "require-dev": {
-        "andyftw/image-faker":               "1.1.*",
-        "doctrine/doctrine-fixtures-bundle": "2.3.*",
-        "fzaninotto/faker":                  "1.6.*"
+        "andyftw/image-faker":               "^1.1",
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "fzaninotto/faker":                  "^1.6"
     },
     "autoload": {
         "psr-4": { "Darvin\\MenuBundle\\": "" }
