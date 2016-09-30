@@ -2,6 +2,11 @@ loggable:
     menu_item:             Menu item
     menu_item_translation: Menu item (translation)
 
+menu:
+    group:
+        menu:
+            title: Menu
+
 menu_item:
     action:
         delete:
