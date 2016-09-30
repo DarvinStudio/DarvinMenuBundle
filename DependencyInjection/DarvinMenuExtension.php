@@ -61,6 +61,19 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
                         'config' => '@DarvinMenuBundle/Resources/config/admin/menu/item.yml',
                     ],
                 ],
+                'menu' => [
+                    'groups' => [
+                        [
+                            'name'   => 'menu',
+                            'colors' => [
+                                'sidebar' => '#a4ce23',
+                            ],
+                            'icons' => [
+                                'sidebar' => 'bundles/darvinmenu/images/admin/menu_sidebar.png',
+                            ],
+                        ],
+                    ],
+                ],
             ]);
         }
     }
