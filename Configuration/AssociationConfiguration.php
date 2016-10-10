@@ -85,11 +85,16 @@ class AssociationConfiguration
      */
     public function getAssociationByClass($class)
     {
-        if (!$this->hasAssociationClass($class)) {
-            throw new ConfigurationException(sprintf('Unable to find association by class "%s".', $class));
+        if (isset($this->associationByClasses[$class])) {
+            return $this->associationByClasses[$class];
+        }
+        foreach (class_parents($class) as $parent) {
+            if (isset($this->associationByClasses[$parent])) {
+                return $this->associationByClasses[$parent];
+            }
         }
 
-        return $this->associationByClasses[$class];
+        throw new ConfigurationException(sprintf('Unable to find association by class "%s".', $class));
     }
 
     /**
@@ -99,7 +104,16 @@ class AssociationConfiguration
      */
     public function hasAssociationClass($class)
     {
-        return isset($this->associationByClasses[$class]);
+        if (isset($this->associationByClasses[$class])) {
+            return true;
+        }
+        foreach (class_parents($class) as $parent) {
+            if (isset($this->associationByClasses[$parent])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
