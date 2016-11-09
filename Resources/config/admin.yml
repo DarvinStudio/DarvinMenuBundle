@@ -29,6 +29,8 @@ services:
         class: "%darvin_menu.admin.form_type.menu.class%"
         arguments:
             - "@darvin_menu.configuration.menu"
+            - "@darvin_admin.metadata.manager"
+            - "@request_stack"
         tags:
             - { name: form.type }
 
