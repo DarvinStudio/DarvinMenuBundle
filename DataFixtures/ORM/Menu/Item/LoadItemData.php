@@ -132,6 +132,10 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
      */
     private function getFakerLocales()
     {
+        if ($this->container->hasParameter('faker_locales')) {
+            return $this->container->getParameter('faker_locales');
+        }
+
         $locales = [];
 
         foreach ($this->container->getParameter('locales') as $locale) {
