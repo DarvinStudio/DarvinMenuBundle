@@ -45,7 +45,11 @@ class HidePropertyAccessor
      */
     public function setHidden($associated, $hidden)
     {
-        $this->genericPropertyAccessor->setValue($associated, $this->getHideProperty($associated), $hidden);
+        $property = $this->getHideProperty($associated);
+
+        if (!empty($property)) {
+            $this->genericPropertyAccessor->setValue($associated, $property, $hidden);
+        }
     }
 
     /**
@@ -55,7 +59,11 @@ class HidePropertyAccessor
      */
     public function isHidden($associated)
     {
-        return $this->genericPropertyAccessor->getValue($associated, $this->getHideProperty($associated));
+        $property = $this->getHideProperty($associated);
+
+        return !empty($property)
+            ? $this->genericPropertyAccessor->getValue($associated, $property)
+            : false;
     }
 
     /**
