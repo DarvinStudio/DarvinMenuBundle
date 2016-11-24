@@ -154,10 +154,13 @@ class Builder
     {
         $title = $menuItem->getTitle();
         $url = $menuItem->getUrl();
+        $label = !empty($title) ? $title : $url;
+        $options['label'] = $label;
 
         if (!empty($url)) {
-            return $this->genericItemFactory->createItem(!empty($title) ? $title : $url, [
-                'uri' => $url,
+            return $this->genericItemFactory->createItem($menuItem->getId(), [
+                'label' => $label,
+                'uri'   => $url,
             ]);
         }
 
@@ -179,10 +182,6 @@ class Builder
             $options['force_add_children'] || ($menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1)),
             $options
         );
-
-        if (!empty($title)) {
-            $item->setName($title);
-        }
 
         return $item;
     }
