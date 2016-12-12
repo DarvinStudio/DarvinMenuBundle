@@ -45,8 +45,12 @@ form:
             position:     ~
             enabled:      ~
             showChildren: ~
-            title:        ~
-            url:          ~
+            title:
+                options:
+                    required: false
+            url:
+                options:
+                    required: false
     filter:
         fields:
             positionFrom: ~
