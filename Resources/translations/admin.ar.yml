@@ -1,0 +1,42 @@
+loggable:
+    menu_item: 'عنصر القائمة'
+    menu_item_translation: 'عنصر القائمة (الترجمة)'
+menu:
+    group:
+        menu:
+            title: القائمة
+menu_item:
+    action:
+        delete:
+            confirm: 'التأكد من إزالة عنصر القائمة'
+            submit: 'إزالة عنصر القائمة'
+            success: 'عنصر القائمة إزالة بنجاح'
+        edit:
+            link: 'تحرير عنصر القائمة'
+            success: 'عنصر القائمة تحديثها بنجاح'
+            title: 'تحرير عنصر القائمة "%الكيان%"'
+        index:
+            link: القائمة
+            title: 'عناصر القائمة'
+        new:
+            link: 'إنشاء عنصر القائمة'
+            success: 'عنصر القائمة بنجاح إنشاء'
+            title: 'عنصر القائمة الجديدة'
+        show:
+            title: 'عنصر القائمة "%الكيان%"'
+    entity:
+        associated: وجوه
+        associated_class: وجوه
+        enabled: تمكين
+        menu: القائمة
+        menu_title: القائمة
+        position: موقف
+        position_from: 'موقف (من)'
+        position_to: 'موقف ()'
+        show_children: 'تظهر الأطفال'
+        title: العنوان
+        url: URL
+searchable:
+    menu_item: 'عناصر القائمة'
+securable:
+    menu_item: 'عنصر القائمة'
