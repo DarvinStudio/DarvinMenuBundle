@@ -1,0 +1,42 @@
+loggable:
+    menu_item: 'Élément de Menu'
+    menu_item_translation: 'Élément de Menu (traduction)'
+menu:
+    group:
+        menu:
+            title: Menu
+menu_item:
+    action:
+        delete:
+            confirm: 'Confirmer l''élément de menu de suppression'
+            submit: 'Supprimer l''élément de menu'
+            success: 'Élément de Menu supprimé avec succès'
+        edit:
+            link: 'Modifier l''élément de menu'
+            success: 'Élément de Menu mis à jour avec succès'
+            title: 'Modifier l''élément de menu "%entity%"'
+        index:
+            link: Menu
+            title: 'Les éléments de Menu'
+        new:
+            link: 'Créer l''élément de menu'
+            success: 'Élément de Menu créé avec succès'
+            title: 'Nouvel élément de menu'
+        show:
+            title: 'Élément de Menu "%entity%"'
+    entity:
+        associated: Objet
+        associated_class: Objet
+        enabled: Activé
+        menu: Menu
+        menu_title: Menu
+        position: Position
+        position_from: 'Position (à partir de)'
+        position_to: 'Position ()'
+        show_children: 'Montrer aux enfants'
+        title: Titre
+        url: URL
+searchable:
+    menu_item: 'Les éléments de Menu'
+securable:
+    menu_item: 'Élément de Menu'
