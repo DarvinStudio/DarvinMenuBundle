@@ -14,7 +14,7 @@ menu_item:
         edit:
             link: 'تحرير عنصر القائمة'
             success: 'عنصر القائمة تحديثها بنجاح'
-            title: 'تحرير عنصر القائمة "%الكيان%"'
+            title: 'تحرير عنصر القائمة "%entity%"'
         index:
             link: القائمة
             title: 'عناصر القائمة'
@@ -23,7 +23,7 @@ menu_item:
             success: 'عنصر القائمة بنجاح إنشاء'
             title: 'عنصر القائمة الجديدة'
         show:
-            title: 'عنصر القائمة "%الكيان%"'
+            title: 'عنصر القائمة "%entity%"'
     entity:
         associated: وجوه
         associated_class: وجوه
