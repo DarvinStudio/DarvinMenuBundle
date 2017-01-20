@@ -1,6 +1,9 @@
 index_view_new_form: true
 menu:
     skip: true
+joins:
+    image:       image
+    image_sizes: image.sizes
 order_by:
     menu:     asc
     position: asc
@@ -22,20 +25,30 @@ view:
             menuTitle:    ~
             enabled:      ~
             showChildren: ~
+            title:        ~
             associated:
                 widget:
                     alias: menu_associated
-            title: ~
-            url:   ~
+            url: ~
+            image:
+                widget:
+                    alias: image_link
+                    options:
+                        property: image
+            hoverImage:
+                widget:
+                    alias: image_link
+                    options:
+                        property: hoverImage
     show:
         fields:
             menuTitle:    ~
             enabled:      ~
             showChildren: ~
+            title:        ~
             associated:
                 widget:
                     alias: menu_associated
-            title: ~
             url:
                 widget:
                     alias: simple_link
@@ -45,12 +58,6 @@ form:
             position:     ~
             enabled:      ~
             showChildren: ~
-            title:
-                options:
-                    required: false
-            url:
-                options:
-                    required: false
     filter:
         fields:
             positionFrom: ~
@@ -59,10 +66,10 @@ form:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             enabled:      ~
             showChildren: ~
-            associatedClass:
-                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedClassType
             title:
                 compare_strict: false
+            associatedClass:
+                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedClassType
             url:
                 compare_strict: false
     edit:
@@ -84,6 +91,14 @@ form:
                             attr:
                                 autofocus: true
                         url: ~
+            image:
+                type: Darvin\ImageBundle\Form\Type\Image\ImageType
+                options:
+                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
+            hoverImage:
+                type: Darvin\ImageBundle\Form\Type\Image\ImageType
+                options:
+                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
     new:
         fields:
             menu:
@@ -101,3 +116,11 @@ form:
                         enabled: ~
                         title:   ~
                         url:     ~
+            image:
+                type: Darvin\ImageBundle\Form\Type\Image\ImageType
+                options:
+                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
+            hoverImage:
+                type: Darvin\ImageBundle\Form\Type\Image\ImageType
+                options:
+                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
