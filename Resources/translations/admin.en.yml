@@ -30,6 +30,7 @@ menu_item:
         associated:       Object
         associated_class: Object
         enabled:          Enabled
+        hover_image:      Hover image
         image:            Image
         menu:             Menu
         menu_title:       Menu

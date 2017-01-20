@@ -28,6 +28,7 @@ menu_item:
         associated: Objet
         associated_class: Objet
         enabled: Activé
+        hover_image: 'Survolez l''image'
         image: Image
         menu: Menu
         menu_title: Menu

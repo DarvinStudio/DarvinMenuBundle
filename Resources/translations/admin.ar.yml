@@ -28,6 +28,7 @@ menu_item:
         associated: وجوه
         associated_class: وجوه
         enabled: تمكين
+        hover_image: 'صورة تحوم'
         image: 'صورة'
         menu: القائمة
         menu_title: القائمة

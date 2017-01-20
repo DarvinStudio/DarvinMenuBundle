@@ -28,6 +28,7 @@ menu_item:
         associated: 对象
         associated_class: 对象
         enabled: 启用
+        hover_image: 悬停的图像
         image: 图像
         menu: 菜单
         menu_title: 菜单
