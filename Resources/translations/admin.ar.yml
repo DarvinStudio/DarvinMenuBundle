@@ -28,6 +28,7 @@ menu_item:
         associated: وجوه
         associated_class: وجوه
         enabled: تمكين
+        image: 'صورة'
         menu: القائمة
         menu_title: القائمة
         position: موقف

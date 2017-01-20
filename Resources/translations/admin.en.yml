@@ -30,6 +30,7 @@ menu_item:
         associated:       Object
         associated_class: Object
         enabled:          Enabled
+        image:            Image
         menu:             Menu
         menu_title:       Menu
         position:         Position

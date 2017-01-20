@@ -28,6 +28,7 @@ menu_item:
         associated: Objet
         associated_class: Objet
         enabled: Activé
+        image: Image
         menu: Menu
         menu_title: Menu
         position: Position
