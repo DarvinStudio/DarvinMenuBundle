@@ -161,7 +161,7 @@ class Builder
             return $this->genericItemFactory->createItem($menuItem->getId(), [
                 'label' => $label,
                 'uri'   => $url,
-            ]);
+            ])->setExtras($this->getDefaultItemExtras($menuItem));
         }
 
         $associated = $menuItem->getAssociatedInstance();
@@ -182,8 +182,22 @@ class Builder
             $options['force_add_children'] || ($menuItem->isShowChildren() && (null === $options['depth'] || $options['depth'] > 1)),
             $options
         );
+        $item->setExtras(array_merge($this->getDefaultItemExtras($menuItem), $item->getExtras()));
 
         return $item;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
+     *
+     * @return array
+     */
+    protected function getDefaultItemExtras(Item $menuItem)
+    {
+        return [
+            'image'       => $menuItem->getImage(),
+            'hover_image' => $menuItem->getHoverImage(),
+        ];
     }
 
     /**
