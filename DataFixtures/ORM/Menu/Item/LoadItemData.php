@@ -10,14 +10,17 @@
 
 namespace Darvin\MenuBundle\DataFixtures\ORM\Menu\Item;
 
+use Andyftw\Faker\ImageProvider;
 use Darvin\MenuBundle\Association\Associated;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Entity\Menu\ItemTranslation;
+use Darvin\MenuBundle\Entity\Menu\MenuItemImage;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Menu item data fixture
@@ -84,6 +87,8 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
         $faker = $this->getFaker();
 
         $item = (new Item())
+            ->setImage($faker->boolean(80) ? $this->createMenuItemImage() : null)
+            ->setHoverImage($faker->boolean(80) ? $this->createMenuItemHoverImage() : null)
             ->setShowChildren($faker->boolean());
 
         foreach ($fakerLocales as $locale => $fakerLocale) {
@@ -94,6 +99,26 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
         }
 
         return $item->setMenu($menuAlias);
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     */
+    private function createMenuItemImage()
+    {
+        $pathname = $this->getFaker()->imageFile();
+
+        return !empty($pathname) ? (new MenuItemImage())->setFile(new UploadedFile($pathname, $pathname, null, null, null, true)) : null;
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     */
+    private function createMenuItemHoverImage()
+    {
+        $pathname = $this->getFaker()->imageFile();
+
+        return !empty($pathname) ? (new MenuItemImage())->setFile(new UploadedFile($pathname, $pathname, null, null, null, true)) : null;
     }
 
     /**
@@ -121,7 +146,9 @@ class LoadItemData implements ContainerAwareInterface, FixtureInterface
     private function getFaker($fakerLocale = Factory::DEFAULT_LOCALE)
     {
         if (!isset($this->fakers[$fakerLocale])) {
-            $this->fakers[$fakerLocale] = Factory::create($fakerLocale);
+            $faker = Factory::create($fakerLocale);
+            $faker->addProvider(new ImageProvider($faker));
+            $this->fakers[$fakerLocale] = $faker;
         }
 
         return $this->fakers[$fakerLocale];
