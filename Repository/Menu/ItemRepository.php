@@ -30,6 +30,8 @@ class ItemRepository extends EntityRepository
             ->addSelect('translation')
             ->innerJoin('o.translations', 'translation');
         $this
+            ->joinImage($qb)
+            ->joinHoverImage($qb)
             ->addMenuFilter($qb, $menu)
             ->addTranslationEnabledFilter($qb)
             ->addTranslationLocaleFilter($qb, $locale);
@@ -70,6 +72,38 @@ class ItemRepository extends EntityRepository
             ->addAssociatedIdFilter($qb, $associatedId);
 
         return $qb;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     *
+     * @return ItemRepository
+     */
+    private function joinImage(QueryBuilder $qb)
+    {
+        $qb
+            ->addSelect('image')
+            ->addSelect('image_sizes')
+            ->leftJoin('o.image', 'image')
+            ->leftJoin('image.sizes', 'image_sizes');
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     *
+     * @return ItemRepository
+     */
+    private function joinHoverImage(QueryBuilder $qb)
+    {
+        $qb
+            ->addSelect('hover_image')
+            ->addSelect('hover_image_sizes')
+            ->leftJoin('o.hoverImage', 'hover_image')
+            ->leftJoin('hover_image.sizes', 'hover_image_sizes');
+
+        return $this;
     }
 
     /**
