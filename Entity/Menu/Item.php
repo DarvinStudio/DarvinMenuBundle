@@ -49,6 +49,24 @@ class Item
     private $id;
 
     /**
+     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     *
+     * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
+     *
+     * @Assert\Valid
+     */
+    private $image;
+
+    /**
+     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     *
+     * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
+     *
+     * @Assert\Valid
+     */
+    private $hoverImage;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string")
@@ -167,6 +185,46 @@ class Item
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage $image image
+     *
+     * @return Item
+     */
+    public function setImage(MenuItemImage $image = null)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage $hoverImage hoverImage
+     *
+     * @return Item
+     */
+    public function setHoverImage(MenuItemImage $hoverImage = null)
+    {
+        $this->hoverImage = $hoverImage;
+
+        return $this;
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     */
+    public function getHoverImage()
+    {
+        return $this->hoverImage;
     }
 
     /**
