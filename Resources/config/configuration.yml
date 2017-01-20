@@ -1,9 +1,18 @@
 parameters:
+    darvin_menu.configuration.class: Darvin\MenuBundle\Configuration\Configuration
+
     darvin_menu.configuration.association.class: Darvin\MenuBundle\Configuration\AssociationConfiguration
 
     darvin_menu.configuration.menu.class: Darvin\MenuBundle\Configuration\MenuConfiguration
 
 services:
+    darvin_menu.configuration:
+        class:  "%darvin_menu.configuration.class%"
+        public: false
+        tags:
+            - { name: darvin_config.configuration }
+            - { name: darvin_image.configuration }
+
     darvin_menu.configuration.association:
         class: "%darvin_menu.configuration.association.class%"
         arguments:
