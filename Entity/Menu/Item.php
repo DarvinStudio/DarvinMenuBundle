@@ -52,6 +52,7 @@ class Item
      * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
      *
      * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      *
      * @Assert\Valid
      */
@@ -61,6 +62,7 @@ class Item
      * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
      *
      * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      *
      * @Assert\Valid
      */
