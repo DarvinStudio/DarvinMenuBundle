@@ -1,3 +1,12 @@
+configuration:
+    darvin_menu:
+        parameter:
+            image_sizes: 'Les tailles d''Image'
+        title: Le "Menu" configuration du module
+image_size:
+    menu:
+        menu_item_hover_image: 'Élément de Menu hover image'
+        menu_item_image: 'Élément de Menu de l''image'
 loggable:
     menu_item: 'Élément de Menu'
     menu_item_translation: 'Élément de Menu (traduction)'

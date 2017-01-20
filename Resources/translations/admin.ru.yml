@@ -1,3 +1,14 @@
+configuration:
+    darvin_menu:
+        parameter:
+            image_sizes: Размеры изображений
+        title: Настройки модуля «Меню»
+
+image_size:
+    menu:
+        menu_item_hover_image: Изображение пункта меню при наведении
+        menu_item_image:       Изображение пункта меню
+
 loggable:
     menu_item:             Пункт меню
     menu_item_translation: Пункт меню (перевод)

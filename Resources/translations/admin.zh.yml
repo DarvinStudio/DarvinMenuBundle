@@ -1,3 +1,12 @@
+configuration:
+    darvin_menu:
+        parameter:
+            image_sizes: 图像大小
+        title: '"菜单"模块结构'
+image_size:
+    menu:
+        menu_item_hover_image: 菜单项悬停的图像
+        menu_item_image: 菜单项的图像
 loggable:
     menu_item: 菜单项
     menu_item_translation: 菜单项目(翻译)

@@ -1,3 +1,12 @@
+configuration:
+    darvin_menu:
+        parameter:
+            image_sizes: 'أحجام الصور'
+        title: '"القائمة" وحدة التكوين'
+image_size:
+    menu:
+        menu_item_hover_image: 'عنصر القائمة تحوم صورة'
+        menu_item_image: 'عنصر القائمة صورة'
 loggable:
     menu_item: 'عنصر القائمة'
     menu_item_translation: 'عنصر القائمة (الترجمة)'
