@@ -97,7 +97,7 @@ class AssociatedWidget extends AbstractWidget
     protected function getAllowedEntityClasses()
     {
         return [
-            Item::ITEM_CLASS,
+            Item::class,
         ];
     }
 

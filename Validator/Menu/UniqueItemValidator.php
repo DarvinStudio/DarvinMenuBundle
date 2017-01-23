@@ -44,7 +44,7 @@ class UniqueItemValidator extends UniqueEntityValidator
     {
         if (!$item instanceof Item) {
             throw new ValidatorException(
-                sprintf('Validated entity must be instance of "%s", got instance of "%s".', Item::ITEM_CLASS, get_class($item))
+                sprintf('Validated entity must be instance of "%s", got instance of "%s".', Item::class, get_class($item))
             );
         }
         if (!empty($constraint->errorPath)) {

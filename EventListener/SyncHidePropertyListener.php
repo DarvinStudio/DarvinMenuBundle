@@ -190,7 +190,7 @@ class SyncHidePropertyListener
      */
     private function getMenuItemRepository()
     {
-        return $this->em->getRepository(Item::ITEM_CLASS);
+        return $this->em->getRepository(Item::class);
     }
 
     /**

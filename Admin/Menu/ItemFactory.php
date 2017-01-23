@@ -56,7 +56,7 @@ class ItemFactory implements ItemFactoryInterface
     {
         $items = [];
 
-        $filterFormTypeName = $this->metadataManager->getMetadata(Item::ITEM_CLASS)->getFilterFormTypeName();
+        $filterFormTypeName = $this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName();
 
         foreach ($this->menuConfig->getMenus() as $menu) {
             $items[] = $this->createItem($menu, $filterFormTypeName);
@@ -75,10 +75,10 @@ class ItemFactory implements ItemFactoryInterface
     {
         return (new \Darvin\AdminBundle\Menu\Item('menu_'.$menu->getAlias()))
             ->setIndexTitle($menu->getTitle())
-            ->setIndexUrl($this->adminRouter->generate(null, Item::ITEM_CLASS, AdminRouter::TYPE_INDEX, [
+            ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouter::TYPE_INDEX, [
                 $filterFormTypeName.'[menu]' => $menu->getAlias(),
             ]))
-            ->setAssociatedObject(Item::ITEM_CLASS)
+            ->setAssociatedObject(Item::class)
             ->setParentName('menu');
     }
 }

@@ -22,8 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MenuType extends AbstractType
 {
-    const MENU_TYPE_CLASS = __CLASS__;
-
     /**
      * @var \Darvin\MenuBundle\Configuration\MenuConfiguration
      */
@@ -96,7 +94,7 @@ class MenuType extends AbstractType
             return null;
         }
 
-        $filterData = $request->query->get($this->metadataManager->getMetadata(Item::ITEM_CLASS)->getFilterFormTypeName());
+        $filterData = $request->query->get($this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName());
 
         return isset($filterData['menu']) ? $filterData['menu'] : null;
     }

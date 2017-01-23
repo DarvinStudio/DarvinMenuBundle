@@ -37,8 +37,6 @@ class Item
 {
     use TranslatableTrait;
 
-    const ITEM_CLASS = __CLASS__;
-
     /**
      * @var int
      *
