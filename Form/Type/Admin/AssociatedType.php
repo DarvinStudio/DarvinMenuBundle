@@ -14,6 +14,7 @@ use Darvin\MenuBundle\Configuration\AssociationConfiguration;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\AssociatedTransformer;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -50,7 +51,7 @@ class AssociatedType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('alias', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', [
+            ->add('alias', ChoiceType::class, [
                 'label'             => 'menu_item.entity.associated',
                 'choices'           => $this->buildAliasChoices(),
                 'choices_as_values' => true,

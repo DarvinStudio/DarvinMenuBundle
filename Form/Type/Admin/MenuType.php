@@ -14,6 +14,7 @@ use Darvin\AdminBundle\Metadata\MetadataManager;
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -66,7 +67,7 @@ class MenuType extends AbstractType
      */
     public function getParent()
     {
-        return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
+        return ChoiceType::class;
     }
 
     /**

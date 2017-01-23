@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\DependencyInjection;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -55,7 +56,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->scalarNode('item_factory')->isRequired()->cannotBeEmpty()->end()
                             ->scalarNode('hide_property')->defaultNull()->end()
-                            ->scalarNode('form_type')->defaultValue('Symfony\Bridge\Doctrine\Form\Type\EntityType');
+                            ->scalarNode('form_type')->defaultValue(EntityType::class);
 
         return $treeBuilder;
     }

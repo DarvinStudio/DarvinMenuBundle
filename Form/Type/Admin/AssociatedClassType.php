@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\MenuBundle\Configuration\AssociationConfiguration;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\AssociatedClassTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -58,7 +59,7 @@ class AssociatedClassType extends AbstractType
      */
     public function getParent()
     {
-        return 'Symfony\Component\Form\Extension\Core\Type\ChoiceType';
+        return ChoiceType::class;
     }
 
     /**
