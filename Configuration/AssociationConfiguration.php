@@ -117,6 +117,14 @@ class AssociationConfiguration
     }
 
     /**
+     * @return string[]
+     */
+    public function getAssociationClasses()
+    {
+        return array_keys($this->associationByClasses);
+    }
+
+    /**
      * @return \Darvin\MenuBundle\Configuration\Association[]
      */
     public function getAssociations()
