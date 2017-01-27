@@ -60,7 +60,7 @@ class Association
         $this->hideProperty = $hideProperty;
         $this->formType = $formType;
 
-        $this->title = 'menu_association.'.$alias;
+        $this->title = 'entity_name.single.'.$alias;
     }
 
     /**

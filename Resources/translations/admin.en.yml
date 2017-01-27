@@ -4,14 +4,17 @@ configuration:
             image_sizes: Image sizes
         title: The "Menu" module configuration
 
+entity_name:
+    multiple:
+        menu_item: Menu items
+    single:
+        menu_item:             Menu item
+        menu_item_translation: Menu item (translation)
+
 image_size:
     menu:
         menu_item_hover_image: Menu item hover image
         menu_item_image:       Menu item image
-
-loggable:
-    menu_item:             Menu item
-    menu_item_translation: Menu item (translation)
 
 menu:
     group:
@@ -51,9 +54,3 @@ menu_item:
         show_children:    Show children
         title:            Title
         url:              URL
-
-searchable:
-    menu_item: Menu items
-
-securable:
-    menu_item: Menu item
