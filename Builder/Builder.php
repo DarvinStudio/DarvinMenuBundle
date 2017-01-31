@@ -207,6 +207,7 @@ class Builder
      */
     protected function getMenuItems($locale)
     {
+        /** @var \Darvin\MenuBundle\Entity\Menu\Item[] $menuItems */
         $menuItems = $this->menuItemRepository->getByMenuEnabledBuilder($this->menuAlias, $locale)->getQuery()->getResult();
 
         $translationJoiner = $this->translationJoiner;
@@ -216,6 +217,18 @@ class Builder
                 $translationJoiner->joinTranslation($qb, true, $locale, null, true);
             }
         });
+
+        $associatedInstances = [];
+
+        foreach ($menuItems as $menuItem) {
+            $associatedClass = $menuItem->getAssociatedClass();
+
+            if (!empty($associatedClass) && $this->customObjectLoader->customObjectsLoadable($associatedClass)) {
+                $associatedInstances[] = $menuItem->getAssociatedInstance();
+            }
+        }
+
+        $this->customObjectLoader->loadCustomObjects($associatedInstances);
 
         return $menuItems;
     }
