@@ -15,6 +15,9 @@ use Darvin\MenuBundle\Configuration\MenuConfiguration;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -53,12 +56,40 @@ class MenuType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $metadataManager = $this->metadataManager;
+        $requestStack = $this->requestStack;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($metadataManager, $requestStack) {
+            $data = $event->getData();
+
+            if (!empty($data)) {
+                return;
+            }
+
+            $request = $requestStack->getCurrentRequest();
+
+            if (empty($request)) {
+                return;
+            }
+
+            $filterData = $request->query->get($metadataManager->getMetadata(Item::class)->getFilterFormTypeName());
+
+            if (isset($filterData['menu'])) {
+                $event->setData($filterData['menu']);
+            }
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'choices'           => $this->buildChoices(),
             'choices_as_values' => true,
-            'data'              => $this->getData(),
         ]);
     }
 
@@ -82,21 +113,5 @@ class MenuType extends AbstractType
         }
 
         return $choices;
-    }
-
-    /**
-     * @return string
-     */
-    private function getData()
-    {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (empty($request)) {
-            return null;
-        }
-
-        $filterData = $request->query->get($this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName());
-
-        return isset($filterData['menu']) ? $filterData['menu'] : null;
     }
 }
