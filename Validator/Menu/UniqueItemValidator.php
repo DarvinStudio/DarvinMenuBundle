@@ -52,13 +52,16 @@ class UniqueItemValidator extends UniqueEntityValidator
         }
 
         $associatedClass = $item->getAssociatedClass();
+        $associatedId = $item->getAssociatedId();
 
-        if (!empty($associatedClass)) {
-            $constraint->errorPath = sprintf(
-                'associated[associated_%s]',
-                $this->associationConfig->getAssociationByClass($associatedClass)->getAlias()
-            );
+        if (empty($associatedClass) || empty($associatedId)) {
+            return;
         }
+
+        $constraint->errorPath = sprintf(
+            'associated[associated_%s]',
+            $this->associationConfig->getAssociationByClass($associatedClass)->getAlias()
+        );
 
         parent::validate($item, $constraint);
     }
