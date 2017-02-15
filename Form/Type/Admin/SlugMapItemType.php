@@ -14,6 +14,7 @@ use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
+use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
@@ -113,6 +114,8 @@ class SlugMapItemType extends AbstractType
                 $i++;
             }
         }
+
+        $builder->addModelTransformer(new SlugMapItemToArrayTransformer($this->entityNamer));
     }
 
     /**
