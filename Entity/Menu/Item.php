@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Entity\Menu;
 
+use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +33,14 @@ class Item
      * @ORM\Id
      */
     private $id;
+
+    /**
+     * @var \Darvin\ContentBundle\Entity\SlugMapItem
+     *
+     * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\SlugMapItem")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $slugMapItem;
 
     /**
      * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
@@ -99,6 +108,26 @@ class Item
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem slugMapItem
+     *
+     * @return Item
+     */
+    public function setSlugMapItem(SlugMapItem $slugMapItem = null)
+    {
+        $this->slugMapItem = $slugMapItem;
+
+        return $this;
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem
+     */
+    public function getSlugMapItem()
+    {
+        return $this->slugMapItem;
     }
 
     /**
