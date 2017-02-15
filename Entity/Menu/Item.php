@@ -11,11 +11,7 @@
 namespace Darvin\MenuBundle\Entity\Menu;
 
 use Darvin\ContentBundle\Traits\TranslatableTrait;
-use Darvin\MenuBundle\Association\Associated;
-use Darvin\Utils\Mapping\Annotation as Darvin;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Bridge\Doctrine\Validator\Constraints as Doctrine;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -23,15 +19,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\Menu\ItemRepository")
  * @ORM\Table(name="menu_item")
- *
- * @Doctrine\UniqueEntity(fields={"menu", "associatedClass", "associatedId"}, service="darvin_menu.unique_menu_item")
- *
- * @Gedmo\Loggable(logEntryClass="Darvin\AdminBundle\Entity\LogEntry")
- *
- * @method void   setEnabled(\bool $enabled)
- * @method bool   isEnabled()
- * @method string getTitle()
- * @method string getUrl()
  */
 class Item
 {
@@ -72,9 +59,6 @@ class Item
      * @ORM\Column(type="string")
      *
      * @Assert\NotBlank
-     *
-     * @Gedmo\SortableGroup
-     * @Gedmo\Versioned
      */
     private $menu;
 
@@ -82,44 +66,8 @@ class Item
      * @var bool
      *
      * @ORM\Column(type="boolean")
-     *
-     * @Gedmo\Versioned
      */
     private $showChildren;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @Gedmo\Versioned
-     */
-    private $associatedClass;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @Gedmo\Versioned
-     */
-    private $associatedId;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     *
-     * @Gedmo\SortablePosition
-     */
-    private $position;
-
-    /**
-     * @var object
-     *
-     * @Darvin\CustomObject(classPropertyPath="associatedClass", initPropertyValuePath="associatedId")
-     */
-    private $associatedInstance;
 
     /**
      * Constructor
@@ -132,51 +80,9 @@ class Item
     /**
      * @return string
      */
-    public function __toString()
-    {
-        $title = $this->getTitle();
-
-        if (!empty($title)) {
-            return $title;
-        }
-        if (!empty($this->associatedInstance)) {
-            $string = (string) $this->associatedInstance;
-
-            if (!empty($string)) {
-                return $string;
-            }
-        }
-
-        return (string) $this->id;
-    }
-
-    /**
-     * @return string
-     */
     public function getMenuTitle()
     {
         return 'menu.'.$this->menu;
-    }
-
-    /**
-     * @param \Darvin\MenuBundle\Association\Associated $associated Associated
-     *
-     * @return Item
-     */
-    public function setAssociated(Associated $associated = null)
-    {
-        $this->associatedClass = !empty($associated) ? $associated->getClass() : null;
-        $this->associatedId = !empty($associated) ? $associated->getId() : null;
-
-        return $this;
-    }
-
-    /**
-     * @return \Darvin\MenuBundle\Association\Associated
-     */
-    public function getAssociated()
-    {
-        return new Associated($this->associatedClass, $this->associatedId);
     }
 
     /**
@@ -265,85 +171,5 @@ class Item
     public function isShowChildren()
     {
         return $this->showChildren;
-    }
-
-    /**
-     * @param string $associatedClass associatedClass
-     *
-     * @return Item
-     */
-    public function setAssociatedClass($associatedClass)
-    {
-        $this->associatedClass = $associatedClass;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAssociatedClass()
-    {
-        return $this->associatedClass;
-    }
-
-    /**
-     * @param string $associatedId associatedId
-     *
-     * @return Item
-     */
-    public function setAssociatedId($associatedId)
-    {
-        $this->associatedId = $associatedId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAssociatedId()
-    {
-        return $this->associatedId;
-    }
-
-    /**
-     * @param int $position position
-     *
-     * @return Item
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param object $associatedInstance associatedInstance
-     *
-     * @return Item
-     */
-    public function setAssociatedInstance($associatedInstance)
-    {
-        $this->associatedInstance = $associatedInstance;
-
-        return $this;
-    }
-
-    /**
-     * @return object
-     */
-    public function getAssociatedInstance()
-    {
-        return $this->associatedInstance;
     }
 }
