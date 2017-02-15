@@ -11,9 +11,12 @@
 namespace Darvin\MenuBundle\Builder;
 
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
+use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
+use Darvin\Utils\Locale\LocaleProviderInterface;
+use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Knp\Menu\ItemInterface;
 
 /**
  * Builder
@@ -28,14 +31,19 @@ class Builder
     private $customObjectLoader;
 
     /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
      * @var \Knp\Menu\FactoryInterface
      */
     private $genericItemFactory;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\RequestStack
+     * @var \Darvin\Utils\Locale\LocaleProviderInterface
      */
-    private $requestStack;
+    private $localeProvider;
 
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
@@ -49,21 +57,24 @@ class Builder
 
     /**
      * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface        $customObjectLoader Custom object loader
+     * @param \Doctrine\ORM\EntityManager                                   $em                 Entity manager
      * @param \Knp\Menu\FactoryInterface                                    $genericItemFactory Generic item factory
-     * @param \Symfony\Component\HttpFoundation\RequestStack                $requestStack       Request stack
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider     Locale provider
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner  Translation joiner
      * @param string                                                        $menuAlias          Menu alias
      */
     public function __construct(
         CustomObjectLoaderInterface $customObjectLoader,
+        EntityManager $em,
         FactoryInterface $genericItemFactory,
-        RequestStack $requestStack,
+        LocaleProviderInterface $localeProvider,
         TranslationJoinerInterface $translationJoiner,
         $menuAlias
     ) {
         $this->customObjectLoader = $customObjectLoader;
+        $this->em = $em;
         $this->genericItemFactory = $genericItemFactory;
-        $this->requestStack = $requestStack;
+        $this->localeProvider = $localeProvider;
         $this->translationJoiner = $translationJoiner;
         $this->menuAlias = $menuAlias;
     }
@@ -75,6 +86,62 @@ class Builder
     {
         $root = $this->genericItemFactory->createItem($this->menuAlias);
 
+        $entities = $this->getEntities();
+
+        $this->addItems($root, $entities);
+
         return $root;
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface               $root     Root menu item
+     * @param \Darvin\MenuBundle\Entity\Menu\Item[] $entities Menu item entities
+     */
+    private function addItems(ItemInterface $root, array $entities)
+    {
+        /** @var \Knp\Menu\ItemInterface[] $items */
+        $items = [];
+
+        foreach ($entities as $entity) {
+            $item = $this->createItem($entity);
+            $items[$entity->getId()] = $item;
+
+            if (null === $entity->getParent()) {
+                $root->addChild($item);
+
+                continue;
+            }
+            if (isset($items[$entity->getParent()->getId()])) {
+                $items[$entity->getParent()->getId()]->addChild($item);
+            }
+        }
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $entity Menu item entity
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function createItem(Item $entity)
+    {
+        return $this->genericItemFactory->createItem($entity->getId());
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     */
+    private function getEntities()
+    {
+        return $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale())
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
+     */
+    private function getEntityRepository()
+    {
+        return $this->em->getRepository(Item::class);
     }
 }

@@ -24,54 +24,17 @@ class ItemRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getByMenuEnabledBuilder($menu, $locale)
-    {
-        $qb = $this->createDefaultQueryBuilder()
-            ->addSelect('translation')
-            ->innerJoin('o.translations', 'translation');
-        $this
-            ->joinImage($qb)
-            ->joinHoverImage($qb)
-            ->addMenuFilter($qb, $menu)
-            ->addTranslationEnabledFilter($qb)
-            ->addTranslationLocaleFilter($qb, $locale);
-
-        return $qb;
-    }
-
-    /**
-     * @param string $associatedClass   Associated class
-     * @param string $associatedId      Associated ID
-     * @param string $currentMenu       Current menu alias
-     * @param int    $currentMenuItemId Current menu item ID
-     *
-     * @return bool
-     */
-    public function isAssociatedInOtherMenus($associatedClass, $associatedId, $currentMenu, $currentMenuItemId)
-    {
-        $qb = $this->getByAssociatedBuilder($associatedClass, $associatedId)
-            ->select('COUNT(o)');
-        $this
-            ->addNotMenuFilter($qb, $currentMenu)
-            ->addNotIdFilter($qb, $currentMenuItemId);
-
-        return $qb->getQuery()->getSingleScalarResult() > 0;
-    }
-
-    /**
-     * @param string $associatedClass Associated class
-     * @param string $associatedId    Associated ID
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getByAssociatedBuilder($associatedClass, $associatedId)
+    public function getForMenuBuilder($menu, $locale)
     {
         $qb = $this->createDefaultQueryBuilder();
         $this
-            ->addAssociatedClassFilter($qb, $associatedClass)
-            ->addAssociatedIdFilter($qb, $associatedId);
+            ->joinTranslations($qb, $locale, false)
+            ->addEnabledFilter($qb)
+            ->addMenuFilter($qb, $menu);
 
-        return $qb;
+        return $qb
+            ->andWhere('o.slugMapItem IS NOT NULL OR (translations.url IS NOT NULL AND translations.title IS NOT NULL)')
+            ->orderBy('o.level');
     }
 
     /**
@@ -107,27 +70,34 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb              Query builder
-     * @param string                     $associatedClass Associated class
+     * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
+     * @param string                     $locale    Locale
+     * @param bool                       $addSelect Whether to add select
      *
      * @return ItemRepository
      */
-    private function addAssociatedClassFilter(QueryBuilder $qb, $associatedClass)
+    private function joinTranslations(QueryBuilder $qb, $locale, $addSelect = true)
     {
-        $qb->andWhere('o.associatedClass = :associated_class')->setParameter('associated_class', $associatedClass);
+        $qb
+            ->innerJoin('o.translations', 'translations')
+            ->andWhere('translations.locale = :locale')
+            ->setParameter('locale', $locale);
+
+        if ($addSelect) {
+            $qb->addSelect('translations');
+        }
 
         return $this;
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb           Query builder
-     * @param string                     $associatedId Associated ID
+     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      *
      * @return ItemRepository
      */
-    private function addAssociatedIdFilter(QueryBuilder $qb, $associatedId)
+    private function addEnabledFilter(QueryBuilder $qb)
     {
-        $qb->andWhere('o.associatedId = :associated_id')->setParameter('associated_id', $associatedId);
+        $qb->andWhere('translations.enabled = :translations_enabled')->setParameter('translations_enabled', true);
 
         return $this;
     }
@@ -146,61 +116,10 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
-     * @param int                        $id Menu item ID
-     *
-     * @return ItemRepository
-     */
-    private function addNotIdFilter(QueryBuilder $qb, $id)
-    {
-        $qb->andWhere('o.id != :id')->setParameter('id', $id);
-
-        return $this;
-    }
-
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
-     * @param string                     $menu Menu alias
-     *
-     * @return ItemRepository
-     */
-    private function addNotMenuFilter(QueryBuilder $qb, $menu)
-    {
-        $qb->andWhere('o.menu != :menu')->setParameter('menu', $menu);
-
-        return $this;
-    }
-
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
-     *
-     * @return ItemRepository
-     */
-    private function addTranslationEnabledFilter(QueryBuilder $qb)
-    {
-        $qb->andWhere('translation.enabled = :translation_enabled')->setParameter('translation_enabled', true);
-
-        return $this;
-    }
-
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
-     * @param string                     $locale Locale
-     *
-     * @return ItemRepository
-     */
-    private function addTranslationLocaleFilter(QueryBuilder $qb, $locale)
-    {
-        $qb->andWhere('translation.locale = :translation_locale')->setParameter('translation_locale', $locale);
-
-        return $this;
-    }
-
-    /**
      * @return \Doctrine\ORM\QueryBuilder
      */
     private function createDefaultQueryBuilder()
     {
-        return $this->createQueryBuilder('o')->addOrderBy('o.position');
+        return $this->createQueryBuilder('o');
     }
 }
