@@ -2,34 +2,29 @@ index_view_new_form: true
 menu:
     skip: true
 joins:
-    image:       image
-    image_sizes: image.sizes
+    hover_image:       hoverImage
+    hover_image_sizes: hover_image.sizes
+    image:             image
+    image_sizes:       image.sizes
 order_by:
-    menu:     asc
-    position: asc
+    menu: asc
 searchable_fields:
     - title
     - url
 sortable_fields:
-    position:     ~
     menuTitle:    menu
     enabled:      translations.enabled
     showChildren: ~
-    associated:   associatedClass
     title:        translations.title
     url:          translations.url
 view:
     index:
         fields:
-            position:     ~
             menuTitle:    ~
             enabled:      ~
             showChildren: ~
             title:        ~
-            associated:
-                widget:
-                    alias: menu_associated
-            url: ~
+            url:          ~
             image:
                 widget:
                     alias: image_link
@@ -46,38 +41,28 @@ view:
             enabled:      ~
             showChildren: ~
             title:        ~
-            associated:
-                widget:
-                    alias: menu_associated
             url:
                 widget:
                     alias: simple_link
 form:
     index:
         fields:
-            position:     ~
             enabled:      ~
             showChildren: ~
     filter:
         fields:
-            positionFrom: ~
-            positionTo:   ~
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             enabled:      ~
             showChildren: ~
             title:
                 compare_strict: false
-            associatedClass:
-                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedClassType
             url:
                 compare_strict: false
     edit:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
-            associated:
-                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
             showChildren:
                 options:
                     required: false
@@ -103,8 +88,6 @@ form:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
-            associated:
-                type: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
             showChildren:
                 options:
                     required: false
