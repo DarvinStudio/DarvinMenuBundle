@@ -1,36 +1,29 @@
 parameters:
-    darvin_menu.admin.form_type.associated.class: Darvin\MenuBundle\Form\Type\Admin\AssociatedType
-
-    darvin_menu.admin.form_type.associated_class.class: Darvin\MenuBundle\Form\Type\Admin\AssociatedClassType
-
     darvin_menu.admin.form_type.menu.class: Darvin\MenuBundle\Form\Type\Admin\MenuType
+
+    darvin_menu.admin.form_type.slug_map_item.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemType
 
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
 
     darvin_menu.admin.view_widget.associated.class: Darvin\MenuBundle\Admin\View\AssociatedWidget
 
 services:
-    darvin_menu.admin.form_type.associated:
-        class: "%darvin_menu.admin.form_type.associated.class%"
-        arguments:
-            - "@darvin_menu.configuration.association"
-            - "@doctrine.orm.entity_manager"
-        tags:
-            - { name: form.type }
-
-    darvin_menu.admin.form_type.associated_class:
-        class: "%darvin_menu.admin.form_type.associated_class.class%"
-        arguments:
-            - "@darvin_menu.configuration.association"
-        tags:
-            - { name: form.type }
-
     darvin_menu.admin.form_type.menu:
         class: "%darvin_menu.admin.form_type.menu.class%"
         arguments:
             - "@darvin_menu.configuration.menu"
             - "@darvin_admin.metadata.manager"
             - "@request_stack"
+        tags:
+            - { name: form.type }
+
+    darvin_menu.admin.form_type.slug_map_item:
+        class: "%darvin_menu.admin.form_type.slug_map_item.class%"
+        arguments:
+            - "@darvin_utils.custom_object.loader"
+            - "@doctrine.orm.entity_manager"
+            - "@darvin_admin.entity_namer"
+            - "@darvin_content.translatable.translation_joiner"
         tags:
             - { name: form.type }
 

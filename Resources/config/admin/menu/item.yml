@@ -59,35 +59,12 @@ form:
                 compare_strict: false
             url:
                 compare_strict: false
-    edit:
-        fields:
-            menu:
-                type: Darvin\MenuBundle\Form\Type\Admin\MenuType
-            showChildren:
-                options:
-                    required: false
-            translations:
-                type: A2lix\TranslationFormBundle\Form\Type\TranslationsType
-                options:
-                    label: false
-                    fields:
-                        enabled: ~
-                        title:
-                            attr:
-                                autofocus: true
-                        url: ~
-            image:
-                type: Darvin\ImageBundle\Form\Type\Image\ImageType
-                options:
-                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
-            hoverImage:
-                type: Darvin\ImageBundle\Form\Type\Image\ImageType
-                options:
-                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
     new:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+            slugMapItem:
+                type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemType
             showChildren:
                 options:
                     required: false
