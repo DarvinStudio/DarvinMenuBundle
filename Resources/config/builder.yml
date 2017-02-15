@@ -1,22 +1,12 @@
 parameters:
-    darvin_menu.abstract_builder.class: Darvin\MenuBundle\Builder\Builder
-
-    darvin_menu.abstract_breadcrumbs_builder.class: Darvin\MenuBundle\Builder\BreadcrumbsBuilder
+    darvin_menu.builder.abstract.class: Darvin\MenuBundle\Builder\Builder
 
 services:
-    darvin_menu.abstract_builder:
-        class:    "%darvin_menu.abstract_builder.class%"
+    darvin_menu.builder.abstract:
+        class:    "%darvin_menu.builder.abstract.class%"
         abstract: true
         arguments:
             - "@darvin_utils.custom_object.loader"
             - "@knp_menu.factory"
-            - "@darvin_menu.repository.menu_item"
             - "@request_stack"
             - "@darvin_content.translatable.translation_joiner"
-
-    darvin_menu.abstract_breadcrumbs_builder:
-        class:    "%darvin_menu.abstract_breadcrumbs_builder.class%"
-        parent:   darvin_menu.abstract_builder
-        abstract: true
-        calls:
-            - [ setMatcher, [ "@knp_menu.matcher" ] ]
