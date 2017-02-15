@@ -80,6 +80,7 @@ class SlugMapItemType extends AbstractType
         $builder->add('class_property', ChoiceType::class, [
             'choices'           => $classPropertyChoices,
             'choices_as_values' => true,
+            'required'          => false,
             'attr'              => [
                 'class' => 'class_property',
             ],
@@ -94,6 +95,7 @@ class SlugMapItemType extends AbstractType
                 $builder->add($classPropertyChoiceValues[$i], EntityType::class, [
                     'class'         => SlugMapItem::class,
                     'choice_label'  => 'id',
+                    'required'      => false,
                     'query_builder' => function (SlugMapItemRepository $repository) use ($class, $property) {
                         return $repository->createQueryBuilder('o')
                             ->where('o.objectClass = :object_class')
