@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Builder
@@ -47,6 +48,11 @@ class Builder
     private $localeProvider;
 
     /**
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
+    private $router;
+
+    /**
      * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
      */
     private $translationJoiner;
@@ -61,6 +67,7 @@ class Builder
      * @param \Doctrine\ORM\EntityManager                                   $em                 Entity manager
      * @param \Knp\Menu\FactoryInterface                                    $genericItemFactory Generic item factory
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider     Locale provider
+     * @param \Symfony\Component\Routing\RouterInterface                    $router             Router
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner  Translation joiner
      * @param string                                                        $menuAlias          Menu alias
      */
@@ -69,6 +76,7 @@ class Builder
         EntityManager $em,
         FactoryInterface $genericItemFactory,
         LocaleProviderInterface $localeProvider,
+        RouterInterface $router,
         TranslationJoinerInterface $translationJoiner,
         $menuAlias
     ) {
@@ -76,6 +84,7 @@ class Builder
         $this->em = $em;
         $this->genericItemFactory = $genericItemFactory;
         $this->localeProvider = $localeProvider;
+        $this->router = $router;
         $this->translationJoiner = $translationJoiner;
         $this->menuAlias = $menuAlias;
     }
@@ -137,6 +146,8 @@ class Builder
     {
         $options = [
             'extras' => $this->getItemExtras($entity),
+            'label'  => $this->getItemLabel($entity),
+            'uri'    => $this->getItemUri($entity),
         ];
 
         return $options;
@@ -153,6 +164,34 @@ class Builder
             'image'      => $entity->getImage(),
             'hoverImage' => $entity->getHoverImage(),
         ];
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $entity Menu item entity
+     *
+     * @return string
+     */
+    private function getItemLabel(Item $entity)
+    {
+        $title = $entity->getTitle();
+
+        return !empty($title) ? $title : (string) $entity->getSlugMapItem()->getObject();
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $entity Menu item entity
+     *
+     * @return string
+     */
+    private function getItemUri(Item $entity)
+    {
+        $url = $entity->getUrl();
+
+        return !empty($url)
+            ? $url
+            : $this->router->generate('darvin_content_content_show', [
+                'slug' => $entity->getSlugMapItem()->getSlug(),
+            ]);
     }
 
     /**

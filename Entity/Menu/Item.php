@@ -24,6 +24,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="menu_item")
  *
  * @Gedmo\Tree(type="materializedPath")
+ *
+ * @method string getTitle()
+ * @method string getUrl()
  */
 class Item
 {

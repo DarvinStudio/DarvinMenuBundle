@@ -10,4 +10,5 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@knp_menu.factory"
             - "@darvin_utils.locale.provider"
+            - "@router"
             - "@darvin_content.translatable.translation_joiner"
