@@ -80,6 +80,14 @@ class Item
     /**
      * @return string
      */
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
+    /**
+     * @return string
+     */
     public function getMenuTitle()
     {
         return 'menu.'.$this->menu;
