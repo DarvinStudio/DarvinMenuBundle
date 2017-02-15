@@ -87,6 +87,7 @@ class SlugMapItemType extends AbstractType
             ],
         ]);
 
+        $classPropertyChoiceLabels = array_keys($classPropertyChoices);
         $classPropertyChoiceValues = array_values($classPropertyChoices);
 
         $i = 0;
@@ -94,6 +95,7 @@ class SlugMapItemType extends AbstractType
         foreach ($propertiesByClasses as $class => $properties) {
             foreach ($properties as $property) {
                 $builder->add($classPropertyChoiceValues[$i], EntityType::class, [
+                    'label'         => $classPropertyChoiceLabels[$i],
                     'class'         => SlugMapItem::class,
                     'choice_label'  => 'id',
                     'required'      => false,
