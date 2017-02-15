@@ -28,7 +28,10 @@ class ItemRepository extends EntityRepository
     {
         $qb = $this->createDefaultQueryBuilder();
         $this
-            ->joinTranslations($qb, $locale, false)
+            ->joinHoverImage($qb)
+            ->joinImage($qb)
+            ->joinSlugMapItem($qb)
+            ->joinTranslations($qb, $locale)
             ->addEnabledFilter($qb)
             ->addMenuFilter($qb, $menu);
 
@@ -70,22 +73,32 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
-     * @param string                     $locale    Locale
-     * @param bool                       $addSelect Whether to add select
+     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      *
      * @return ItemRepository
      */
-    private function joinTranslations(QueryBuilder $qb, $locale, $addSelect = true)
+    private function joinSlugMapItem(QueryBuilder $qb)
     {
         $qb
+            ->addSelect('slug_map_item')
+            ->leftJoin('o.slugMapItem', 'slug_map_item');
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
+     * @param string                     $locale Locale
+     *
+     * @return ItemRepository
+     */
+    private function joinTranslations(QueryBuilder $qb, $locale)
+    {
+        $qb
+            ->addSelect('translations')
             ->innerJoin('o.translations', 'translations')
             ->andWhere('translations.locale = :locale')
             ->setParameter('locale', $locale);
-
-        if ($addSelect) {
-            $qb->addSelect('translations');
-        }
 
         return $this;
     }

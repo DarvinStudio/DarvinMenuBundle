@@ -15,6 +15,7 @@ use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 
@@ -124,7 +125,34 @@ class Builder
      */
     private function createItem(Item $entity)
     {
-        return $this->genericItemFactory->createItem($entity->getId());
+        return $this->genericItemFactory->createItem($entity->getId(), $this->getItemOptions($entity));
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $entity Menu item entity
+     *
+     * @return array
+     */
+    private function getItemOptions(Item $entity)
+    {
+        $options = [
+            'extras' => $this->getItemExtras($entity),
+        ];
+
+        return $options;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $entity Menu item entity
+     *
+     * @return array
+     */
+    private function getItemExtras(Item $entity)
+    {
+        return [
+            'image'      => $entity->getImage(),
+            'hoverImage' => $entity->getHoverImage(),
+        ];
     }
 
     /**
@@ -132,9 +160,34 @@ class Builder
      */
     private function getEntities()
     {
-        return $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale())
+        $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale())
             ->getQuery()
             ->getResult();
+        $slugMapItems = [];
+
+        /** @var \Darvin\MenuBundle\Entity\Menu\Item $entity */
+        foreach ($entities as $entity) {
+            if (null !== $entity->getSlugMapItem()) {
+                $slugMapItems[$entity->getId()] = $entity->getSlugMapItem();
+            }
+        }
+
+        $locale = $this->localeProvider->getCurrentLocale();
+        $translationJoiner = $this->translationJoiner;
+
+        $this->customObjectLoader->loadCustomObjects($slugMapItems, function (QueryBuilder $qb) use ($locale, $translationJoiner) {
+            if ($translationJoiner->isTranslatable($qb->getRootEntities()[0])) {
+                $translationJoiner->joinTranslation($qb, true, $locale, null, true);
+            }
+        });
+
+        foreach ($entities as $key => $entity) {
+            if (null !== $entity->getSlugMapItem() && null === $entity->getSlugMapItem()->getObject()) {
+                unset($entities[$key]);
+            }
+        }
+
+        return $entities;
     }
 
     /**

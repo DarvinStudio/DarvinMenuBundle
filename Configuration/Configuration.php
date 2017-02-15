@@ -33,8 +33,8 @@ class Configuration extends AbstractConfiguration implements ImageConfigurationI
                 'image_sizes',
                 ParameterModel::TYPE_ARRAY,
                 [
-                    'menu_item_image'       => new Size('menu_item_image', 64, 64),
-                    'menu_item_hover_image' => new Size('menu_item_hover_image', 64, 64),
+                    'menu_item_image'       => new Size('menu_item_image', 32, 32),
+                    'menu_item_hover_image' => new Size('menu_item_hover_image', 32, 32),
                 ],
                 [
                     'form' => [
