@@ -12,7 +12,9 @@ namespace Darvin\MenuBundle\Entity\Menu;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Traits\TranslatableTrait;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,6 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\Menu\ItemRepository")
  * @ORM\Table(name="menu_item")
+ *
+ * @Gedmo\Tree(type="materializedPath")
  */
 class Item
 {
@@ -31,8 +35,26 @@ class Item
      * @ORM\Column(type="integer", unique=true)
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Id
+     *
+     * @Gedmo\TreePathSource
      */
     private $id;
+
+    /**
+     * @var Item
+     *
+     * @ORM\ManyToOne(targetEntity="Item", inversedBy="children")
+     *
+     * @Gedmo\TreeParent
+     */
+    private $parent;
+
+    /**
+     * @var Item[]|\Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="parent", cascade={"remove"})
+     */
+    private $children;
 
     /**
      * @var \Darvin\ContentBundle\Entity\SlugMapItem
@@ -79,6 +101,24 @@ class Item
     private $showChildren;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=2550, nullable=true)
+     *
+     * @Gedmo\TreePath(separator="/", appendId="false")
+     */
+    private $treePath;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @Gedmo\TreeLevel
+     */
+    private $level;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -108,6 +148,46 @@ class Item
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $parent parent
+     *
+     * @return Item
+     */
+    public function setParent(Item $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Entity\Menu\Item
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param Item[]|\Doctrine\Common\Collections\Collection $children children
+     *
+     * @return Item
+     */
+    public function setChildren(Collection $children)
+    {
+        $this->children = $children;
+
+        return $this;
+    }
+
+    /**
+     * @return Item[]|\Doctrine\Common\Collections\Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 
     /**
@@ -208,5 +288,45 @@ class Item
     public function isShowChildren()
     {
         return $this->showChildren;
+    }
+
+    /**
+     * @param string $treePath treePath
+     *
+     * @return Item
+     */
+    public function setTreePath($treePath)
+    {
+        $this->treePath = $treePath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTreePath()
+    {
+        return $this->treePath;
+    }
+
+    /**
+     * @param int $level level
+     *
+     * @return Item
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 }
