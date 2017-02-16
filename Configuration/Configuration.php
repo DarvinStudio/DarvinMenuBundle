@@ -63,7 +63,7 @@ class Configuration extends AbstractConfiguration implements ImageConfigurationI
      */
     public function isImageSizesGlobal()
     {
-        return false;
+        return true;
     }
 
     /**
