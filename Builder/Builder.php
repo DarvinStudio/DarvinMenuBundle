@@ -134,7 +134,7 @@ class Builder
      */
     private function createItem(Item $entity)
     {
-        return $this->genericItemFactory->createItem($entity->getId(), $this->getItemOptions($entity));
+        return $this->genericItemFactory->createItem($entity->getId(), $this->getItemOptionsFromEntity($entity));
     }
 
     /**
@@ -142,12 +142,12 @@ class Builder
      *
      * @return array
      */
-    private function getItemOptions(Item $entity)
+    private function getItemOptionsFromEntity(Item $entity)
     {
         $options = [
-            'extras' => $this->getItemExtras($entity),
-            'label'  => $this->getItemLabel($entity),
-            'uri'    => $this->getItemUri($entity),
+            'extras' => $this->getItemExtrasFromEntity($entity),
+            'label'  => $this->getItemLabelFromEntity($entity),
+            'uri'    => $this->getItemUriFromEntity($entity),
         ];
 
         return $options;
@@ -158,7 +158,7 @@ class Builder
      *
      * @return array
      */
-    private function getItemExtras(Item $entity)
+    private function getItemExtrasFromEntity(Item $entity)
     {
         return [
             'image'      => $entity->getImage(),
@@ -171,7 +171,7 @@ class Builder
      *
      * @return string
      */
-    private function getItemLabel(Item $entity)
+    private function getItemLabelFromEntity(Item $entity)
     {
         $title = $entity->getTitle();
 
@@ -183,7 +183,7 @@ class Builder
      *
      * @return string
      */
-    private function getItemUri(Item $entity)
+    private function getItemUriFromEntity(Item $entity)
     {
         $url = $entity->getUrl();
 
@@ -219,12 +219,6 @@ class Builder
                 $translationJoiner->joinTranslation($qb, true, $locale, null, true);
             }
         });
-
-        foreach ($entities as $key => $entity) {
-            if (null !== $entity->getSlugMapItem() && null === $entity->getSlugMapItem()->getObject()) {
-                unset($entities[$key]);
-            }
-        }
 
         return $entities;
     }
