@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Item;
 use Darvin\MenuBundle\Entity\Menu\Item;
 
 /**
- * Menu item factory
+ * Item from menu item entity factory
  */
 class MenuItemFactory extends AbstractItemFactory
 {

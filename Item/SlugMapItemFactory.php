@@ -16,7 +16,7 @@ use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Slug map item factory
+ * Item from slug map item factory
  */
 class SlugMapItemFactory extends AbstractItemFactory
 {
