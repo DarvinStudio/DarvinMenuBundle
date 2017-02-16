@@ -10,10 +10,38 @@
 
 namespace Darvin\MenuBundle\Item;
 
+use Darvin\MenuBundle\Entity\Menu\Item;
+
 /**
  * Menu item factory
  */
-class MenuItemFactory
+class MenuItemFactory extends AbstractItemFactory
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsClass($class)
+    {
+        return Item::class === $class;
+    }
 
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
+     *
+     * @return string
+     */
+    protected function getLabel($menuItem)
+    {
+        // TODO: Implement getLabel() method.
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
+     *
+     * @return string
+     */
+    protected function getUri($menuItem)
+    {
+        // TODO: Implement getUri() method.
+    }
 }

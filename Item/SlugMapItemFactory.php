@@ -49,7 +49,7 @@ class SlugMapItemFactory extends AbstractItemFactory
      */
     public function supportsClass($class)
     {
-        return SlugMapItem::class;
+        return SlugMapItem::class === $class;
     }
 
     /**
