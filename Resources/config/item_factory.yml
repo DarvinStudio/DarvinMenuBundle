@@ -10,7 +10,7 @@ services:
     darvin_menu.item_factory.abstract:
         class:    "%darvin_menu.item_factory.abstract.class%"
         abstract: true
-        public:   false
+#        public:   false
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@knp_menu.factory"

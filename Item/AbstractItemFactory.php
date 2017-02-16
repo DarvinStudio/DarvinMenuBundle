@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Item factory abstract implementation
  */
-abstract class AbstractItemFactory implements ItemFactoryInterface
+abstract class AbstractItemFactory
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -51,7 +51,9 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity Entity
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     public function createItem($entity)
     {
@@ -147,4 +149,9 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
      * @return string
      */
     abstract protected function getUri($entity);
+
+    /**
+     * @return string
+     */
+    abstract protected function getSupportedClass();
 }

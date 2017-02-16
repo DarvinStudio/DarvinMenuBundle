@@ -45,14 +45,6 @@ class SlugMapItemFactory extends AbstractItemFactory
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getSupportedClass()
-    {
-        return SlugMapItem::class;
-    }
-
-    /**
      * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
      *
      * @return string
@@ -76,5 +68,13 @@ class SlugMapItemFactory extends AbstractItemFactory
         return $this->router->generate($this->uriRoute, [
             'slug' => $slugMapItem->getSlug(),
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSupportedClass()
+    {
+        return SlugMapItem::class;
     }
 }

@@ -37,14 +37,6 @@ class MenuItemFactory extends AbstractItemFactory
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getSupportedClass()
-    {
-        return Item::class;
-    }
-
-    /**
      * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
      *
      * @return string
@@ -66,5 +58,13 @@ class MenuItemFactory extends AbstractItemFactory
         $url = $menuItem->getUrl();
 
         return !empty($url) ? $url : $this->slugMapItemFactory->getUri($menuItem->getSlugMapItem());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getSupportedClass()
+    {
+        return Item::class;
     }
 }
