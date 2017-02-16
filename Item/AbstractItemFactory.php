@@ -74,8 +74,9 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
     protected function getItemName($entity)
     {
         $class = ClassUtils::getClass($entity);
+        $ids = $this->em->getClassMetadata($class)->getIdentifierValues($entity);
 
-        return uniqid($class.'-'.$this->em->getClassMetadata($class)->getIdentifierValues($entity)[0], true);
+        return uniqid($class.'-'.reset($ids).'-', true);
     }
 
     /**
@@ -105,7 +106,7 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
                 ->setDefault($extra, null)
                 ->setAllowedTypes($extra, [
                     AbstractImage::class,
-                    null,
+                    'null',
                 ]);
         }
     }
@@ -115,7 +116,10 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
      *
      * @return array
      */
-    abstract protected function getExtras($entity);
+    protected function getExtras($entity)
+    {
+        return [];
+    }
 
     /**
      * @param object $entity Entity
