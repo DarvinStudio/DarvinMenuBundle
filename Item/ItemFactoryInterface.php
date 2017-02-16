@@ -16,20 +16,17 @@ namespace Darvin\MenuBundle\Item;
 interface ItemFactoryInterface
 {
     /**
-     * @param object $associated  Associated
-     * @param string $locale      Locale
-     * @param bool   $addChildren Whether to add child items
-     * @param array  $options     Options
+     * @param object $entity Entity
      *
      * @return \Knp\Menu\ItemInterface
+     * @throws \Darvin\MenuBundle\Item\ItemFactoryException
      */
-    public function createItem($associated, $locale, $addChildren = false, array $options = []);
+    public function createItem($entity);
 
     /**
-     * @param object $associated Associated
-     * @param array  $options    Options
+     * @param string $class Entity class
      *
      * @return bool
      */
-    public function canCreateItem($associated, array $options = []);
+    public function supportsClass($class);
 }
