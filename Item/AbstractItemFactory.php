@@ -63,6 +63,33 @@ abstract class AbstractItemFactory
     }
 
     /**
+     * @return \Knp\Menu\FactoryInterface
+     */
+    public function getGenericItemFactory()
+    {
+        return $this->genericItemFactory;
+    }
+
+    /**
+     * @param object $entity Entity
+     *
+     * @return string
+     */
+    abstract protected function getLabel($entity);
+
+    /**
+     * @param object $entity Entity
+     *
+     * @return string
+     */
+    abstract protected function getUri($entity);
+
+    /**
+     * @return string
+     */
+    abstract protected function getSupportedClass();
+
+    /**
      * @param object $entity Entity
      *
      * @return string
@@ -83,10 +110,20 @@ abstract class AbstractItemFactory
     protected function getOptions($entity)
     {
         return [
-            'extras' => $this->extrasResolver->resolve($this->getExtras($entity)),
             'label'  => $this->getLabel($entity),
             'uri'    => $this->getUri($entity),
+            'extras' => $this->extrasResolver->resolve($this->getExtras($entity)),
         ];
+    }
+
+    /**
+     * @param object $entity Entity
+     *
+     * @return array
+     */
+    protected function getExtras($entity)
+    {
+        return [];
     }
 
     /**
@@ -125,33 +162,4 @@ abstract class AbstractItemFactory
             throw new ItemFactoryException(sprintf('Entity must instance of "%s", got "%s".', $supportedClass, $class));
         }
     }
-
-    /**
-     * @param object $entity Entity
-     *
-     * @return array
-     */
-    protected function getExtras($entity)
-    {
-        return [];
-    }
-
-    /**
-     * @param object $entity Entity
-     *
-     * @return string
-     */
-    abstract protected function getLabel($entity);
-
-    /**
-     * @param object $entity Entity
-     *
-     * @return string
-     */
-    abstract protected function getUri($entity);
-
-    /**
-     * @return string
-     */
-    abstract protected function getSupportedClass();
 }

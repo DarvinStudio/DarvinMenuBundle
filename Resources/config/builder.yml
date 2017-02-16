@@ -8,7 +8,7 @@ services:
         arguments:
             - "@darvin_utils.custom_object.loader"
             - "@doctrine.orm.entity_manager"
-            - "@knp_menu.factory"
             - "@darvin_utils.locale.provider"
-            - "@router"
+            - "@darvin_menu.item_factory.menu_item"
+            - "@darvin_menu.item_factory.slug_map_item"
             - "@darvin_content.translatable.translation_joiner"

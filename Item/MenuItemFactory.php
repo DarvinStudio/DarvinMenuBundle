@@ -61,6 +61,19 @@ class MenuItemFactory extends AbstractItemFactory
     }
 
     /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
+     *
+     * @return array
+     */
+    protected function getExtras($menuItem)
+    {
+        return array_merge(parent::getExtras($menuItem), [
+            'image'      => $menuItem->getImage(),
+            'hoverImage' => $menuItem->getHoverImage(),
+        ]);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getSupportedClass()
