@@ -170,6 +170,11 @@ class Builder
         $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale())
             ->getQuery()
             ->getResult();
+
+        if (empty($entities)) {
+            return $entities;
+        }
+
         $slugMapItems = [];
 
         /** @var \Darvin\MenuBundle\Entity\Menu\Item $entity */
@@ -194,13 +199,14 @@ class Builder
         /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems */
         $slugMapItems = $this->getSlugMapItemRepository()->getChildrenBuilder($slugMapItem)->getQuery()->getResult();
 
-        $this->loadSlugMapItemCustomObjects($slugMapItems);
-
         $children = [];
 
         if (empty($slugMapItems)) {
             return $children;
         }
+
+        $this->loadSlugMapItemCustomObjects($slugMapItems);
+
         foreach ($slugMapItems as $slugMapItem) {
             $children[$slugMapItem->getId()] = [
                 'object'    => $slugMapItem,
@@ -229,6 +235,10 @@ class Builder
      */
     protected function loadSlugMapItemCustomObjects(array $slugMapItems)
     {
+        if (empty($slugMapItems)) {
+            return;
+        }
+
         $locale = $this->localeProvider->getCurrentLocale();
         $translationJoiner = $this->translationJoiner;
 
