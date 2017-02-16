@@ -1,21 +1,29 @@
 parameters:
     darvin_menu.item_factory.abstract.class: Darvin\MenuBundle\Item\AbstractItemFactory
 
-    darvin_menu.item_factory.slug_map.class:     Darvin\MenuBundle\Item\SlugMapItemFactory
-    darvin_menu.item_factory.slug_map.uri_route: darvin_content_content_show
+    darvin_menu.item_factory.menu_item.class: Darvin\MenuBundle\Item\MenuItemFactory
+
+    darvin_menu.item_factory.slug_map_item.class:     Darvin\MenuBundle\Item\SlugMapItemFactory
+    darvin_menu.item_factory.slug_map_item.uri_route: darvin_content_content_show
 
 services:
     darvin_menu.item_factory.abstract:
         class:    "%darvin_menu.item_factory.abstract.class%"
         abstract: true
-#        public:   false
+        public:   false
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@knp_menu.factory"
 
-    darvin_menu.item_factory.slug_map:
-        class:  "%darvin_menu.item_factory.slug_map.class%"
+    darvin_menu.item_factory.menu_item:
+        class:  "%darvin_menu.item_factory.menu_item.class%"
+        parent: darvin_menu.item_factory.abstract
+        arguments:
+            - "@darvin_menu.item_factory.slug_map_item"
+
+    darvin_menu.item_factory.slug_map_item:
+        class:  "%darvin_menu.item_factory.slug_map_item.class%"
         parent: darvin_menu.item_factory.abstract
         arguments:
             - "@router"
-            - "%darvin_menu.item_factory.slug_map.uri_route%"
+            - "%darvin_menu.item_factory.slug_map_item.uri_route%"

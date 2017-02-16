@@ -11,12 +11,31 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Doctrine\ORM\EntityManager;
+use Knp\Menu\FactoryInterface;
 
 /**
  * Item from menu item entity factory
  */
 class MenuItemFactory extends AbstractItemFactory
 {
+    /**
+     * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
+     */
+    protected $slugMapItemFactory;
+
+    /**
+     * @param \Doctrine\ORM\EntityManager                $em                 Entity manager
+     * @param \Knp\Menu\FactoryInterface                 $genericItemFactory Generic item factory
+     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory $slugMapItemFactory Item from slug map item factory
+     */
+    public function __construct(EntityManager $em, FactoryInterface $genericItemFactory, SlugMapItemFactory $slugMapItemFactory)
+    {
+        parent::__construct($em, $genericItemFactory);
+
+        $this->slugMapItemFactory = $slugMapItemFactory;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -32,7 +51,9 @@ class MenuItemFactory extends AbstractItemFactory
      */
     protected function getLabel($menuItem)
     {
-        // TODO: Implement getLabel() method.
+        $title = $menuItem->getTitle();
+
+        return !empty($title) ? $title : $this->slugMapItemFactory->getLabel($menuItem->getSlugMapItem());
     }
 
     /**
@@ -42,6 +63,8 @@ class MenuItemFactory extends AbstractItemFactory
      */
     protected function getUri($menuItem)
     {
-        // TODO: Implement getUri() method.
+        $url = $menuItem->getUrl();
+
+        return !empty($url) ? $url : $this->slugMapItemFactory->getUri($menuItem->getSlugMapItem());
     }
 }
