@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Builder;
 
+use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
@@ -134,7 +135,42 @@ class Builder
      */
     private function createItem(Item $entity)
     {
-        return $this->genericItemFactory->createItem($entity->getId(), $this->getItemOptionsFromEntity($entity));
+        $item = $this->genericItemFactory->createItem($entity->getId(), $this->getItemOptionsFromEntity($entity));
+
+        if (null !== $entity->getSlugMapItem()) {
+            $this->addChildItems($item, $entity->getSlugMapItem());
+        }
+
+        return $item;
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface                  $parent      Parent menu item
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     */
+    private function addChildItems(ItemInterface $parent, SlugMapItem $slugMapItem)
+    {
+        /** @var \Knp\Menu\ItemInterface[] $items */
+        $items = [];
+
+        foreach ($this->getChildSlugMapItems($slugMapItem) as $id => $slugMapItem) {
+            $item = $this->genericItemFactory->createItem($slugMapItem['slug'], [
+                'extras' => [
+                    'image'      => null,
+                    'hoverImage' => null,
+                ],
+            ]);
+            $items[$id] = $item;
+
+            if (empty($slugMapItem['parent_id'])) {
+                $parent->addChild($item);
+
+                continue;
+            }
+            if (isset($items[$slugMapItem['parent_id']])) {
+                $items[$slugMapItem['parent_id']]->addChild($item);
+            }
+        }
     }
 
     /**
@@ -224,10 +260,56 @@ class Builder
     }
 
     /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     *
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
+     */
+    private function getChildSlugMapItems(SlugMapItem $slugMapItem)
+    {
+        /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $result */
+        $result = $this->getSlugMapItemRepository()->getChildrenBuilder($slugMapItem)->getQuery()->getResult();
+
+        $items = [];
+
+        if (empty($result)) {
+            return $items;
+        }
+        foreach ($result as $item) {
+            $items[$item->getId()] = [
+                'object'    => $item,
+                'level'     => substr_count($item->getSlug(), '/'),
+                'parent_id' => null,
+                'slug'      => $item->getSlug(),
+            ];
+        }
+        foreach ($items as $itemId => $item) {
+            foreach ($items as $otherItemId => $otherItem) {
+                if (1 === $item['level'] - $otherItem['level'] && 0 === strpos($item['slug'], $otherItem['slug'].'/')) {
+                    $items[$itemId]['parent_id'] = $otherItemId;
+                }
+            }
+        }
+
+        uasort($items, function (array $a, array $b) {
+            return $a['level'] === $b['level'] ? 0 : ($a['level'] > $b['level'] ? 1 : -1);
+        });
+
+        return $items;
+    }
+
+    /**
      * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
      */
     private function getEntityRepository()
     {
         return $this->em->getRepository(Item::class);
+    }
+
+    /**
+     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
+     */
+    private function getSlugMapItemRepository()
+    {
+        return $this->em->getRepository(SlugMapItem::class);
     }
 }
