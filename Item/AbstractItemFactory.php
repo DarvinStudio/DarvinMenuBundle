@@ -55,13 +55,7 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
      */
     public function createItem($entity)
     {
-        $class = ClassUtils::getClass($entity);
-
-        if (!$this->supportsClass($class)) {
-            throw new ItemFactoryException(
-                sprintf('Unable to create menu item from instance of "%s": class is not supported.', $class)
-            );
-        }
+        $this->validateEntity($entity);
 
         return $this->genericItemFactory->createItem($this->getItemName($entity), $this->getOptions($entity));
     }
@@ -108,6 +102,25 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
                     AbstractImage::class,
                     'null',
                 ]);
+        }
+    }
+
+    /**
+     * @param object $entity Entity
+     *
+     * @throws \Darvin\MenuBundle\Item\ItemFactoryException
+     */
+    protected function validateEntity($entity)
+    {
+        if (!is_object($entity)) {
+            throw new ItemFactoryException(sprintf('Entity must be object, got "%s".', gettype($entity)));
+        }
+
+        $class = ClassUtils::getClass($entity);
+        $supportedClass = $this->getSupportedClass();
+
+        if ($class !== $supportedClass) {
+            throw new ItemFactoryException(sprintf('Entity must instance of "%s", got "%s".', $supportedClass, $class));
         }
     }
 

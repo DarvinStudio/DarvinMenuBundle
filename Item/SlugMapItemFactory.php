@@ -47,9 +47,9 @@ class SlugMapItemFactory extends AbstractItemFactory
     /**
      * {@inheritdoc}
      */
-    public function supportsClass($class)
+    public function getSupportedClass()
     {
-        return SlugMapItem::class === $class;
+        return SlugMapItem::class;
     }
 
     /**
@@ -57,8 +57,10 @@ class SlugMapItemFactory extends AbstractItemFactory
      *
      * @return string
      */
-    protected function getLabel($slugMapItem)
+    public function getLabel($slugMapItem)
     {
+        $this->validateEntity($slugMapItem);
+
         return (string) $slugMapItem->getObject();
     }
 
@@ -67,8 +69,10 @@ class SlugMapItemFactory extends AbstractItemFactory
      *
      * @return string
      */
-    protected function getUri($slugMapItem)
+    public function getUri($slugMapItem)
     {
+        $this->validateEntity($slugMapItem);
+
         return $this->router->generate($this->uriRoute, [
             'slug' => $slugMapItem->getSlug(),
         ]);

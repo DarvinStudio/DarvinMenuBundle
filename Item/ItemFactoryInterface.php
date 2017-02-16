@@ -24,9 +24,7 @@ interface ItemFactoryInterface
     public function createItem($entity);
 
     /**
-     * @param string $class Entity class
-     *
-     * @return bool
+     * @return string
      */
-    public function supportsClass($class);
+    public function getSupportedClass();
 }

@@ -20,9 +20,9 @@ class MenuItemFactory extends AbstractItemFactory
     /**
      * {@inheritdoc}
      */
-    public function supportsClass($class)
+    public function getSupportedClass()
     {
-        return Item::class === $class;
+        return Item::class;
     }
 
     /**
