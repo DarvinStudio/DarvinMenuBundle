@@ -5,6 +5,8 @@ parameters:
 
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
 
+    darvin_menu.admin.preserve_menu_in_url_listener.class: Darvin\MenuBundle\EventListener\Admin\PreserveMenuInUrlListener
+
     darvin_menu.admin.view_widget.associated.class: Darvin\MenuBundle\Admin\View\AssociatedWidget
 
 services:
@@ -36,6 +38,15 @@ services:
             - "@darvin_admin.metadata.manager"
         tags:
             - { name: darvin_admin.menu_item_factory }
+
+    darvin_menu.admin.preserve_menu_in_url_listener:
+        class: "%darvin_menu.admin.preserve_menu_in_url_listener.class%"
+        arguments:
+            - "@darvin_menu.configuration.menu"
+            - "@darvin_admin.metadata.manager"
+            - "@request_stack"
+        tags:
+            - { name: kernel.event_listener, event: darvin_admin.router.pre_generate, method: preRouteGenerate }
 
     darvin_menu.admin.view_widget.associated:
         class:  "%darvin_menu.admin.view_widget.associated.class%"
