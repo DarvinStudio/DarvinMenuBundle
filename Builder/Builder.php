@@ -155,7 +155,9 @@ class Builder
             return;
         }
         foreach ($this->getSlugMapItemRepository()->getBySlugsChildren(array_unique($parentSlugs)) as $parentSlug => $childSlugMapItems) {
-            $this->addChildren($items[array_search($parentSlug, $parentSlugs)], $childSlugMapItems);
+            foreach (array_keys($parentSlugs, $parentSlug) as $entityId) {
+                $this->addChildren($items[$entityId], $childSlugMapItems);
+            }
         }
     }
 
