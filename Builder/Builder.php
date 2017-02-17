@@ -70,6 +70,11 @@ class Builder
     protected $menuAlias;
 
     /**
+     * @var array
+     */
+    protected $slugPartSeparators;
+
+    /**
      * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface        $customObjectLoader Custom object loader
      * @param \Doctrine\ORM\EntityManager                                   $em                 Entity manager
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider     Locale provider
@@ -97,6 +102,8 @@ class Builder
         $this->slugMapItemFactory = $slugMapItemFactory;
         $this->translationJoiner = $translationJoiner;
         $this->menuAlias = $menuAlias;
+
+        $this->slugPartSeparators = [];
     }
 
     /**
@@ -126,15 +133,15 @@ class Builder
             $slugMapItem = $entity->getSlugMapItem();
 
             if (!empty($slugMapItem) && $entity->isShowChildren()) {
-                $meta = $this->metadataFactory->getExtendedMetadata($slugMapItem->getObjectClass())['slugs'];
+                $separator = $this->getSlugPartsSeparator($slugMapItem->getObjectClass(), $slugMapItem->getProperty());
 
-                if (!isset($meta[$slugMapItem->getProperty()])) {
+                if (false === $separator) {
                     unset($entities[$key]);
 
                     continue;
                 }
 
-                $parentSlugs[$entity->getId()] = $slugMapItem->getSlug().$meta[$slugMapItem->getProperty()]['separator'];
+                $parentSlugs[$entity->getId()] = $slugMapItem->getSlug().$separator;
             }
 
             $item = $this->menuItemFactory->createItem($entity);
@@ -236,13 +243,11 @@ class Builder
             return $children;
         }
 
-        $meta = $this->metadataFactory->getExtendedMetadata($childSlugMapItems[0]->getObjectClass())['slugs'];
+        $separator = $this->getSlugPartsSeparator($childSlugMapItems[0]->getObjectClass(), $childSlugMapItems[0]->getProperty());
 
-        if (!isset($meta[$childSlugMapItems[0]->getProperty()])) {
+        if (false === $separator) {
             return $children;
         }
-
-        $separator = $meta[$childSlugMapItems[0]->getProperty()]['separator'];
 
         $this->loadSlugMapItemCustomObjects($childSlugMapItems);
 
@@ -292,6 +297,26 @@ class Builder
                 $translationJoiner->joinTranslation($qb, true, $locale, null, true);
             }
         });
+    }
+
+    /**
+     * @param string $class    Class
+     * @param string $property Property
+     *
+     * @return bool|string
+     */
+    protected function getSlugPartsSeparator($class, $property)
+    {
+        if (!isset($this->slugPartSeparators[$class][$property])) {
+            if (!isset($this->slugPartSeparators[$class])) {
+                $this->slugPartSeparators[$class] = [];
+            }
+
+            $meta = $this->metadataFactory->getExtendedMetadata($class)['slugs'];
+            $this->slugPartSeparators[$class][$property] = isset($meta[$property]) ? $meta[$property]['separator'] : false;
+        }
+
+        return $this->slugPartSeparators[$class][$property];
     }
 
     /**
