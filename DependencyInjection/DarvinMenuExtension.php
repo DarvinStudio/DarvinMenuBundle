@@ -10,13 +10,13 @@
 
 namespace Darvin\MenuBundle\DependencyInjection;
 
-use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\Utils\DependencyInjection\ConfigInjector;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -51,32 +51,14 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
      */
     public function prepend(ContainerBuilder $container)
     {
-        $bundles = $container->getParameter('kernel.bundles');
+        $fileLocator = new FileLocator(__DIR__.'/../Resources/config/app');
 
-        if (isset($bundles['DarvinAdminBundle'])) {
-            $container->prependExtensionConfig('darvin_admin', [
-                'sections' => [
-                    [
-                        'entity' => Item::class,
-                        'config' => '@DarvinMenuBundle/Resources/config/admin/menu/item.yml',
-                    ],
-                ],
-                'menu' => [
-                    'groups' => [
-                        [
-                            'name'   => 'menu',
-                            'colors' => [
-                                'main'    => '#cb9023',
-                                'sidebar' => '#a4ce23',
-                            ],
-                            'icons' => [
-                                'main'    => 'bundles/darvinmenu/images/admin/menu_main.png',
-                                'sidebar' => 'bundles/darvinmenu/images/admin/menu_sidebar.png',
-                            ],
-                        ],
-                    ],
-                ],
-            ]);
+        foreach ([
+            'darvin_admin',
+        ] as $extension) {
+            if ($container->hasExtension($extension)) {
+                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yml')))[$extension]);
+            }
         }
     }
 }
