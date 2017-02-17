@@ -119,6 +119,7 @@ class Builder
      */
     protected function addItems(ItemInterface $root, array $entities)
     {
+        /** @var \Knp\Menu\ItemInterface[] $items */
         $items = $parentSlugs = [];
 
         foreach ($entities as $key => $entity) {
