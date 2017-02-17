@@ -186,6 +186,12 @@ class Builder
 
         $this->loadSlugMapItemCustomObjects($slugMapItems);
 
+        foreach ($entities as $key => $entity) {
+            if (null !== $entity->getSlugMapItem() && null === $entity->getSlugMapItem()->getObject()) {
+                unset($entities[$key]);
+            }
+        }
+
         return $entities;
     }
 
@@ -197,7 +203,9 @@ class Builder
     protected function getSlugMapItemChildren(SlugMapItem $slugMapItem)
     {
         /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems */
-        $slugMapItems = $this->getSlugMapItemRepository()->getChildrenBuilder($slugMapItem)->getQuery()->getResult();
+        $slugMapItems = $this->getSlugMapItemRepository()->getBySlugChildrenBuilder($slugMapItem->getSlug(), '/')
+            ->getQuery()
+            ->getResult();
 
         $children = [];
 
@@ -207,7 +215,13 @@ class Builder
 
         $this->loadSlugMapItemCustomObjects($slugMapItems);
 
-        foreach ($slugMapItems as $slugMapItem) {
+        foreach ($slugMapItems as $key => $slugMapItem) {
+            if (null === $slugMapItem->getObject()) {
+                unset($slugMapItems[$key]);
+
+                continue;
+            }
+
             $children[$slugMapItem->getId()] = [
                 'object'    => $slugMapItem,
                 'slug'      => $slugMapItem->getSlug(),
