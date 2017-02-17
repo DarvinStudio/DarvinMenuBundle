@@ -120,13 +120,23 @@ class Builder
     protected function addItems(ItemInterface $root, array $entities)
     {
         /** @var \Knp\Menu\ItemInterface[] $items */
-        $items = [];
+        $items = $parentSlugs = [];
 
-        foreach ($entities as $entity) {
+        foreach ($entities as $key => $entity) {
             $item = $this->menuItemFactory->createItem($entity);
 
-            if ($entity->isShowChildren() && null !== $entity->getSlugMapItem()) {
-                $this->addChildren($item, $entity->getSlugMapItem());
+            $slugMapItem = $entity->getSlugMapItem();
+
+            if ($entity->isShowChildren() && !empty($slugMapItem)) {
+                $meta = $this->metadataFactory->getExtendedMetadata($slugMapItem->getObjectClass())['slugs'];
+
+                if (!isset($meta[$slugMapItem->getProperty()])) {
+                    unset($entities[$key]);
+
+                    continue;
+                }
+
+                $parentSlugs[$entity->getId()] = $slugMapItem->getSlug().$meta[$slugMapItem->getProperty()]['separator'];
             }
 
             $items[$entity->getId()] = $item;
@@ -143,18 +153,26 @@ class Builder
                 $items[$parentId]->addChild($item);
             }
         }
+        if (empty($parentSlugs)) {
+            return;
+        }
+        foreach ($this->getSlugMapItemRepository()->getBySlugsChildren(array_unique($parentSlugs)) as $parentSlug => $childSlugMapItems) {
+            $this->addChildren($items[array_search($parentSlug, $parentSlugs)], $childSlugMapItems);
+        }
     }
 
     /**
-     * @param \Knp\Menu\ItemInterface                  $parent      Parent item
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     * @param \Knp\Menu\ItemInterface                    $parent            Parent item
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
      */
-    protected function addChildren(ItemInterface $parent, SlugMapItem $slugMapItem)
+    protected function addChildren(ItemInterface $parent, array $childSlugMapItems)
     {
+        $childSlugMapItems = $this->prepareChildSlugMapItems($childSlugMapItems);
+
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = [];
 
-        foreach ($this->getSlugMapItemChildren($slugMapItem) as $id => $slugMapItem) {
+        foreach ($childSlugMapItems as $id => $slugMapItem) {
             $item = $this->slugMapItemFactory->createItem($slugMapItem['object']);
             $items[$id] = $item;
 
@@ -205,36 +223,31 @@ class Builder
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
+     * @return array
      */
-    protected function getSlugMapItemChildren(SlugMapItem $slugMapItem)
+    protected function prepareChildSlugMapItems(array $childSlugMapItems)
     {
         $children = [];
 
-        $meta = $this->metadataFactory->getExtendedMetadata($slugMapItem->getObjectClass())['slugs'];
-
-        if (!isset($meta[$slugMapItem->getProperty()])) {
+        if (empty($childSlugMapItems)) {
             return $children;
         }
 
-        $separator = $meta[$slugMapItem->getProperty()]['separator'];
+        $meta = $this->metadataFactory->getExtendedMetadata($childSlugMapItems[0]->getObjectClass())['slugs'];
 
-        /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems */
-        $slugMapItems = $this->getSlugMapItemRepository()->getBySlugChildrenBuilder($slugMapItem->getSlug(), $separator)
-            ->getQuery()
-            ->getResult();
-
-        if (empty($slugMapItems)) {
+        if (!isset($meta[$childSlugMapItems[0]->getProperty()])) {
             return $children;
         }
 
-        $this->loadSlugMapItemCustomObjects($slugMapItems);
+        $separator = $meta[$childSlugMapItems[0]->getProperty()]['separator'];
 
-        foreach ($slugMapItems as $key => $slugMapItem) {
+        $this->loadSlugMapItemCustomObjects($childSlugMapItems);
+
+        foreach ($childSlugMapItems as $key => $slugMapItem) {
             if (null === $slugMapItem->getObject()) {
-                unset($slugMapItems[$key]);
+                unset($childSlugMapItems[$key]);
 
                 continue;
             }
