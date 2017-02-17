@@ -76,7 +76,9 @@ class ItemFactory implements ItemFactoryInterface
         return (new \Darvin\AdminBundle\Menu\Item('menu_'.$menu->getAlias()))
             ->setIndexTitle($menu->getTitle())
             ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouter::TYPE_INDEX, [
-                $filterFormTypeName.'[menu]' => $menu->getAlias(),
+                $filterFormTypeName => [
+                    'menu' => $menu->getAlias(),
+                ],
             ]))
             ->setAssociatedObject(Item::class)
             ->setParentName('menu');

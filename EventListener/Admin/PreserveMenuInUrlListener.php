@@ -63,8 +63,12 @@ class PreserveMenuInUrlListener
             return;
         }
 
+        $params = $event->getParams();
         $param = $this->metadataManager->getMetadata($event->getEntityClass())->getFilterFormTypeName();
 
+        if (isset($params[$param]['menu'])) {
+            return;
+        }
         if (!$request->query->has($param)) {
             return;
         }
@@ -82,9 +86,6 @@ class PreserveMenuInUrlListener
         if (!isset($menus[$alias])) {
             return;
         }
-
-        $params = $event->getParams();
-
         if (!isset($params[$param])) {
             $params[$param] = [];
         }
