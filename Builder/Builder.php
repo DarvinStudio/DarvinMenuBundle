@@ -123,8 +123,6 @@ class Builder
         $items = $parentSlugs = [];
 
         foreach ($entities as $key => $entity) {
-            $item = $this->menuItemFactory->createItem($entity);
-
             $slugMapItem = $entity->getSlugMapItem();
 
             if ($entity->isShowChildren() && !empty($slugMapItem)) {
@@ -139,6 +137,7 @@ class Builder
                 $parentSlugs[$entity->getId()] = $slugMapItem->getSlug().$meta[$slugMapItem->getProperty()]['separator'];
             }
 
+            $item = $this->menuItemFactory->createItem($entity);
             $items[$entity->getId()] = $item;
 
             if (null === $entity->getParent()) {
