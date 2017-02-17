@@ -59,7 +59,7 @@ abstract class AbstractItemFactory
     {
         $this->validateEntity($entity);
 
-        return $this->genericItemFactory->createItem($this->getItemName($entity), $this->getOptions($entity));
+        return $this->create($entity, $this->getOptions($entity));
     }
 
     /**
@@ -90,6 +90,17 @@ abstract class AbstractItemFactory
     abstract protected function getSupportedClass();
 
     /**
+     * @param object $entity  Entity
+     * @param array  $options Options
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    protected function create($entity, array $options)
+    {
+        return $this->genericItemFactory->createItem($this->getItemName($entity), $options);
+    }
+
+    /**
      * @param object $entity Entity
      *
      * @return string
@@ -99,7 +110,7 @@ abstract class AbstractItemFactory
         $class = ClassUtils::getClass($entity);
         $ids = $this->em->getClassMetadata($class)->getIdentifierValues($entity);
 
-        return uniqid($class.'-'.reset($ids).'-', true);
+        return uniqid(sprintf('%s-%s-', $class, reset($ids)), true);
     }
 
     /**
