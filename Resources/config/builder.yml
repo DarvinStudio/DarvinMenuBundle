@@ -10,5 +10,6 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@darvin_utils.locale.provider"
             - "@darvin_menu.item_factory.menu_item"
+            - "@darvin_utils.mapping.metadata_factory"
             - "@darvin_menu.item_factory.slug_map_item"
             - "@darvin_content.translatable.translation_joiner"

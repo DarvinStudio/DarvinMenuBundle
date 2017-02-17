@@ -17,6 +17,7 @@ use Darvin\MenuBundle\Item\MenuItemFactory;
 use Darvin\MenuBundle\Item\SlugMapItemFactory;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
+use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Menu\ItemInterface;
@@ -49,6 +50,11 @@ class Builder
     protected $menuItemFactory;
 
     /**
+     * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
+     */
+    protected $metadataFactory;
+
+    /**
      * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
      */
     protected $slugMapItemFactory;
@@ -68,6 +74,7 @@ class Builder
      * @param \Doctrine\ORM\EntityManager                                   $em                 Entity manager
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider     Locale provider
      * @param \Darvin\MenuBundle\Item\MenuItemFactory                       $menuItemFactory    Item from menu item entity factory
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory    Extended metadata factory
      * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                    $slugMapItemFactory Item from slug map item factory
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner  Translation joiner
      * @param string                                                        $menuAlias          Menu alias
@@ -77,6 +84,7 @@ class Builder
         EntityManager $em,
         LocaleProviderInterface $localeProvider,
         MenuItemFactory $menuItemFactory,
+        MetadataFactoryInterface $metadataFactory,
         SlugMapItemFactory $slugMapItemFactory,
         TranslationJoinerInterface $translationJoiner,
         $menuAlias
@@ -85,6 +93,7 @@ class Builder
         $this->em = $em;
         $this->localeProvider = $localeProvider;
         $this->menuItemFactory = $menuItemFactory;
+        $this->metadataFactory = $metadataFactory;
         $this->slugMapItemFactory = $slugMapItemFactory;
         $this->translationJoiner = $translationJoiner;
         $this->menuAlias = $menuAlias;
@@ -202,12 +211,20 @@ class Builder
      */
     protected function getSlugMapItemChildren(SlugMapItem $slugMapItem)
     {
+        $children = [];
+
+        $meta = $this->metadataFactory->getExtendedMetadata($slugMapItem->getObjectClass())['slugs'];
+
+        if (!isset($meta[$slugMapItem->getProperty()])) {
+            return $children;
+        }
+
+        $separator = $meta[$slugMapItem->getProperty()]['separator'];
+
         /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems */
-        $slugMapItems = $this->getSlugMapItemRepository()->getBySlugChildrenBuilder($slugMapItem->getSlug(), '/')
+        $slugMapItems = $this->getSlugMapItemRepository()->getBySlugChildrenBuilder($slugMapItem->getSlug(), $separator)
             ->getQuery()
             ->getResult();
-
-        $children = [];
 
         if (empty($slugMapItems)) {
             return $children;
@@ -225,13 +242,13 @@ class Builder
             $children[$slugMapItem->getId()] = [
                 'object'    => $slugMapItem,
                 'slug'      => $slugMapItem->getSlug(),
-                'level'     => substr_count($slugMapItem->getSlug(), '/'),
+                'level'     => substr_count($slugMapItem->getSlug(), $separator),
                 'parent_id' => null,
             ];
         }
         foreach ($children as $childId => $child) {
             foreach ($children as $otherChildId => $otherChild) {
-                if (1 === $child['level'] - $otherChild['level'] && 0 === strpos($child['slug'], $otherChild['slug'].'/')) {
+                if (1 === $child['level'] - $otherChild['level'] && 0 === strpos($child['slug'], $otherChild['slug'].$separator)) {
                     $children[$childId]['parent_id'] = $otherChildId;
                 }
             }
