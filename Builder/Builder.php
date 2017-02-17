@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Builder;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
+use Darvin\ImageBundle\ORM\ImageJoinerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Item\MenuItemFactory;
 use Darvin\MenuBundle\Item\SlugMapItemFactory;
@@ -38,6 +39,11 @@ class Builder
      * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
+
+    /**
+     * @var \Darvin\ImageBundle\ORM\ImageJoinerInterface
+     */
+    protected $imageJoiner;
 
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
@@ -77,6 +83,7 @@ class Builder
     /**
      * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface        $customObjectLoader Custom object loader
      * @param \Doctrine\ORM\EntityManager                                   $em                 Entity manager
+     * @param \Darvin\ImageBundle\ORM\ImageJoinerInterface                  $imageJoiner        Image joiner
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider     Locale provider
      * @param \Darvin\MenuBundle\Item\MenuItemFactory                       $menuItemFactory    Item from menu item entity factory
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory    Extended metadata factory
@@ -87,6 +94,7 @@ class Builder
     public function __construct(
         CustomObjectLoaderInterface $customObjectLoader,
         EntityManager $em,
+        ImageJoinerInterface $imageJoiner,
         LocaleProviderInterface $localeProvider,
         MenuItemFactory $menuItemFactory,
         MetadataFactoryInterface $metadataFactory,
@@ -96,6 +104,7 @@ class Builder
     ) {
         $this->customObjectLoader = $customObjectLoader;
         $this->em = $em;
+        $this->imageJoiner = $imageJoiner;
         $this->localeProvider = $localeProvider;
         $this->menuItemFactory = $menuItemFactory;
         $this->metadataFactory = $metadataFactory;
@@ -290,9 +299,12 @@ class Builder
         }
 
         $locale = $this->localeProvider->getCurrentLocale();
+        $imageJoiner = $this->imageJoiner;
         $translationJoiner = $this->translationJoiner;
 
-        $this->customObjectLoader->loadCustomObjects($slugMapItems, function (QueryBuilder $qb) use ($locale, $translationJoiner) {
+        $this->customObjectLoader->loadCustomObjects($slugMapItems, function (QueryBuilder $qb) use ($locale, $imageJoiner, $translationJoiner) {
+            $imageJoiner->joinImages($qb);
+
             if ($translationJoiner->isTranslatable($qb->getRootEntities()[0])) {
                 $translationJoiner->joinTranslation($qb, true, $locale, null, true);
             }

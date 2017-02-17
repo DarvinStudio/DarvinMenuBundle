@@ -8,6 +8,7 @@ services:
         arguments:
             - "@darvin_utils.custom_object.loader"
             - "@doctrine.orm.entity_manager"
+            - "@darvin_image.orm.image_joiner"
             - "@darvin_utils.locale.provider"
             - "@darvin_menu.item_factory.menu_item"
             - "@darvin_utils.mapping.metadata_factory"
