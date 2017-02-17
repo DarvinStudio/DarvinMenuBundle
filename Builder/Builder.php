@@ -125,7 +125,7 @@ class Builder
         foreach ($entities as $key => $entity) {
             $slugMapItem = $entity->getSlugMapItem();
 
-            if ($entity->isShowChildren() && !empty($slugMapItem)) {
+            if (!empty($slugMapItem) && $entity->isShowChildren()) {
                 $meta = $this->metadataFactory->getExtendedMetadata($slugMapItem->getObjectClass())['slugs'];
 
                 if (!isset($meta[$slugMapItem->getProperty()])) {
