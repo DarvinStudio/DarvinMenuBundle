@@ -139,7 +139,7 @@ class Item
         if (!empty($title)) {
             return $title;
         }
-        if (!empty($this->associatedInstance)) {
+        if (!empty($this->associatedInstance) && method_exists($this->associatedInstance, '__toString')) {
             $string = (string) $this->associatedInstance;
 
             if (!empty($string)) {
