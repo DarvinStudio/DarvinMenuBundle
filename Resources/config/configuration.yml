@@ -1,8 +1,6 @@
 parameters:
     darvin_menu.configuration.class: Darvin\MenuBundle\Configuration\Configuration
 
-    darvin_menu.configuration.association.class: Darvin\MenuBundle\Configuration\AssociationConfiguration
-
     darvin_menu.configuration.menu.class: Darvin\MenuBundle\Configuration\MenuConfiguration
 
 services:
@@ -12,14 +10,6 @@ services:
         tags:
             - { name: darvin_config.configuration }
             - { name: darvin_image.configuration }
-
-    darvin_menu.configuration.association:
-        class: "%darvin_menu.configuration.association.class%"
-        arguments:
-            - "@darvin_admin.entity_namer"
-            - "%darvin_menu.associations%"
-        tags:
-            - { name: darvin_utils.providable }
 
     darvin_menu.configuration.menu:
         class: "%darvin_menu.configuration.menu.class%"

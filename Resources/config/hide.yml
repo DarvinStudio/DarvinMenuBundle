@@ -1,9 +1,0 @@
-parameters:
-    darvin_menu.hide.property_accessor.class: Darvin\MenuBundle\Hide\HidePropertyAccessor
-
-services:
-    darvin_menu.hide.property_accessor:
-        class: "%darvin_menu.hide.property_accessor.class%"
-        arguments:
-            - "@darvin_menu.configuration.association.provider"
-            - "@property_accessor"
