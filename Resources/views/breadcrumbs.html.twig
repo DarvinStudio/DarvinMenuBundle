@@ -1,0 +1,24 @@
+{% extends 'knp_menu.html.twig' %}
+
+{% block root %}
+    <div class="breadcrumbs">
+        {{ block('list') }}
+    </div>
+{% endblock %}
+
+{% block list %}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {{ block('children') }}
+    {% endif %}
+{% endblock %}
+
+{% block item %}
+    {% if item.displayed and matcher.isAncestor(item) or matcher.isCurrent(item) %}
+        {% if item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
+            {{ block('linkElement') }}
+        {% else %}
+            {{ block('spanElement') }}
+        {% endif %}
+        {{ block('list') }}
+    {% endif %}
+{% endblock %}
