@@ -2,6 +2,8 @@ parameters:
     darvin_menu.breadcrumbs.provider.class:     Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuProvider
     darvin_menu.breadcrumbs.provider.menu_name: darvin_menu_breadcrumbs
 
+    darvin_menu.breadcrumbs.twig_extension.class: Darvin\MenuBundle\Twig\Extension\BreadcrumbsExtension
+
 services:
     darvin_menu.breadcrumbs.provider:
         class: "%darvin_menu.breadcrumbs.provider.class%"
@@ -13,3 +15,14 @@ services:
             - "%darvin_menu.breadcrumbs.provider.menu_name%"
         tags:
             - { name: knp_menu.provider }
+
+    darvin_menu.breadcrumbs.twig_extension:
+        class:  "%darvin_menu.breadcrumbs.twig_extension.class%"
+        public: false
+        arguments:
+            - "@darvin_menu.breadcrumbs.provider"
+            - "@knp_menu.helper"
+            - "%darvin_menu.breadcrumbs.provider.menu_name%"
+            - "%darvin_menu.template.breadcrumbs%"
+        tags:
+            - { name: twig.extension }

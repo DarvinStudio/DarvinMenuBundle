@@ -34,6 +34,11 @@ class Configuration implements ConfigurationInterface
         // more information on that topic.
         $rootNode
             ->children()
+                ->arrayNode('template')->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('breadcrumbs')->defaultValue('DarvinMenuBundle::breadcrumbs.html.twig')->end()
+                    ->end()
+                ->end()
                 ->arrayNode('menus')
                     ->prototype('array')
                         ->children()
