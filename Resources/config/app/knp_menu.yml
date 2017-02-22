@@ -2,3 +2,5 @@ knp_menu:
     providers:
         builder_alias:   false
         builder_service: false
+    twig:
+        template: DarvinMenuBundle::menu.html.twig

@@ -1,0 +1,31 @@
+{% extends 'knp_menu.html.twig' %}
+
+{% block image %}
+
+    {% set image       = image_exists(item.extras.image) ? item.extras.image|image_crop('menu_item_image') : null %}
+    {% set hover_image = image_exists(item.extras.hoverImage) ? item.extras.hoverImage|image_crop('menu_item_hover_image') : image %}
+
+    {% if image %}
+        <img src="{{ image }}" onmouseover="this.src='{{ hover_image }}';" onmouseout="this.src='{{ image }}';">
+    {% endif %}
+{% endblock %}
+
+{% block linkElement %}
+
+    {% import 'knp_menu.html.twig' as knp_menu %}
+
+    <a href="{{ item.uri }}"{{ knp_menu.attributes(item.linkAttributes) }}>
+        {{ block('image') }}
+        {{ block('label') }}
+    </a>
+{% endblock %}
+
+{% block spanElement %}
+
+    {% import 'knp_menu.html.twig' as knp_menu %}
+
+    <span{{ knp_menu.attributes(item.labelAttributes) }}>
+        {{ block('image') }}
+        {{ block('label') }}
+    </span>
+{% endblock %}
