@@ -122,7 +122,12 @@ class Builder
      */
     public function buildMenu()
     {
-        $root = $this->menuItemFactory->getGenericItemFactory()->createItem($this->menuAlias);
+        $root = $this->menuItemFactory->getGenericItemFactory()->createItem($this->menuAlias, [
+            'extras' => [
+                'hasSlugMapChildren'  => false,
+                'showSlugMapChildren' => false,
+            ],
+        ]);
 
         $entities = $this->getEntities();
 
@@ -143,7 +148,7 @@ class Builder
         foreach ($entities as $key => $entity) {
             $slugMapItem = $entity->getSlugMapItem();
 
-            if (!empty($slugMapItem) && $entity->isShowChildren()) {
+            if (!empty($slugMapItem)) {
                 $separator = $this->getSlugPartsSeparator($slugMapItem->getObjectClass(), $slugMapItem->getProperty());
 
                 if (false === $separator) {
@@ -187,6 +192,10 @@ class Builder
     protected function addChildren(ItemInterface $parent, array $childSlugMapItems)
     {
         $childSlugMapItems = $this->prepareChildSlugMapItems($childSlugMapItems);
+
+        $parent->setExtras(array_merge($parent->getExtras(), [
+            'hasSlugMapChildren' => !empty($childSlugMapItems),
+        ]));
 
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = [];

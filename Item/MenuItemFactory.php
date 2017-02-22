@@ -68,8 +68,9 @@ class MenuItemFactory extends AbstractItemFactory
     protected function getExtras($menuItem)
     {
         return array_merge(parent::getExtras($menuItem), [
-            'image'      => $menuItem->getImage(),
-            'hoverImage' => $menuItem->getHoverImage(),
+            'image'               => $menuItem->getImage(),
+            'hoverImage'          => $menuItem->getHoverImage(),
+            'showSlugMapChildren' => $menuItem->isShowChildren(),
         ]);
     }
 

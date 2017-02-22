@@ -1,5 +1,16 @@
 {% extends 'knp_menu.html.twig' %}
 
+{% block list %}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren and (not item.extras.hasSlugMapChildren or item.extras.showSlugMapChildren) %}
+
+        {% import 'knp_menu.html.twig' as knp_menu %}
+
+        <ul{{ knp_menu.attributes(listAttributes) }}>
+            {{ block('children') }}
+        </ul>
+    {% endif %}
+{% endblock %}
+
 {% block image %}
 
     {% set image       = image_exists(item.extras.image) ? item.extras.image|image_crop('menu_item_image') : null %}

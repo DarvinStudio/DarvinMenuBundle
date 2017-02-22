@@ -143,6 +143,14 @@ abstract class AbstractItemFactory
     protected function configureExtras(OptionsResolver $resolver)
     {
         foreach ([
+            'hasSlugMapChildren',
+            'showSlugMapChildren',
+        ] as $extra) {
+            $resolver
+                ->setDefault($extra, false)
+                ->setAllowedTypes($extra, 'boolean');
+        }
+        foreach ([
             'image',
             'hoverImage',
         ] as $extra) {
