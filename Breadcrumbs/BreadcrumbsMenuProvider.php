@@ -112,6 +112,8 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
 
                 if ($this->isMenuCurrent($menu)) {
                     $this->currentMenu = $menu;
+
+                    break;
                 }
             }
             if (empty($this->currentMenu)) {
