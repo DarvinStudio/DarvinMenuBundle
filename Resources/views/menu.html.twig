@@ -1,7 +1,11 @@
 {% extends 'knp_menu.html.twig' %}
 
 {% block list %}
-    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren and (not item.extras.hasSlugMapChildren or item.extras.showSlugMapChildren) %}
+    {% if item.hasChildren
+        and options.depth is not same as(0)
+        and item.displayChildren
+        and (not item.extras.hasSlugMapChildren or item.extras.showSlugMapChildren)
+    %}
 
         {% import 'knp_menu.html.twig' as knp_menu %}
 
