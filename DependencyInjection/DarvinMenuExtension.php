@@ -30,6 +30,12 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (!isset($bundles['KnpMenuBundle'])) {
+            throw new \RuntimeException('Please register "KnpMenuBundle" in AppKernel.php.');
+        }
+
         (new ConfigInjector())->inject($this->processConfiguration(new Configuration(), $configs), $container, $this->getAlias());
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
