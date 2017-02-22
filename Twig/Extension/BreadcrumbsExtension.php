@@ -34,6 +34,11 @@ class BreadcrumbsExtension extends \Twig_Extension
     private $breadcrumbsMenuName;
 
     /**
+     * @var array
+     */
+    private $defaultOptions;
+
+    /**
      * @var string
      */
     private $defaultTemplate;
@@ -42,13 +47,20 @@ class BreadcrumbsExtension extends \Twig_Extension
      * @param \Knp\Menu\Provider\MenuProviderInterface $breadcrumbsMenuProvider Breadcrumbs menu provider
      * @param \Knp\Menu\Twig\Helper                    $helper                  Helper
      * @param string                                   $breadcrumbsMenuName     Breadcrumbs menu name
+     * @param array                                    $defaultOptions          Default options
      * @param string                                   $defaultTemplate         Default template
      */
-    public function __construct(MenuProviderInterface $breadcrumbsMenuProvider, Helper $helper, $breadcrumbsMenuName, $defaultTemplate)
-    {
+    public function __construct(
+        MenuProviderInterface $breadcrumbsMenuProvider,
+        Helper $helper,
+        $breadcrumbsMenuName,
+        array $defaultOptions,
+        $defaultTemplate
+    ) {
         $this->breadcrumbsMenuProvider = $breadcrumbsMenuProvider;
         $this->helper = $helper;
         $this->breadcrumbsMenuName = $breadcrumbsMenuName;
+        $this->defaultOptions = $defaultOptions;
         $this->defaultTemplate = $defaultTemplate;
     }
 
@@ -72,6 +84,8 @@ class BreadcrumbsExtension extends \Twig_Extension
      */
     public function renderBreadcrumbs(array $options = [], $renderer = null)
     {
+        $options = array_merge($this->defaultOptions, $options);
+
         if (!isset($options['template'])) {
             $options['template'] = $this->defaultTemplate;
         }
