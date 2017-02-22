@@ -28,6 +28,11 @@ class Menu
     /**
      * @var string
      */
+    private $title;
+
+    /**
+     * @var string
+     */
     private $builderId;
 
     /**
@@ -44,11 +49,6 @@ class Menu
      * @var string
      */
     private $breadcrumbsBuilderAlias;
-
-    /**
-     * @var string
-     */
-    private $title;
 
     /**
      * @param string $alias              Alias
