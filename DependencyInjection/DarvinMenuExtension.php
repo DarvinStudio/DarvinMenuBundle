@@ -48,6 +48,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'item_factory',
             'menu',
             'validator',
+            'voter',
         ] as $resource) {
             $loader->load($resource.'.yml');
         }
