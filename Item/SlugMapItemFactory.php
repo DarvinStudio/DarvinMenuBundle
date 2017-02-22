@@ -16,9 +16,9 @@ use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Item from slug map item factory
+ * Item from slug map item entity factory
  */
-class SlugMapItemFactory extends AbstractItemFactory
+class SlugMapItemFactory extends AbstractEntityItemFactory
 {
     /**
      * @var \Symfony\Component\Routing\RouterInterface
@@ -31,14 +31,14 @@ class SlugMapItemFactory extends AbstractItemFactory
     protected $uriRoute;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                $em                 Entity manager
      * @param \Knp\Menu\FactoryInterface                 $genericItemFactory Generic item factory
+     * @param \Doctrine\ORM\EntityManager                $em                 Entity manager
      * @param \Symfony\Component\Routing\RouterInterface $router             Router
      * @param string                                     $uriRoute           URI route
      */
-    public function __construct(EntityManager $em, FactoryInterface $genericItemFactory, RouterInterface $router, $uriRoute)
+    public function __construct(FactoryInterface $genericItemFactory, EntityManager $em, RouterInterface $router, $uriRoute)
     {
-        parent::__construct($em, $genericItemFactory);
+        parent::__construct($genericItemFactory, $em);
 
         $this->router = $router;
         $this->uriRoute = $uriRoute;

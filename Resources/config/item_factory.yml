@@ -1,10 +1,14 @@
 parameters:
     darvin_menu.item_factory.abstract.class: Darvin\MenuBundle\Item\AbstractItemFactory
 
-    darvin_menu.item_factory.menu_item.class: Darvin\MenuBundle\Item\MenuItemFactory
+    darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\AbstractEntityItemFactory
 
-    darvin_menu.item_factory.slug_map_item.class:     Darvin\MenuBundle\Item\SlugMapItemFactory
-    darvin_menu.item_factory.slug_map_item.uri_route: darvin_content_content_show
+    darvin_menu.item_factory.root.class: Darvin\MenuBundle\Item\RootItemFactory
+
+    darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\MenuItemFactory
+
+    darvin_menu.item_factory.slug_map_item_entity.class:     Darvin\MenuBundle\Item\SlugMapItemFactory
+    darvin_menu.item_factory.slug_map_item_entity.uri_route: darvin_content_content_show
 
 services:
     darvin_menu.item_factory.abstract:
@@ -12,18 +16,28 @@ services:
         abstract: true
         public:   false
         arguments:
-            - "@doctrine.orm.entity_manager"
             - "@knp_menu.factory"
 
-    darvin_menu.item_factory.menu_item:
-        class:  "%darvin_menu.item_factory.menu_item.class%"
-        parent: darvin_menu.item_factory.abstract
+    darvin_menu.item_factory.abstract_entity:
+        class:    "%darvin_menu.item_factory.abstract_entity.class%"
+        parent:   darvin_menu.item_factory.abstract
+        abstract: true
         arguments:
-            - "@darvin_menu.item_factory.slug_map_item"
+            - "@doctrine.orm.entity_manager"
 
-    darvin_menu.item_factory.slug_map_item:
-        class:  "%darvin_menu.item_factory.slug_map_item.class%"
+    darvin_menu.item_factory.root:
+        class:  "%darvin_menu.item_factory.root.class%"
         parent: darvin_menu.item_factory.abstract
+
+    darvin_menu.item_factory.menu_item_entity:
+        class:  "%darvin_menu.item_factory.menu_item_entity.class%"
+        parent: darvin_menu.item_factory.abstract_entity
+        arguments:
+            - "@darvin_menu.item_factory.slug_map_item_entity"
+
+    darvin_menu.item_factory.slug_map_item_entity:
+        class:  "%darvin_menu.item_factory.slug_map_item_entity.class%"
+        parent: darvin_menu.item_factory.abstract_entity
         arguments:
             - "@router"
-            - "%darvin_menu.item_factory.slug_map_item.uri_route%"
+            - "%darvin_menu.item_factory.slug_map_item_entity.uri_route%"

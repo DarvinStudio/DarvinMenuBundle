@@ -17,6 +17,7 @@ use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\ImageBundle\ORM\ImageJoinerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Item\MenuItemFactory;
+use Darvin\MenuBundle\Item\RootItemFactory;
 use Darvin\MenuBundle\Item\SlugMapItemFactory;
 use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
@@ -63,6 +64,11 @@ class Builder
     protected $metadataFactory;
 
     /**
+     * @var \Darvin\MenuBundle\Item\RootItemFactory
+     */
+    protected $rootItemFactory;
+
+    /**
      * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
      */
     protected $slugMapItemFactory;
@@ -89,7 +95,8 @@ class Builder
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider     Locale provider
      * @param \Darvin\MenuBundle\Item\MenuItemFactory                       $menuItemFactory    Item from menu item entity factory
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory    Extended metadata factory
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                    $slugMapItemFactory Item from slug map item factory
+     * @param \Darvin\MenuBundle\Item\RootItemFactory                       $rootItemFactory    Root item factory
+     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                    $slugMapItemFactory Item from slug map item entity factory
      * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner  Translation joiner
      * @param string                                                        $menuAlias          Menu alias
      */
@@ -100,6 +107,7 @@ class Builder
         LocaleProviderInterface $localeProvider,
         MenuItemFactory $menuItemFactory,
         MetadataFactoryInterface $metadataFactory,
+        RootItemFactory $rootItemFactory,
         SlugMapItemFactory $slugMapItemFactory,
         TranslationJoinerInterface $translationJoiner,
         $menuAlias
@@ -110,6 +118,7 @@ class Builder
         $this->localeProvider = $localeProvider;
         $this->menuItemFactory = $menuItemFactory;
         $this->metadataFactory = $metadataFactory;
+        $this->rootItemFactory = $rootItemFactory;
         $this->slugMapItemFactory = $slugMapItemFactory;
         $this->translationJoiner = $translationJoiner;
         $this->menuAlias = $menuAlias;
@@ -122,14 +131,9 @@ class Builder
      */
     public function buildMenu()
     {
-        $root = $this->menuItemFactory->getGenericItemFactory()->createItem($this->menuAlias, [
-            'extras' => [
-                'hasSlugMapChildren'  => false,
-                'showSlugMapChildren' => false,
-            ],
-        ]);
+        $root = $this->rootItemFactory->createItem($this->menuAlias);
 
-        $entities = $this->getEntities();
+        $entities = $this->getMenuItemEntities();
 
         $this->addItems($root, $entities);
 
@@ -220,7 +224,7 @@ class Builder
     /**
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    protected function getEntities()
+    protected function getMenuItemEntities()
     {
         $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale())
             ->getQuery()

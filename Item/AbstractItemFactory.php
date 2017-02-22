@@ -11,8 +11,6 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
-use Doctrine\Common\Util\ClassUtils;
-use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,11 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class AbstractItemFactory
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $em;
-
     /**
      * @var \Knp\Menu\FactoryInterface
      */
@@ -37,12 +30,10 @@ abstract class AbstractItemFactory
     protected $extrasResolver;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em                 Entity manager
-     * @param \Knp\Menu\FactoryInterface  $genericItemFactory Generic item factory
+     * @param \Knp\Menu\FactoryInterface $genericItemFactory Generic item factory
      */
-    public function __construct(EntityManager $em, FactoryInterface $genericItemFactory)
+    public function __construct(FactoryInterface $genericItemFactory)
     {
-        $this->em = $em;
         $this->genericItemFactory = $genericItemFactory;
 
         $extrasResolver = new OptionsResolver();
@@ -51,88 +42,62 @@ abstract class AbstractItemFactory
     }
 
     /**
-     * @param object $entity Entity
+     * @param mixed $source Source
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function createItem($entity)
+    public function createItem($source)
     {
-        $this->validateEntity($entity);
-
-        return $this->create($entity, $this->getOptions($entity));
+        return $this->genericItemFactory->createItem($this->getItemName($source), $this->getOptions($source));
     }
 
     /**
-     * @return \Knp\Menu\FactoryInterface
-     */
-    public function getGenericItemFactory()
-    {
-        return $this->genericItemFactory;
-    }
-
-    /**
-     * @param object $entity Entity
+     * @param mixed $source Source
      *
      * @return string
      */
-    abstract protected function getLabel($entity);
+    abstract protected function getItemName($source);
 
     /**
-     * @param object $entity Entity
-     *
-     * @return string
-     */
-    abstract protected function getUri($entity);
-
-    /**
-     * @return string
-     */
-    abstract protected function getSupportedClass();
-
-    /**
-     * @param object $entity  Entity
-     * @param array  $options Options
-     *
-     * @return \Knp\Menu\ItemInterface
-     */
-    protected function create($entity, array $options)
-    {
-        return $this->genericItemFactory->createItem($this->getItemName($entity), $options);
-    }
-
-    /**
-     * @param object $entity Entity
-     *
-     * @return string
-     */
-    protected function getItemName($entity)
-    {
-        $class = ClassUtils::getClass($entity);
-        $ids = $this->em->getClassMetadata($class)->getIdentifierValues($entity);
-
-        return uniqid(sprintf('%s-%s-', $class, reset($ids)), true);
-    }
-
-    /**
-     * @param object $entity Entity
+     * @param mixed $source Source
      *
      * @return array
      */
-    protected function getOptions($entity)
+    protected function getOptions($source)
     {
         return [
-            'label'  => $this->getLabel($entity),
-            'uri'    => $this->getUri($entity),
-            'extras' => $this->extrasResolver->resolve($this->getExtras($entity)),
+            'label'  => $this->getLabel($source),
+            'uri'    => $this->getUri($source),
+            'extras' => $this->extrasResolver->resolve($this->getExtras($source)),
         ];
     }
 
     /**
-     * @param object $entity Entity
+     * @param mixed $source Source
+     *
+     * @return string
+     */
+    protected function getLabel($source)
+    {
+        return null;
+    }
+
+    /**
+     * @param mixed $source Source
+     *
+     * @return string
+     */
+    protected function getUri($source)
+    {
+        return null;
+    }
+
+    /**
+     * @param mixed $source Source
      *
      * @return array
      */
-    protected function getExtras($entity)
+    protected function getExtras($source)
     {
         return [];
     }
@@ -160,25 +125,6 @@ abstract class AbstractItemFactory
                     AbstractImage::class,
                     'null',
                 ]);
-        }
-    }
-
-    /**
-     * @param object $entity Entity
-     *
-     * @throws \Darvin\MenuBundle\Item\ItemFactoryException
-     */
-    protected function validateEntity($entity)
-    {
-        if (!is_object($entity)) {
-            throw new ItemFactoryException(sprintf('Entity must be object, got "%s".', gettype($entity)));
-        }
-
-        $class = ClassUtils::getClass($entity);
-        $supportedClass = $this->getSupportedClass();
-
-        if ($class !== $supportedClass) {
-            throw new ItemFactoryException(sprintf('Entity must instance of "%s", got "%s".', $supportedClass, $class));
         }
     }
 }

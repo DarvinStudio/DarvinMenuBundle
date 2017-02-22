@@ -17,7 +17,7 @@ use Knp\Menu\FactoryInterface;
 /**
  * Item from menu item entity factory
  */
-class MenuItemFactory extends AbstractItemFactory
+class MenuItemFactory extends AbstractEntityItemFactory
 {
     /**
      * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
@@ -25,13 +25,13 @@ class MenuItemFactory extends AbstractItemFactory
     protected $slugMapItemFactory;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                $em                 Entity manager
      * @param \Knp\Menu\FactoryInterface                 $genericItemFactory Generic item factory
+     * @param \Doctrine\ORM\EntityManager                $em                 Entity manager
      * @param \Darvin\MenuBundle\Item\SlugMapItemFactory $slugMapItemFactory Item from slug map item factory
      */
-    public function __construct(EntityManager $em, FactoryInterface $genericItemFactory, SlugMapItemFactory $slugMapItemFactory)
+    public function __construct(FactoryInterface $genericItemFactory, EntityManager $em, SlugMapItemFactory $slugMapItemFactory)
     {
-        parent::__construct($em, $genericItemFactory);
+        parent::__construct($genericItemFactory, $em);
 
         $this->slugMapItemFactory = $slugMapItemFactory;
     }
