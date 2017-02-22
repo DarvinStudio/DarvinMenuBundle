@@ -42,6 +42,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
 
         foreach ([
             'admin',
+            'breadcrumbs',
             'builder',
             'configuration',
             'item_factory',

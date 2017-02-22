@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
-                            ->booleanNode('breadcrumbs')->defaultFalse()->end()
+                            ->booleanNode('breadcrumbs')->defaultTrue()->end()
                         ->end()
                     ->end()
                 ->end()

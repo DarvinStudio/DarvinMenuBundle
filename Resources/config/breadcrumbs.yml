@@ -1,0 +1,15 @@
+parameters:
+    darvin_menu.breadcrumbs.provider.class:     Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuProvider
+    darvin_menu.breadcrumbs.provider.menu_name: darvin_menu_breadcrumbs
+
+services:
+    darvin_menu.breadcrumbs.provider:
+        class: "%darvin_menu.breadcrumbs.provider.class%"
+        arguments:
+            - "@service_container"
+            - "@knp_menu.matcher"
+            - "@darvin_menu.configuration.menu"
+            - "@darvin_menu.item_factory.root"
+            - "%darvin_menu.breadcrumbs.provider.menu_name%"
+        tags:
+            - { name: knp_menu.provider }
