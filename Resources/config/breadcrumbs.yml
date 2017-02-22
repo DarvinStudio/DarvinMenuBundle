@@ -25,6 +25,6 @@ services:
             - "@knp_menu.helper"
             - "%darvin_menu.breadcrumbs.provider.menu_name%"
             - "%darvin_menu.breadcrumbs.twig_extension.default_options%"
-            - "%darvin_menu.template.breadcrumbs%"
+            - "%darvin_menu.breadcrumbs.template%"
         tags:
             - { name: twig.extension }
