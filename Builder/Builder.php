@@ -10,7 +10,9 @@
 
 namespace Darvin\MenuBundle\Builder;
 
+use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\ImageBundle\ORM\ImageJoinerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
@@ -231,7 +233,7 @@ class Builder
         $this->loadSlugMapItemCustomObjects($slugMapItems);
 
         foreach ($entities as $key => $entity) {
-            if (null !== $entity->getSlugMapItem() && null === $entity->getSlugMapItem()->getObject()) {
+            if (null !== $entity->getSlugMapItem() && !$this->isSlugMapItemActive($entity->getSlugMapItem())) {
                 unset($entities[$key]);
             }
         }
@@ -261,7 +263,7 @@ class Builder
         $this->loadSlugMapItemCustomObjects($childSlugMapItems);
 
         foreach ($childSlugMapItems as $key => $slugMapItem) {
-            if (null === $slugMapItem->getObject()) {
+            if (!$this->isSlugMapItemActive($slugMapItem)) {
                 unset($childSlugMapItems[$key]);
 
                 continue;
@@ -329,6 +331,28 @@ class Builder
         }
 
         return $this->slugPartSeparators[$class][$property];
+    }
+
+    /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     *
+     * @return bool
+     */
+    protected function isSlugMapItemActive(SlugMapItem $slugMapItem)
+    {
+        $customObject = $slugMapItem->getObject();
+
+        if (empty($customObject)) {
+            return false;
+        }
+        if ($customObject instanceof DisableableInterface && !$customObject->isEnabled()) {
+            return false;
+        }
+        if ($customObject instanceof HideableInterface && $customObject->isHidden()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
