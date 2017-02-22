@@ -1,7 +1,7 @@
 <?php
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2017, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,18 +10,20 @@
 
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
-use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuBuilderPass;
+use Darvin\MenuBundle\Builder\Builder;
+use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Create builders compiler pass
+ * Create menu services compiler pass
  */
-class CreateBuildersPass implements CompilerPassInterface
+class CreateMenuServicesPass implements CompilerPassInterface
 {
-    const PARENT_ID = 'darvin_menu.builder.abstract';
+    const PARENT_ID = 'darvin_menu.menu.abstract';
 
     /**
      * {@inheritdoc}
@@ -31,7 +33,11 @@ class CreateBuildersPass implements CompilerPassInterface
         $definitions = [];
 
         foreach ($this->getMenuConfig($container)->getMenus() as $menu) {
-            $definitions[$menu->getBuilderId()] = (new DefinitionDecorator(self::PARENT_ID))->addArgument($menu->getAlias());
+            $definitions[$menu->getMenuServiceId()] = (new DefinitionDecorator(self::PARENT_ID))
+                ->setFactory([new Reference($menu->getBuilderId()), Builder::BUILD_METHOD])
+                ->addTag('knp_menu.menu', [
+                    'alias' => $menu->getMenuServiceAlias(),
+                ]);
         }
         foreach ($definitions as $id => $definition) {
             if ($container->hasDefinition($id)) {
@@ -41,7 +47,7 @@ class CreateBuildersPass implements CompilerPassInterface
 
         $container->addDefinitions($definitions);
 
-        (new MenuBuilderPass())->process($container);
+        (new MenuPass())->process($container);
     }
 
     /**

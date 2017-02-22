@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle;
 
 use Darvin\MenuBundle\DependencyInjection\Compiler\CreateBuildersPass;
+use Darvin\MenuBundle\DependencyInjection\Compiler\CreateMenuServicesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -24,6 +25,8 @@ class DarvinMenuBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new CreateBuildersPass());
+        $container
+            ->addCompilerPass(new CreateBuildersPass())
+            ->addCompilerPass(new CreateMenuServicesPass());
     }
 }

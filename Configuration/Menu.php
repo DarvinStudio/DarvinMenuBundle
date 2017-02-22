@@ -51,6 +51,16 @@ class Menu
     private $breadcrumbsBuilderAlias;
 
     /**
+     * @var string
+     */
+    private $menuServiceId;
+
+    /**
+     * @var string
+     */
+    private $menuServiceAlias;
+
+    /**
      * @param string $alias              Alias
      * @param bool   $breadcrumbsEnabled Is breadcrumbs functionality enabled
      */
@@ -64,6 +74,8 @@ class Menu
         $this->builderAlias = 'darvin_menu_'.$alias;
         $this->breadcrumbsBuilderId = 'darvin_menu.breadcrumbs_builder.'.$alias;
         $this->breadcrumbsBuilderAlias = 'darvin_breadcrumbs_'.$alias;
+        $this->menuServiceId = 'darvin_menu.menu.'.$alias;
+        $this->menuServiceAlias = 'darvin_menu_'.$alias;
     }
 
     /**
@@ -120,5 +132,21 @@ class Menu
     public function getBreadcrumbsBuilderAlias()
     {
         return $this->breadcrumbsBuilderAlias;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMenuServiceId()
+    {
+        return $this->menuServiceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMenuServiceAlias()
+    {
+        return $this->menuServiceAlias;
     }
 }

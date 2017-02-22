@@ -5,6 +5,7 @@ services:
     darvin_menu.builder.abstract:
         class:    "%darvin_menu.builder.abstract.class%"
         abstract: true
+        public:   false
         arguments:
             - "@darvin_utils.custom_object.loader"
             - "@doctrine.orm.entity_manager"
