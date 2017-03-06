@@ -41,6 +41,21 @@ class MenuConfiguration
     }
 
     /**
+     * @param string $alias Menu alias
+     *
+     * @return \Darvin\MenuBundle\Configuration\Menu
+     * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
+     */
+    public function getMenu($alias)
+    {
+        if (!isset($this->menus[$alias])) {
+            throw new ConfigurationException(sprintf('Menu with alias "%s" does not exist.', $alias));
+        }
+
+        return $this->menus[$alias];
+    }
+
+    /**
      * @return \Darvin\MenuBundle\Configuration\Menu[]
      */
     public function getMenus()

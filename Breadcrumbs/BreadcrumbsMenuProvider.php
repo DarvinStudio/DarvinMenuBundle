@@ -16,6 +16,7 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\MatcherInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Breadcrumbs menu provider
@@ -48,6 +49,11 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     private $menuName;
 
     /**
+     * @var \Symfony\Component\OptionsResolver\OptionsResolver
+     */
+    private $optionsResolver;
+
+    /**
      * @var \Knp\Menu\ItemInterface
      */
     private $currentMenu;
@@ -72,6 +78,10 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
         $this->rootItemFactory = $rootItemFactory;
         $this->menuName = $menuName;
 
+        $optionsResolver = new OptionsResolver();
+        $this->configureOptions($optionsResolver);
+        $this->optionsResolver = $optionsResolver;
+
         $this->currentMenu = null;
     }
 
@@ -80,11 +90,13 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
      */
     public function get($name, array $options = [])
     {
+        $options = $this->optionsResolver->resolve($options);
+
         if (!$this->has($name, $options)) {
             throw new \InvalidArgumentException(sprintf('Menu "%s" does not exist.', $name));
         }
 
-        return $this->getCurrentMenu();
+        return $this->getCurrentMenu($options);
     }
 
     /**
@@ -96,10 +108,15 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     }
 
     /**
+     * @param array $options Options
+     *
      * @return \Knp\Menu\ItemInterface
      */
-    private function getCurrentMenu()
+    private function getCurrentMenu(array $options)
     {
+        if (!empty($options['menu_alias'])) {
+            return $this->getGenericMenuProvider()->get($this->menuConfig->getMenu($options['menu_alias'])->getMenuServiceAlias());
+        }
         if (empty($this->currentMenu)) {
             $genericMenuProvider = $this->getGenericMenuProvider();
 
@@ -138,6 +155,19 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
+     */
+    private function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefault('menu_alias', null)
+            ->setAllowedTypes('menu_alias', [
+                'string',
+                'null',
+            ]);
     }
 
     /**

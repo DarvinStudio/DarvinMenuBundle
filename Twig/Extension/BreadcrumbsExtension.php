@@ -77,12 +77,13 @@ class BreadcrumbsExtension extends \Twig_Extension
     }
 
     /**
-     * @param array  $options  Options
-     * @param string $renderer Renderer
+     * @param string $menuAlias Menu alias
+     * @param array  $options   Options
+     * @param string $renderer  Renderer
      *
      * @return string
      */
-    public function renderBreadcrumbs(array $options = [], $renderer = null)
+    public function renderBreadcrumbs($menuAlias = null, array $options = [], $renderer = null)
     {
         $options = array_merge($this->defaultOptions, $options);
 
@@ -90,6 +91,12 @@ class BreadcrumbsExtension extends \Twig_Extension
             $options['template'] = $this->defaultTemplate;
         }
 
-        return $this->helper->render($this->breadcrumbsMenuProvider->get($this->breadcrumbsMenuName), $options, $renderer);
+        return $this->helper->render(
+            $this->breadcrumbsMenuProvider->get($this->breadcrumbsMenuName, [
+                'menu_alias' => $menuAlias,
+            ]),
+            $options,
+            $renderer
+        );
     }
 }
