@@ -62,6 +62,7 @@ class MenuItemParentType extends AbstractType
                 'class'        => 'slave_input',
                 'data-master'  => '.menu',
                 'data-show-on' => $menuItem->getMenu(),
+                'disabled'     => $menuItem === $form->getParent()->getData(),
             ]);
         }
 
