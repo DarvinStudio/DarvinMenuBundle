@@ -146,16 +146,18 @@ class Item
      */
     public function __toString()
     {
+        $prefix = str_repeat('---', $this->level - 1);
+
         $title = $this->getTitle();
 
         if (!empty($title)) {
-            return $title;
+            return $prefix.$title;
         }
         if (!empty($this->slugMapItem) && null !== $this->slugMapItem->getObject()) {
-            return (string) $this->slugMapItem->getObject();
+            return $prefix.$this->slugMapItem->getObject();
         }
 
-        return (string) $this->id;
+        return $prefix.$this->id;
     }
 
     /**
