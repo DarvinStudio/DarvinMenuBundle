@@ -94,6 +94,8 @@ class Item
      * @ORM\Column(type="string")
      *
      * @Assert\NotBlank
+     *
+     * @Gedmo\SortableGroup
      */
     private $menu;
 
