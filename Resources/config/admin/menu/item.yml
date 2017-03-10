@@ -1,40 +1,33 @@
-index_view_new_form: true
+index_view_row_attr:
+    - level
 menu:
     skip: true
+pagination:
+    enabled: false
+searchable_fields:
+    - title
+    - url
+sorter:
+    id:     darvin_menu.sorter.menu_item
+    method: sort
+order_by:
+    menu:     asc
+    level:    asc
+    position: asc
 joins:
     hover_image:       hoverImage
     hover_image_sizes: hover_image.sizes
     image:             image
     image_sizes:       image.sizes
-order_by:
-    menu: asc
-searchable_fields:
-    - title
-    - url
-sortable_fields:
-    menuTitle:    menu
-    enabled:      translations.enabled
-    showChildren: ~
-    title:        translations.title
-    url:          translations.url
 view:
     index:
         fields:
             menuTitle:    ~
+            position:     ~
             enabled:      ~
             showChildren: ~
             title:        ~
             url:          ~
-            image:
-                widget:
-                    alias: image_link
-                    options:
-                        property: image
-            hoverImage:
-                widget:
-                    alias: image_link
-                    options:
-                        property: hoverImage
     show:
         fields:
             menuTitle:    ~
@@ -47,6 +40,10 @@ view:
 form:
     index:
         fields:
+            position:
+                options:
+                    attr:
+                        class: position
             enabled:      ~
             showChildren: ~
     filter:
@@ -59,10 +56,13 @@ form:
                 compare_strict: false
             url:
                 compare_strict: false
-    new:
+    edit:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+            parent:
+                options:
+                    required: false
             slugMapItem:
                 type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemType
             showChildren:

@@ -37,7 +37,8 @@ class ItemRepository extends EntityRepository
 
         return $qb
             ->andWhere('o.slugMapItem IS NOT NULL OR (translations.url IS NOT NULL AND translations.title IS NOT NULL)')
-            ->orderBy('o.level');
+            ->orderBy('o.level')
+            ->addOrderBy('o.position');
     }
 
     /**
