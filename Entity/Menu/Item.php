@@ -49,6 +49,7 @@ class Item
      * @ORM\ManyToOne(targetEntity="Item", inversedBy="children")
      *
      * @Gedmo\TreeParent
+     * @Gedmo\SortableGroup
      */
     private $parent;
 
@@ -102,6 +103,15 @@ class Item
      * @ORM\Column(type="boolean")
      */
     private $showChildren;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     *
+     * @Gedmo\SortablePosition
+     */
+    private $position;
 
     /**
      * @var string
@@ -291,6 +301,26 @@ class Item
     public function isShowChildren()
     {
         return $this->showChildren;
+    }
+
+    /**
+     * @param int $position position
+     *
+     * @return Item
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 
     /**
