@@ -146,6 +146,15 @@ class Item
      */
     public function __toString()
     {
+        $title = $this->getTitle();
+
+        if (!empty($title)) {
+            return $title;
+        }
+        if (!empty($this->slugMapItem) && null !== $this->slugMapItem->getObject()) {
+            return (string) $this->slugMapItem->getObject();
+        }
+
         return (string) $this->id;
     }
 
