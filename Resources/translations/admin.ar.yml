@@ -44,6 +44,7 @@ menu_item:
         image: صورة
         menu: القائمة
         menu_title: القائمة
+        parent: 'الأم'
         position: موقف
         position_from: 'موقف (من)'
         position_to: 'موقف ()'

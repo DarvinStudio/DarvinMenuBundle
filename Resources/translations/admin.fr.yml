@@ -44,6 +44,7 @@ menu_item:
         image: Image
         menu: Menu
         menu_title: Menu
+        parent: Parent
         position: Position
         position_from: 'Position (à partir de)'
         position_to: 'Position ()'

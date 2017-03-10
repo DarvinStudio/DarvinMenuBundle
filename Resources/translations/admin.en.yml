@@ -48,6 +48,7 @@ menu_item:
         image:            Image
         menu:             Menu
         menu_title:       Menu
+        parent:           Parent
         position:         Position
         position_from:    Position (from)
         position_to:      Position (to)

@@ -79,6 +79,7 @@ class SlugMapItemType extends AbstractType
         $classPropertyChoices = $this->buildClassPropertyChoices($propertiesByClasses);
 
         $builder->add('class_property', ChoiceType::class, [
+            'label'             => 'menu_item.entity.slug_map_item',
             'choices'           => $classPropertyChoices,
             'choices_as_values' => true,
             'required'          => false,

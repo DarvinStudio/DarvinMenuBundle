@@ -44,6 +44,7 @@ menu_item:
         image: 图像
         menu: 菜单
         menu_title: 菜单
+        parent: 父
         position: 位置
         position_from: 位置()
         position_to: 位置()
