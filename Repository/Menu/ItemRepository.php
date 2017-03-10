@@ -19,6 +19,24 @@ use Doctrine\ORM\QueryBuilder;
 class ItemRepository extends EntityRepository
 {
     /**
+     * @param string $locale Locale
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getAdminBuilder($locale)
+    {
+        $qb = $this->createDefaultQueryBuilder()
+            ->orderBy('o.menu')
+            ->addOrderBy('o.level')
+            ->addOrderBy('o.position');
+        $this
+            ->joinSlugMapItem($qb)
+            ->joinTranslations($qb, $locale);
+
+        return $qb;
+    }
+
+    /**
      * @param string $menu   Menu alias
      * @param string $locale Locale
      *

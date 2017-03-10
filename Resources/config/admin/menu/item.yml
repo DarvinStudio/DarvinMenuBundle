@@ -67,8 +67,7 @@ form:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
             parent:
-                options:
-                    required: false
+                type: Darvin\MenuBundle\Form\Type\Admin\MenuItemParentType
             slugMapItem:
                 type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemType
             showChildren:
