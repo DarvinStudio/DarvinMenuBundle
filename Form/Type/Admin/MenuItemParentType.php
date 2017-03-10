@@ -54,12 +54,19 @@ class MenuItemParentType extends AbstractType
 
         /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
         foreach ($view->vars['choices'] as $choice) {
-            $menuItems[] = $choice->data;
+            /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+            $menuItem = $choice->data;
+            $menuItems[] = $menuItem;
+
+            $choice->attr = array_merge($choice->attr, [
+                'class'        => 'slave_input',
+                'data-master'  => '.menu',
+                'data-show-on' => $menuItem->getMenu(),
+            ]);
         }
 
         $choices = [];
 
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
         foreach ($this->menuItemSorter->sort($menuItems) as $menuItem) {
             $choices[$menuItem->getId()] = $view->vars['choices'][$menuItem->getId()];
         }

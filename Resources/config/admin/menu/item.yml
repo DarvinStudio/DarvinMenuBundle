@@ -66,6 +66,9 @@ form:
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+                options:
+                    attr:
+                        class: menu
             parent:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuItemParentType
             slugMapItem:
