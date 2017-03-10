@@ -14,7 +14,8 @@
     "require": {
         "knplabs/knp-menu-bundle":          "^2.1",
 
-        "darvinstudio/darvin-admin-bundle": "*"
+        "darvinstudio/darvin-admin-bundle": "*",
+        "darvinstudio/darvin-page-bundle":  "*"
     },
     "require-dev": {
         "andyftw/image-faker":               "^1.1",

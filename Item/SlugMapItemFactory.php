@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\PageBundle\Configuration\Configuration;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -21,6 +22,11 @@ use Symfony\Component\Routing\RouterInterface;
 class SlugMapItemFactory extends AbstractEntityItemFactory
 {
     /**
+     * @var \Darvin\PageBundle\Configuration\Configuration
+     */
+    protected $pageConfig;
+
+    /**
      * @var \Symfony\Component\Routing\RouterInterface
      */
     protected $router;
@@ -28,20 +34,35 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     /**
      * @var string
      */
-    protected $uriRoute;
+    protected $genericUriRoute;
 
     /**
-     * @param \Knp\Menu\FactoryInterface                 $genericItemFactory Generic item factory
-     * @param \Doctrine\ORM\EntityManager                $em                 Entity manager
-     * @param \Symfony\Component\Routing\RouterInterface $router             Router
-     * @param string                                     $uriRoute           URI route
+     * @var string
      */
-    public function __construct(FactoryInterface $genericItemFactory, EntityManager $em, RouterInterface $router, $uriRoute)
-    {
+    protected $homepageUriRoute;
+
+    /**
+     * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
+     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
+     * @param \Darvin\PageBundle\Configuration\Configuration $pageConfig         Page configuration
+     * @param \Symfony\Component\Routing\RouterInterface     $router             Router
+     * @param string                                         $genericUriRoute    Generic URI route
+     * @param string                                         $homepageUriRoute   Homepage URI route
+     */
+    public function __construct(
+        FactoryInterface $genericItemFactory,
+        EntityManager $em,
+        Configuration $pageConfig,
+        RouterInterface $router,
+        $genericUriRoute,
+        $homepageUriRoute
+    ) {
         parent::__construct($genericItemFactory, $em);
 
+        $this->pageConfig = $pageConfig;
         $this->router = $router;
-        $this->uriRoute = $uriRoute;
+        $this->genericUriRoute = $genericUriRoute;
+        $this->homepageUriRoute = $homepageUriRoute;
     }
 
     /**
@@ -65,7 +86,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     {
         $this->validateEntity($slugMapItem);
 
-        return $this->router->generate($this->uriRoute, [
+        return $this->router->generate($this->getUriRoute($slugMapItem), [
             'slug' => $slugMapItem->getSlug(),
         ]);
     }
@@ -76,5 +97,17 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     protected function getSupportedClass()
     {
         return SlugMapItem::class;
+    }
+
+    /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     *
+     * @return string
+     */
+    private function getUriRoute(SlugMapItem $slugMapItem)
+    {
+        $homepage = $this->pageConfig->getHomepage();
+
+        return !empty($homepage) && $homepage === $slugMapItem->getObject() ? $this->homepageUriRoute : $this->genericUriRoute;
     }
 }
