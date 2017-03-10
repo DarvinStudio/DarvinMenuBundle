@@ -52,5 +52,6 @@ menu_item:
         position_from:    Position (from)
         position_to:      Position (to)
         show_children:    Show children
+        slug_map_item:    Object
         title:            Title
         url:              URL

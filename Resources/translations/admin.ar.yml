@@ -48,5 +48,6 @@ menu_item:
         position_from: 'موقف (من)'
         position_to: 'موقف ()'
         show_children: 'تظهر الأطفال'
+        slug_map_item: وجوه
         title: العنوان
         url: URL

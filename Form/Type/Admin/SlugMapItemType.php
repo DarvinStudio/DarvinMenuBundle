@@ -184,8 +184,8 @@ class SlugMapItemType extends AbstractType
 
         foreach ($propertiesByClasses as $class => $properties) {
             foreach ($properties as $property) {
-                $choice = $this->entityNamer->name($class).'_'.$property;
-                $choices['slug_map_item.'.$choice] = $choice;
+                $entityName = $this->entityNamer->name($class);
+                $choices[sprintf('slug_map_item.%s.%s', $entityName, $property)] = $entityName.'_'.$property;
             }
         }
 

@@ -10,16 +10,18 @@
 
 namespace Darvin\MenuBundle\Admin\View;
 
+use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\AdminBundle\Route\AdminRouter;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Menu item entity link admin view widget
+ * Slug map item link admin view widget
  */
-class MenuItemEntityLinkWidget extends AbstractWidget
+class SlugMapItemLinkWidget extends AbstractWidget
 {
     /**
      * @var \Darvin\AdminBundle\Route\AdminRouter
@@ -27,9 +29,19 @@ class MenuItemEntityLinkWidget extends AbstractWidget
     private $adminRouter;
 
     /**
+     * @var \Darvin\AdminBundle\EntityNamer\EntityNamerInterface
+     */
+    private $entityNamer;
+
+    /**
      * @var \Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget
      */
     private $showLinkWidget;
+
+    /**
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param \Darvin\AdminBundle\Route\AdminRouter $adminRouter Admin router
@@ -40,11 +52,27 @@ class MenuItemEntityLinkWidget extends AbstractWidget
     }
 
     /**
+     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface $entityNamer Entity namer
+     */
+    public function setEntityNamer(EntityNamerInterface $entityNamer)
+    {
+        $this->entityNamer = $entityNamer;
+    }
+
+    /**
      * @param \Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget $showLinkWidget Show link admin view widget
      */
     public function setShowLinkWidget(ShowLinkWidget $showLinkWidget)
     {
         $this->showLinkWidget = $showLinkWidget;
+    }
+
+    /**
+     * @param \Symfony\Component\Translation\TranslatorInterface $translator Translator
+     */
+    public function setTranslator(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
     }
 
     /**
@@ -66,11 +94,17 @@ class MenuItemEntityLinkWidget extends AbstractWidget
             return null;
         }
 
-        $content = $this->showLinkWidget->getContent($entity, [
+        $content = $this->translator->trans(
+            sprintf('slug_map_item.%s.%s', $this->entityNamer->name($entity), $menuItem->getSlugMapItem()->getProperty()),
+            [],
+            'admin'
+        );
+
+        $showLink = $this->showLinkWidget->getContent($entity, [
             'text_link' => true,
         ]);
 
-        return !empty($content) ? $content : (string) $entity;
+        return $content.(!empty($showLink) ? $showLink : $entity);
     }
 
     /**

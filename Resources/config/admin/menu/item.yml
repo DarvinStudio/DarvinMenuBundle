@@ -27,9 +27,9 @@ view:
             position:     ~
             enabled:      ~
             showChildren: ~
-            entity:
+            slugMapItem:
                 widget:
-                    alias: menu_item_entity_link
+                    alias: slug_map_item_link
             title: ~
             url:
                 widget:

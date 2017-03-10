@@ -48,5 +48,6 @@ menu_item:
         position_from: 位置()
         position_to: 位置()
         show_children: 孩子们展示
+        slug_map_item: 对象
         title: 标题
         url: URL
