@@ -86,9 +86,14 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     {
         $this->validateEntity($slugMapItem);
 
-        return $this->router->generate($this->getUriRoute($slugMapItem), [
-            'slug' => $slugMapItem->getSlug(),
-        ]);
+        $route = $this->getUriRoute($slugMapItem);
+        $params = [];
+
+        if ($this->router->getRouteCollection()->get($route)->hasRequirement('slug')) {
+            $params['slug'] = $slugMapItem->getSlug();
+        }
+
+        return $this->router->generate($route, $params);
     }
 
     /**
