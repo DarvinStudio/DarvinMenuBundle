@@ -30,8 +30,10 @@ view:
             entity:
                 widget:
                     alias: menu_item_entity_link
-            title:        ~
-            url:          ~
+            title: ~
+            url:
+                widget:
+                    alias: simple_link
     show:
         fields:
             menuTitle:    ~

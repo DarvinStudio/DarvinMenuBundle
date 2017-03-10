@@ -34,6 +34,9 @@ services:
     darvin_menu.admin.menu_item_entity_link_view_widget:
         class:  "%darvin_menu.admin.menu_item_entity_link_view_widget.class%"
         parent: darvin_admin.view.widget.abstract
+        calls:
+            - [ setAdminRouter,    [ "@darvin_admin.router" ] ]
+            - [ setShowLinkWidget, [ "@darvin_admin.view.widget.show_link" ] ]
         tags:
             - { name: darvin_admin.view_widget }
 

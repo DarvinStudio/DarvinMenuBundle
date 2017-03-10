@@ -10,8 +10,10 @@
 
 namespace Darvin\MenuBundle\Admin\View;
 
+use Darvin\AdminBundle\Route\AdminRouter;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
+use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
 use Darvin\MenuBundle\Entity\Menu\Item;
 
 /**
@@ -19,6 +21,32 @@ use Darvin\MenuBundle\Entity\Menu\Item;
  */
 class MenuItemEntityLinkWidget extends AbstractWidget
 {
+    /**
+     * @var \Darvin\AdminBundle\Route\AdminRouter
+     */
+    private $adminRouter;
+
+    /**
+     * @var \Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget
+     */
+    private $showLinkWidget;
+
+    /**
+     * @param \Darvin\AdminBundle\Route\AdminRouter $adminRouter Admin router
+     */
+    public function setAdminRouter(AdminRouter $adminRouter)
+    {
+        $this->adminRouter = $adminRouter;
+    }
+
+    /**
+     * @param \Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget $showLinkWidget Show link admin view widget
+     */
+    public function setShowLinkWidget(ShowLinkWidget $showLinkWidget)
+    {
+        $this->showLinkWidget = $showLinkWidget;
+    }
+
     /**
      * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
      * @param array                               $options  Options
@@ -32,7 +60,17 @@ class MenuItemEntityLinkWidget extends AbstractWidget
             return null;
         }
 
-        return $menuItem->getSlugMapItem()->getObject();
+        $entity = $menuItem->getSlugMapItem()->getObject();
+
+        if (empty($entity)) {
+            return null;
+        }
+
+        $content = $this->showLinkWidget->getContent($entity, [
+            'text_link' => true,
+        ]);
+
+        return !empty($content) ? $content : (string) $entity;
     }
 
     /**
