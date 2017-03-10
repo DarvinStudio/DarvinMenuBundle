@@ -8,15 +8,29 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Sorter;
+namespace Darvin\MenuBundle\Admin\Sorter;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 
 /**
  * Menu item sorter
  */
 class MenuItemSorter
 {
+    /**
+     * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
+     */
+    private $customObjectLoader;
+
+    /**
+     * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface $customObjectLoader Custom object loader
+     */
+    public function __construct(CustomObjectLoaderInterface $customObjectLoader)
+    {
+        $this->customObjectLoader = $customObjectLoader;
+    }
+
     /**
      * @param \Darvin\MenuBundle\Entity\Menu\Item[] $menuItems Menu items
      *
@@ -28,9 +42,12 @@ class MenuItemSorter
             return [];
         }
 
-        $children = [];
+        $children = $slugMapItems = [];
 
         foreach ($menuItems as $menuItem) {
+            if (null !== $menuItem->getSlugMapItem()) {
+                $slugMapItems[] = $menuItem->getSlugMapItem();
+            }
             if (null === $menuItem->getParent()) {
                 continue;
             }
@@ -49,6 +66,8 @@ class MenuItemSorter
         foreach ($menuItems as $menuItem) {
             $this->addMenuItem($sorted, $menuItem, $children);
         }
+
+        $this->customObjectLoader->loadCustomObjects($slugMapItems);
 
         return $sorted;
     }

@@ -3,7 +3,11 @@ parameters:
 
     darvin_menu.admin.form_type.slug_map_item.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemType
 
+    darvin_menu.admin.menu_item_entity_link_view_widget.class: Darvin\MenuBundle\Admin\View\MenuItemEntityLinkWidget
+
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
+
+    darvin_menu.admin.menu_item_sorter.class: Darvin\MenuBundle\Admin\Sorter\MenuItemSorter
 
     darvin_menu.admin.preserve_menu_in_url_listener.class: Darvin\MenuBundle\EventListener\Admin\PreserveMenuInUrlListener
 
@@ -27,6 +31,12 @@ services:
         tags:
             - { name: form.type }
 
+    darvin_menu.admin.menu_item_entity_link_view_widget:
+        class:  "%darvin_menu.admin.menu_item_entity_link_view_widget.class%"
+        parent: darvin_admin.view.widget.abstract
+        tags:
+            - { name: darvin_admin.view_widget }
+
     darvin_menu.admin.menu_item_factory:
         class:  "%darvin_menu.admin.menu_item_factory.class%"
         public: false
@@ -36,6 +46,11 @@ services:
             - "@darvin_admin.metadata.manager"
         tags:
             - { name: darvin_admin.menu_item_factory }
+
+    darvin_menu.admin.menu_item_sorter:
+        class: "%darvin_menu.admin.menu_item_sorter.class%"
+        arguments:
+            - "@darvin_utils.custom_object.loader"
 
     darvin_menu.admin.preserve_menu_in_url_listener:
         class: "%darvin_menu.admin.preserve_menu_in_url_listener.class%"

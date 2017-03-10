@@ -8,7 +8,7 @@ searchable_fields:
     - title
     - url
 sorter:
-    id:     darvin_menu.sorter.menu_item
+    id:     darvin_menu.admin.menu_item_sorter
     method: sort
 order_by:
     menu:     asc
@@ -19,6 +19,7 @@ joins:
     hover_image_sizes: hover_image.sizes
     image:             image
     image_sizes:       image.sizes
+    slug_map_item:     slugMapItem
 view:
     index:
         fields:
@@ -26,6 +27,9 @@ view:
             position:     ~
             enabled:      ~
             showChildren: ~
+            entity:
+                widget:
+                    alias: menu_item_entity_link
             title:        ~
             url:          ~
     show:

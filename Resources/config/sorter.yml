@@ -1,6 +1,0 @@
-parameters:
-    darvin_menu.sorter.menu_item.class: Darvin\MenuBundle\Sorter\MenuItemSorter
-
-services:
-    darvin_menu.sorter.menu_item:
-        class: "%darvin_menu.sorter.menu_item.class%"
