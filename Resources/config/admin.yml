@@ -24,10 +24,9 @@ services:
     darvin_menu.admin.form_type.slug_map_item:
         class: "%darvin_menu.admin.form_type.slug_map_item.class%"
         arguments:
-            - "@darvin_utils.custom_object.loader"
             - "@doctrine.orm.entity_manager"
             - "@darvin_admin.entity_namer"
-            - "@darvin_content.translatable.translation_joiner"
+            - "@darvin_menu.slug_map.item_custom_object_loader"
         tags:
             - { name: form.type }
 

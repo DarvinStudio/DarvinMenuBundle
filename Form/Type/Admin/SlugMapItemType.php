@@ -13,11 +13,9 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
-use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
+use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -32,11 +30,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SlugMapItemType extends AbstractType
 {
     /**
-     * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
-     */
-    private $customObjectLoader;
-
-    /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
@@ -47,26 +40,23 @@ class SlugMapItemType extends AbstractType
     private $entityNamer;
 
     /**
-     * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
+     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
      */
-    private $translationJoiner;
+    private $slugMapItemCustomObjectLoader;
 
     /**
-     * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface        $customObjectLoader Custom object loader
-     * @param \Doctrine\ORM\EntityManager                                   $em                 Entity manager
-     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface          $entityNamer        Entity namer
-     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner  Translation joiner
+     * @param \Doctrine\ORM\EntityManager                              $em                            Entity manager
+     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface     $entityNamer                   Entity namer
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
      */
     public function __construct(
-        CustomObjectLoaderInterface $customObjectLoader,
         EntityManager $em,
         EntityNamerInterface $entityNamer,
-        TranslationJoinerInterface $translationJoiner
+        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader
     ) {
-        $this->customObjectLoader = $customObjectLoader;
         $this->em = $em;
         $this->entityNamer = $entityNamer;
-        $this->translationJoiner = $translationJoiner;
+        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
     }
 
     /**
@@ -138,13 +128,7 @@ class SlugMapItemType extends AbstractType
             }
         }
 
-        $translationJoiner = $this->translationJoiner;
-
-        $this->customObjectLoader->loadCustomObjects($slugMapItems, function (QueryBuilder $qb) use ($translationJoiner) {
-            if ($translationJoiner->isTranslatable($qb->getRootEntities()[0])) {
-                $translationJoiner->joinTranslation($qb, true, null, null, true);
-            }
-        });
+        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
 
         foreach ($view->children as $field) {
             if ('entity' !== $field->vars['block_prefixes'][2]) {
