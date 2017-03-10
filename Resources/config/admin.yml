@@ -50,7 +50,7 @@ services:
     darvin_menu.admin.menu_item_sorter:
         class: "%darvin_menu.admin.menu_item_sorter.class%"
         arguments:
-            - "@darvin_utils.custom_object.loader"
+            - "@darvin_menu.slug_map.item_custom_object_loader"
 
     darvin_menu.admin.preserve_menu_in_url_listener:
         class: "%darvin_menu.admin.preserve_menu_in_url_listener.class%"

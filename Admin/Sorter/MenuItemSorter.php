@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Admin\Sorter;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
+use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 
 /**
  * Menu item sorter
@@ -19,16 +19,16 @@ use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
 class MenuItemSorter
 {
     /**
-     * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
+     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
      */
-    private $customObjectLoader;
+    private $slugMapItemCustomObjectLoader;
 
     /**
-     * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface $customObjectLoader Custom object loader
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
      */
-    public function __construct(CustomObjectLoaderInterface $customObjectLoader)
+    public function __construct(SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader)
     {
-        $this->customObjectLoader = $customObjectLoader;
+        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
     }
 
     /**
@@ -67,7 +67,7 @@ class MenuItemSorter
             $this->addMenuItem($sorted, $menuItem, $children);
         }
 
-        $this->customObjectLoader->loadCustomObjects($slugMapItems);
+        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
 
         return $sorted;
     }
