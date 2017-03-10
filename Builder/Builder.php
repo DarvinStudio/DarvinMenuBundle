@@ -13,17 +13,14 @@ namespace Darvin\MenuBundle\Builder;
 use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
-use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
-use Darvin\ImageBundle\ORM\ImageJoinerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Item\MenuItemFactory;
 use Darvin\MenuBundle\Item\RootItemFactory;
 use Darvin\MenuBundle\Item\SlugMapItemFactory;
-use Darvin\Utils\CustomObject\CustomObjectLoaderInterface;
+use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
 use Knp\Menu\ItemInterface;
 
 /**
@@ -34,19 +31,9 @@ class Builder
     const BUILD_METHOD = 'buildMenu';
 
     /**
-     * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
-     */
-    protected $customObjectLoader;
-
-    /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
-
-    /**
-     * @var \Darvin\ImageBundle\ORM\ImageJoinerInterface
-     */
-    protected $imageJoiner;
 
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
@@ -69,14 +56,14 @@ class Builder
     protected $rootItemFactory;
 
     /**
+     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
+     */
+    protected $slugMapItemCustomObjectLoader;
+
+    /**
      * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
      */
     protected $slugMapItemFactory;
-
-    /**
-     * @var \Darvin\ContentBundle\Translatable\TranslationJoinerInterface
-     */
-    protected $translationJoiner;
 
     /**
      * @var string
@@ -89,38 +76,32 @@ class Builder
     protected $slugPartSeparators;
 
     /**
-     * @param \Darvin\Utils\CustomObject\CustomObjectLoaderInterface        $customObjectLoader Custom object loader
-     * @param \Doctrine\ORM\EntityManager                                   $em                 Entity manager
-     * @param \Darvin\ImageBundle\ORM\ImageJoinerInterface                  $imageJoiner        Image joiner
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider     Locale provider
-     * @param \Darvin\MenuBundle\Item\MenuItemFactory                       $menuItemFactory    Item from menu item entity factory
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory    Extended metadata factory
-     * @param \Darvin\MenuBundle\Item\RootItemFactory                       $rootItemFactory    Root item factory
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                    $slugMapItemFactory Item from slug map item entity factory
-     * @param \Darvin\ContentBundle\Translatable\TranslationJoinerInterface $translationJoiner  Translation joiner
-     * @param string                                                        $menuAlias          Menu alias
+     * @param \Doctrine\ORM\EntityManager                              $em                            Entity manager
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface             $localeProvider                Locale provider
+     * @param \Darvin\MenuBundle\Item\MenuItemFactory                  $menuItemFactory               Item from menu item entity factory
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface           $metadataFactory               Extended metadata factory
+     * @param \Darvin\MenuBundle\Item\RootItemFactory                  $rootItemFactory               Root item factory
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory               $slugMapItemFactory            Item from slug map item entity factory
+     * @param string                                                   $menuAlias                     Menu alias
      */
     public function __construct(
-        CustomObjectLoaderInterface $customObjectLoader,
         EntityManager $em,
-        ImageJoinerInterface $imageJoiner,
         LocaleProviderInterface $localeProvider,
         MenuItemFactory $menuItemFactory,
         MetadataFactoryInterface $metadataFactory,
         RootItemFactory $rootItemFactory,
+        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
         SlugMapItemFactory $slugMapItemFactory,
-        TranslationJoinerInterface $translationJoiner,
         $menuAlias
     ) {
-        $this->customObjectLoader = $customObjectLoader;
         $this->em = $em;
-        $this->imageJoiner = $imageJoiner;
         $this->localeProvider = $localeProvider;
         $this->menuItemFactory = $menuItemFactory;
         $this->metadataFactory = $metadataFactory;
         $this->rootItemFactory = $rootItemFactory;
+        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
         $this->slugMapItemFactory = $slugMapItemFactory;
-        $this->translationJoiner = $translationJoiner;
         $this->menuAlias = $menuAlias;
 
         $this->slugPartSeparators = [];
@@ -243,7 +224,7 @@ class Builder
             }
         }
 
-        $this->loadSlugMapItemCustomObjects($slugMapItems);
+        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
 
         foreach ($entities as $key => $entity) {
             if (null !== $entity->getSlugMapItem() && !$this->isSlugMapItemActive($entity->getSlugMapItem())) {
@@ -273,7 +254,7 @@ class Builder
             return $children;
         }
 
-        $this->loadSlugMapItemCustomObjects($childSlugMapItems);
+        $this->slugMapItemCustomObjectLoader->loadCustomObjects($childSlugMapItems);
 
         foreach ($childSlugMapItems as $key => $slugMapItem) {
             if (!$this->isSlugMapItemActive($slugMapItem)) {
@@ -302,28 +283,6 @@ class Builder
         });
 
         return $children;
-    }
-
-    /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems Slug map items
-     */
-    protected function loadSlugMapItemCustomObjects(array $slugMapItems)
-    {
-        if (empty($slugMapItems)) {
-            return;
-        }
-
-        $locale = $this->localeProvider->getCurrentLocale();
-        $imageJoiner = $this->imageJoiner;
-        $translationJoiner = $this->translationJoiner;
-
-        $this->customObjectLoader->loadCustomObjects($slugMapItems, function (QueryBuilder $qb) use ($locale, $imageJoiner, $translationJoiner) {
-            $imageJoiner->joinImages($qb);
-
-            if ($translationJoiner->isTranslatable($qb->getRootEntities()[0])) {
-                $translationJoiner->joinTranslation($qb, true, $locale, null, true);
-            }
-        });
     }
 
     /**
