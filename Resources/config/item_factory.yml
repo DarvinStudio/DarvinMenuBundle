@@ -34,6 +34,7 @@ services:
         class:  "%darvin_menu.item_factory.menu_item_entity.class%"
         parent: darvin_menu.item_factory.abstract_entity
         arguments:
+            - "@request_stack"
             - "@darvin_menu.item_factory.slug_map_item_entity"
 
     darvin_menu.item_factory.slug_map_item_entity:

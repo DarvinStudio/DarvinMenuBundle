@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\Item;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Item from menu item entity factory
@@ -20,19 +21,30 @@ use Knp\Menu\FactoryInterface;
 class MenuItemFactory extends AbstractEntityItemFactory
 {
     /**
+     * @var \Symfony\Component\HttpFoundation\RequestStack
+     */
+    protected $requestStack;
+
+    /**
      * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
      */
     protected $slugMapItemFactory;
 
     /**
-     * @param \Knp\Menu\FactoryInterface                 $genericItemFactory Generic item factory
-     * @param \Doctrine\ORM\EntityManager                $em                 Entity manager
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory $slugMapItemFactory Item from slug map item factory
+     * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
+     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack       Request stack
+     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory     $slugMapItemFactory Item from slug map item factory
      */
-    public function __construct(FactoryInterface $genericItemFactory, EntityManager $em, SlugMapItemFactory $slugMapItemFactory)
-    {
+    public function __construct(
+        FactoryInterface $genericItemFactory,
+        EntityManager $em,
+        RequestStack $requestStack,
+        SlugMapItemFactory $slugMapItemFactory
+    ) {
         parent::__construct($genericItemFactory, $em);
 
+        $this->requestStack = $requestStack;
         $this->slugMapItemFactory = $slugMapItemFactory;
     }
 
@@ -57,7 +69,26 @@ class MenuItemFactory extends AbstractEntityItemFactory
     {
         $url = $menuItem->getUrl();
 
-        return !empty($url) ? $url : $this->slugMapItemFactory->getUri($menuItem->getSlugMapItem());
+        if (empty($url)) {
+            return $this->slugMapItemFactory->getUri($menuItem->getSlugMapItem());
+        }
+        if (0 !== strpos($url, '/') || 0 === strpos($url, '//')) {
+            return $url;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (empty($request)) {
+            return $url;
+        }
+
+        $baseUrl = $request->getBaseUrl();
+
+        if (0 !== strpos($url, $baseUrl)) {
+            $url = $baseUrl.$url;
+        }
+
+        return $url;
     }
 
     /**
