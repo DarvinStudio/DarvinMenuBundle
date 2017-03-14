@@ -84,6 +84,7 @@ class MenuItemParentType extends AbstractType
 
         $resolver->setDefaults([
             'class'         => Item::class,
+            'required'      => false,
             'query_builder' => function (ItemRepository $repository) use ($locale) {
                 return $repository->getAdminBuilder($locale);
             },
