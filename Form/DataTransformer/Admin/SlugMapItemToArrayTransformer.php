@@ -58,6 +58,8 @@ class SlugMapItemToArrayTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        return $value[$value['class_property']];
+        $classProperty = $value['class_property'];
+
+        return !empty($classProperty) ? $value[$classProperty] : null;
     }
 }
