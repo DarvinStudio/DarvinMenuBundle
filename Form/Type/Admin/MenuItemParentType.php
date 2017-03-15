@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\MenuBundle\Admin\Sorter\MenuItemSorter;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
+use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -36,13 +37,23 @@ class MenuItemParentType extends AbstractType
     private $menuItemSorter;
 
     /**
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface   $localeProvider Locale provider
-     * @param \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter $menuItemSorter Menu item sorter
+     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
      */
-    public function __construct(LocaleProviderInterface $localeProvider, MenuItemSorter $menuItemSorter)
-    {
+    private $slugMapItemCustomObjectLoader;
+
+    /**
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface             $localeProvider                Locale provider
+     * @param \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter           $menuItemSorter                Menu item sorter
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
+     */
+    public function __construct(
+        LocaleProviderInterface $localeProvider,
+        MenuItemSorter $menuItemSorter,
+        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader
+    ) {
         $this->localeProvider = $localeProvider;
         $this->menuItemSorter = $menuItemSorter;
+        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
     }
 
     /**
@@ -50,13 +61,17 @@ class MenuItemParentType extends AbstractType
      */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        $menuItems = [];
+        $menuItems = $slugMapItems = [];
 
         /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
         foreach ($view->vars['choices'] as $choice) {
             /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
             $menuItem = $choice->data;
             $menuItems[] = $menuItem;
+
+            if (null !== $menuItem->getSlugMapItem()) {
+                $slugMapItems[] = $menuItem->getSlugMapItem();
+            }
 
             $choice->attr = array_merge($choice->attr, [
                 'class'        => 'slave_input',
@@ -66,10 +81,14 @@ class MenuItemParentType extends AbstractType
             ]);
         }
 
+        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
+
         $choices = [];
 
         foreach ($this->menuItemSorter->sort($menuItems) as $menuItem) {
-            $choices[$menuItem->getId()] = $view->vars['choices'][$menuItem->getId()];
+            $choice = $view->vars['choices'][$menuItem->getId()];
+            $choice->label = $menuItem->__toString();
+            $choices[$menuItem->getId()] = $choice;
         }
 
         $view->vars['choices'] = $choices;

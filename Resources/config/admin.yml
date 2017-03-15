@@ -38,6 +38,7 @@ services:
         arguments:
             - "@darvin_utils.locale.provider"
             - "@darvin_menu.admin.menu_item_sorter"
+            - "@darvin_menu.slug_map.item_custom_object_loader"
         tags:
             - { name: form.type }
 
