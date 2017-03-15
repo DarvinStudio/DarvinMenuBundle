@@ -63,6 +63,7 @@ form:
             url:
                 compare_strict: false
     edit:
+        type: Darvin\MenuBundle\Form\Type\Admin\MenuItemType
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType

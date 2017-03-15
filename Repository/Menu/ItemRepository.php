@@ -20,10 +20,11 @@ class ItemRepository extends EntityRepository
 {
     /**
      * @param string $locale Locale
+     * @param string $menu   Menu alias
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getAdminBuilder($locale)
+    public function getAdminBuilder($locale, $menu = null)
     {
         $qb = $this->createDefaultQueryBuilder()
             ->orderBy('o.menu')
@@ -32,6 +33,10 @@ class ItemRepository extends EntityRepository
         $this
             ->joinSlugMapItem($qb)
             ->joinTranslations($qb, $locale);
+
+        if (!empty($menu)) {
+            $this->addMenuFilter($qb, $menu);
+        }
 
         return $qb;
     }
