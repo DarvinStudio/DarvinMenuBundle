@@ -27,9 +27,8 @@ services:
 
     darvin_menu.admin.form_type.menu_item:
         class:  "%darvin_menu.admin.form_type.menu_item.class%"
-        parent: darvin_admin.form.type.base
-        calls:
-            - [ setLocaleProvider, [ "@darvin_utils.locale.provider" ] ]
+        arguments:
+            - "@darvin_utils.locale.provider"
         tags:
             - { name: form.type }
 

@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\AdminBundle\Form\Type\BaseType;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -20,7 +21,7 @@ use Symfony\Component\Form\FormEvents;
 /**
  * Menu item admin form type
  */
-class MenuItemType extends BaseType
+class MenuItemType extends AbstractType
 {
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
@@ -30,7 +31,7 @@ class MenuItemType extends BaseType
     /**
      * @param \Darvin\Utils\Locale\LocaleProviderInterface $localeProvider Locale provider
      */
-    public function setLocaleProvider(LocaleProviderInterface $localeProvider)
+    public function __construct(LocaleProviderInterface $localeProvider)
     {
         $this->localeProvider = $localeProvider;
     }
@@ -61,5 +62,13 @@ class MenuItemType extends BaseType
             ])->getForm();
             $event->getForm()->add($parentField);
         });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return BaseType::class;
     }
 }
