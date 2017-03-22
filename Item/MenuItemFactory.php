@@ -84,7 +84,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
 
         $baseUrl = $request->getBaseUrl();
 
-        if (0 !== strpos($url, $baseUrl)) {
+        if (!empty($baseUrl) && 0 !== strpos($url, $baseUrl)) {
             $url = $baseUrl.$url;
         }
 
