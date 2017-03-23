@@ -12,7 +12,7 @@ namespace Darvin\MenuBundle\Entity\Menu;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Traits\TranslatableTrait;
-use Darvin\MenuBundle\Validation\Constraints as DarvinMenu;
+use Darvin\MenuBundle\Validation\Constraints as DarvinMenuAssert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\Tree(type="materializedPath")
  *
- * @DarvinMenu\MenuItemValid
+ * @DarvinMenuAssert\MenuItemValid
  *
  * @method string getTitle()
  * @method string getUrl()
