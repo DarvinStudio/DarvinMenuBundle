@@ -42,9 +42,8 @@ class MenuItemValidValidator extends ConstraintValidator
         }
 
         $title = $menuItem->getTitle();
-        $url = $menuItem->getUrl();
 
-        if (empty($title) && empty($url) && null === $menuItem->getSlugMapItem()) {
+        if (empty($title) && null === $menuItem->getSlugMapItem()) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }
     }

@@ -59,7 +59,7 @@ class ItemRepository extends EntityRepository
             ->addMenuFilter($qb, $menu);
 
         return $qb
-            ->andWhere('o.slugMapItem IS NOT NULL OR (translations.url IS NOT NULL AND translations.title IS NOT NULL)')
+            ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL')
             ->orderBy('o.level')
             ->addOrderBy('o.position');
     }

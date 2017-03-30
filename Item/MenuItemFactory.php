@@ -70,7 +70,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
         $url = $menuItem->getUrl();
 
         if (empty($url)) {
-            return $this->slugMapItemFactory->getUri($menuItem->getSlugMapItem());
+            return null !== $menuItem->getSlugMapItem() ? $this->slugMapItemFactory->getUri($menuItem->getSlugMapItem()) : null;
         }
         if (0 !== strpos($url, '/') || 0 === strpos($url, '//')) {
             return $url;
