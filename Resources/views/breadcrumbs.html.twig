@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block item %}
-    {% if item.displayed and matcher.isAncestor(item) or matcher.isCurrent(item) %}
+    {% if item.displayed and (matcher.isAncestor(item) or matcher.isCurrent(item)) %}
         {% if item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
             {{ block('linkElement') }}
         {% else %}
