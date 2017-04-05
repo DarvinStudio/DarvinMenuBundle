@@ -38,7 +38,6 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'admin',
             'builder',
             'configuration',
-            'hide',
             'repository',
             'validator',
         ] as $resource) {
