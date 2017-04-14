@@ -63,8 +63,9 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
                 'menu' => [
                     'groups' => [
                         [
-                            'name'   => 'menu',
-                            'colors' => [
+                            'name'     => 'menu',
+                            'position' => 20,
+                            'colors'   => [
                                 'main'    => '#cb9023',
                                 'sidebar' => '#a4ce23',
                             ],
