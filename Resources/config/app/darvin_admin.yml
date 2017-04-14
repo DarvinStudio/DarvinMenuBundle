@@ -2,7 +2,8 @@ darvin_admin:
     menu:
         groups:
             -
-                name: menu
+                name:     menu
+                position: 20
                 colors:
                     main:    "#cb9023"
                     sidebar: "#a4ce23"
