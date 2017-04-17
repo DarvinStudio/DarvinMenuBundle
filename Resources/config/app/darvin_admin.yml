@@ -8,8 +8,8 @@ darvin_admin:
                     main:    "#cb9023"
                     sidebar: "#a4ce23"
                 icons:
-                    main:    bundles/darvinmenu/images/admin/menu_main.png
-                    sidebar: bundles/darvinmenu/images/admin/menu_sidebar.png
+                    main:    bundles/darvinmenu/images/admin/menu_group_main.png
+                    sidebar: bundles/darvinmenu/images/admin/menu_group_sidebar.png
     sections:
         -
             entity: Darvin\MenuBundle\Entity\Menu\Item

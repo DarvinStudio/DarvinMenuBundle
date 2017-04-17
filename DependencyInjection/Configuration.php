@@ -44,6 +44,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
                             ->booleanNode('breadcrumbs')->defaultTrue()->end()
+                            ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png')->end()
                         ->end()
                     ->end()
                 ->end()

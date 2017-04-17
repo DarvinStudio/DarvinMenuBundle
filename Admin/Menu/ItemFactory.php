@@ -84,6 +84,7 @@ class ItemFactory implements ItemFactoryInterface
             ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouter::TYPE_INDEX, $routeParams))
             ->setNewUrl($this->adminRouter->generate(null, Item::class, AdminRouter::TYPE_NEW, $routeParams))
             ->setNewTitle($this->metadataManager->getMetadata(Item::class)->getBaseTranslationPrefix().'action.new.link')
+            ->setMainIcon($menu->getIcon())
             ->setAssociatedObject(Item::class)
             ->setParentName('menu');
     }

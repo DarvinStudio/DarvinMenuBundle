@@ -36,7 +36,7 @@ class MenuConfiguration
                 throw new ConfigurationException(sprintf('Menu with alias "%s" already exists.', $alias));
             }
 
-            $this->menus[$alias] = new Menu($alias, $config['breadcrumbs']);
+            $this->menus[$alias] = new Menu($alias, $config['breadcrumbs'], $config['icon']);
         }
     }
 
