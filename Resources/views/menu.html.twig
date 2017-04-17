@@ -21,7 +21,7 @@
     {% set hover_image = image_exists(item.extras.hoverImage) ? item.extras.hoverImage|image_crop('menu_item_hover_image') : image %}
 
     {% if image %}
-        <img src="{{ image }}" onmouseover="this.src='{{ hover_image }}';" onmouseout="this.src='{{ image }}';">
+        <img src="{{ image }}" onmouseover="this.src='{{ hover_image }}';" onmouseout="this.src='{{ image }}';" alt="" title="">
     {% endif %}
 {% endblock %}
 
@@ -29,8 +29,8 @@
 
     {% import 'knp_menu.html.twig' as knp_menu %}
 
+    {{ block('image') }}
     <a href="{{ item.uri }}"{{ knp_menu.attributes(item.linkAttributes) }}>
-        {{ block('image') }}
         {{ block('label') }}
     </a>
 {% endblock %}
@@ -39,8 +39,8 @@
 
     {% import 'knp_menu.html.twig' as knp_menu %}
 
+    {{ block('image') }}
     <span{{ knp_menu.attributes(item.labelAttributes) }}>
-        {{ block('image') }}
         {{ block('label') }}
     </span>
 {% endblock %}
