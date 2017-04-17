@@ -28,6 +28,11 @@ class Menu
     /**
      * @var string
      */
+    private $icon;
+
+    /**
+     * @var string
+     */
     private $title;
 
     /**
@@ -63,11 +68,13 @@ class Menu
     /**
      * @param string $alias              Alias
      * @param bool   $breadcrumbsEnabled Is breadcrumbs functionality enabled
+     * @param string $icon               Icon
      */
-    public function __construct($alias, $breadcrumbsEnabled)
+    public function __construct($alias, $breadcrumbsEnabled, $icon)
     {
         $this->alias = $alias;
         $this->breadcrumbsEnabled = $breadcrumbsEnabled;
+        $this->icon = $icon;
 
         $this->title = 'menu.'.$alias;
         $this->builderId = 'darvin_menu.builder.'.$alias;
@@ -92,6 +99,14 @@ class Menu
     public function isBreadcrumbsEnabled()
     {
         return $this->breadcrumbsEnabled;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon()
+    {
+        return $this->icon;
     }
 
     /**
