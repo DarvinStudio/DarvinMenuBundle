@@ -21,7 +21,9 @@ use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
+use Gedmo\Sortable\SortableListener;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Builder
@@ -51,6 +53,11 @@ class Builder
     protected $metadataFactory;
 
     /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
+     */
+    protected $propertyAccessor;
+
+    /**
      * @var \Darvin\MenuBundle\Item\RootItemFactory
      */
     protected $rootItemFactory;
@@ -66,6 +73,11 @@ class Builder
     protected $slugMapItemFactory;
 
     /**
+     * @var \Gedmo\Sortable\SortableListener
+     */
+    protected $sortableListener;
+
+    /**
      * @var string
      */
     protected $menuAlias;
@@ -76,32 +88,38 @@ class Builder
     protected $slugPartSeparators;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                              $em                            Entity manager
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface             $localeProvider                Locale provider
-     * @param \Darvin\MenuBundle\Item\MenuItemFactory                  $menuItemFactory               Item from menu item entity factory
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface           $metadataFactory               Extended metadata factory
-     * @param \Darvin\MenuBundle\Item\RootItemFactory                  $rootItemFactory               Root item factory
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory               $slugMapItemFactory            Item from slug map item entity factory
-     * @param string                                                   $menuAlias                     Menu alias
+     * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                $localeProvider                Locale provider
+     * @param \Darvin\MenuBundle\Item\MenuItemFactory                     $menuItemFactory               Item from menu item entity factory
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory               Extended metadata factory
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
+     * @param \Darvin\MenuBundle\Item\RootItemFactory                     $rootItemFactory               Root item factory
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                  $slugMapItemFactory            Item from slug map item entity factory
+     * @param \Gedmo\Sortable\SortableListener                            $sortableListener              Sortable event listener
+     * @param string                                                      $menuAlias                     Menu alias
      */
     public function __construct(
         EntityManager $em,
         LocaleProviderInterface $localeProvider,
         MenuItemFactory $menuItemFactory,
         MetadataFactoryInterface $metadataFactory,
+        PropertyAccessorInterface $propertyAccessor,
         RootItemFactory $rootItemFactory,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
         SlugMapItemFactory $slugMapItemFactory,
+        SortableListener $sortableListener,
         $menuAlias
     ) {
         $this->em = $em;
         $this->localeProvider = $localeProvider;
         $this->menuItemFactory = $menuItemFactory;
         $this->metadataFactory = $metadataFactory;
+        $this->propertyAccessor = $propertyAccessor;
         $this->rootItemFactory = $rootItemFactory;
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
         $this->slugMapItemFactory = $slugMapItemFactory;
+        $this->sortableListener = $sortableListener;
         $this->menuAlias = $menuAlias;
 
         $this->slugPartSeparators = [];
@@ -278,8 +296,34 @@ class Builder
             }
         }
 
-        uasort($children, function (array $a, array $b) {
-            return $a['level'] === $b['level'] ? 0 : ($a['level'] > $b['level'] ? 1 : -1);
+        $em = $this->em;
+        $propertyAccessor = $this->propertyAccessor;
+        $sortableListener = $this->sortableListener;
+
+        uasort($children, function (array $a, array $b) use ($em, $propertyAccessor, $sortableListener) {
+            if ($a['level'] !== $b['level']) {
+                return $a['level'] > $b['level'] ? 1 : -1;
+            }
+
+            /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItemA */
+            $slugMapItemA = $a['object'];
+            /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItemB */
+            $slugMapItemB = $b['object'];
+
+            if ($slugMapItemA->getObjectClass() !== $slugMapItemB->getObjectClass()) {
+                return $slugMapItemA->getObjectClass() > $slugMapItemB->getObjectClass() ? 1 : -1;
+            }
+
+            $sortableConfig = $sortableListener->getConfiguration($em, $slugMapItemA->getObjectClass());
+
+            if (empty($sortableConfig)) {
+                return 0;
+            }
+
+            $positionA = $propertyAccessor->getValue($slugMapItemA->getObject(), $sortableConfig['position']);
+            $positionB = $propertyAccessor->getValue($slugMapItemB->getObject(), $sortableConfig['position']);
+
+            return $positionA === $positionB ? 0 : ($positionA > $positionB ? 1 : -1);
         });
 
         return $children;

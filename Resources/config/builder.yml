@@ -11,6 +11,8 @@ services:
             - "@darvin_utils.locale.provider"
             - "@darvin_menu.item_factory.menu_item_entity"
             - "@darvin_utils.mapping.metadata_factory"
+            - "@property_accessor"
             - "@darvin_menu.item_factory.root"
             - "@darvin_menu.slug_map.item_custom_object_loader"
             - "@darvin_menu.item_factory.slug_map_item_entity"
+            - "@stof_doctrine_extensions.listener.sortable"
