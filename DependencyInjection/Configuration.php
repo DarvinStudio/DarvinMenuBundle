@@ -10,7 +10,6 @@
 
 namespace Darvin\MenuBundle\DependencyInjection;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -44,25 +43,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
                             ->booleanNode('breadcrumbs')->defaultTrue()->end()
-                            ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png')->end()
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('associations')
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('alias')->defaultNull()->end()
-                            ->scalarNode('class')->isRequired()->cannotBeEmpty()
-                                ->validate()
-                                    ->ifTrue(function ($class) {
-                                        return !class_exists($class);
-                                    })
-                                    ->thenInvalid('Association class %s does not exist.')
-                                ->end()
-                            ->end()
-                            ->scalarNode('item_factory')->isRequired()->cannotBeEmpty()->end()
-                            ->scalarNode('hide_property')->defaultNull()->end()
-                            ->scalarNode('form_type')->defaultValue(EntityType::class);
+                            ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png');
 
         return $treeBuilder;
     }
