@@ -98,9 +98,20 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getExtras($menuItem)
     {
+        $image = $menuItem->getImage();
+        $hoverImage = $menuItem->getHoverImage();
+        
+        if ($image==null && interface_exists('Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface')) {
+            $object = $menuItem->getSlugMapItem() ? $menuItem->getSlugMapItem()->getObject() : null;
+            if ($object instanceof \Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface) {
+                $image = $object->getImage();
+                $hoverImage = $hoverImage!=null ? $hoverImage : $object->getImage();
+            }
+        }
+        
         return array_merge(parent::getExtras($menuItem), [
-            'image'               => $menuItem->getImage(),
-            'hoverImage'          => $menuItem->getHoverImage(),
+            'image'               => $image,
+            'hoverImage'          => $hoverImage,
             'showSlugMapChildren' => $menuItem->isShowChildren(),
         ]);
     }
