@@ -28,10 +28,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 /**
  * Builder
  */
-class Builder
+class Builder implements MenuBuilderInterface
 {
-    const BUILD_METHOD = 'buildMenu';
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -108,8 +106,7 @@ class Builder
         RootItemFactory $rootItemFactory,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
         SlugMapItemFactory $slugMapItemFactory,
-        SortableListener $sortableListener,
-        $menuAlias
+        SortableListener $sortableListener
     ) {
         $this->em = $em;
         $this->localeProvider = $localeProvider;
@@ -120,9 +117,16 @@ class Builder
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
         $this->slugMapItemFactory = $slugMapItemFactory;
         $this->sortableListener = $sortableListener;
-        $this->menuAlias = $menuAlias;
 
         $this->slugPartSeparators = [];
+    }
+
+    /**
+     * @param $menuAlias
+     */
+    public function setMenuAlias($menuAlias)
+    {
+        $this->menuAlias = $menuAlias;
     }
 
     /**
