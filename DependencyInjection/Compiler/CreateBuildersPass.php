@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
+use Darvin\MenuBundle\Builder\MenuBuilderInterface;
 use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuBuilderPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -29,18 +30,25 @@ class CreateBuildersPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $definitions = [];
-
         foreach ($this->getMenuConfig($container)->getMenus() as $menu) {
-            $definitions[$menu->getBuilderId()] = (new DefinitionDecorator(self::PARENT_ID))->addArgument($menu->getAlias());
-        }
-        foreach ($definitions as $id => $definition) {
+            $id = $menu->getBuilderId();
             if ($container->hasDefinition($id)) {
-                throw new \RuntimeException(sprintf('Service "%s" already exists. Please change menu alias.', $id));
+                $class = new \ReflectionClass($container->getDefinition($id)->getClass());
+                if (!$class->implementsInterface(MenuBuilderInterface::class)) {
+                    throw new \RuntimeException(sprintf(
+                        'Service "%s" already exists and it\'s not instance of MenuBuilderInterface. Please change the menu alias.', 
+                        $id
+                    ));
+                }
+                continue;
             }
+            $definitions[$id] = (new DefinitionDecorator(self::PARENT_ID))->addMethodCall(
+                'setMenuAlias', 
+                [$menu->getAlias()]
+            );
         }
 
         $container->addDefinitions($definitions);
-
         (new MenuBuilderPass())->process($container);
     }
 

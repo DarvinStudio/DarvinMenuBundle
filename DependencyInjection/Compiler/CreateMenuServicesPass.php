@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
-use Darvin\MenuBundle\Builder\Builder;
+use Darvin\MenuBundle\Builder\MenuBuilderInterface;
 use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -34,7 +34,7 @@ class CreateMenuServicesPass implements CompilerPassInterface
 
         foreach ($this->getMenuConfig($container)->getMenus() as $menu) {
             $definitions[$menu->getMenuServiceId()] = (new DefinitionDecorator(self::PARENT_ID))
-                ->setFactory([new Reference($menu->getBuilderId()), Builder::BUILD_METHOD])
+                ->setFactory([new Reference($menu->getBuilderId()), MenuBuilderInterface::BUILD_METHOD])
                 ->addTag('knp_menu.menu', [
                     'alias' => $menu->getMenuServiceAlias(),
                 ]);
