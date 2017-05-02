@@ -53,7 +53,7 @@ class PreserveMenuInUrlListener
      */
     public function preRouteGenerate(RouteEvent $event)
     {
-        if (Item::class !== $event->getEntityClass()) {
+        if (Item::class !== $event->getEntityClass() && !in_array(Item::class, class_parents($event->getEntityClass()))) {
             return;
         }
 
