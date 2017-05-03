@@ -95,7 +95,6 @@ class Builder implements MenuBuilderInterface
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
      * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                  $slugMapItemFactory            Item from slug map item entity factory
      * @param \Gedmo\Sortable\SortableListener                            $sortableListener              Sortable event listener
-     * @param string                                                      $menuAlias                     Menu alias
      */
     public function __construct(
         EntityManager $em,
@@ -122,7 +121,7 @@ class Builder implements MenuBuilderInterface
     }
 
     /**
-     * @param $menuAlias
+     * @param string $menuAlias Menu alias
      */
     public function setMenuAlias($menuAlias)
     {
@@ -214,7 +213,9 @@ class Builder implements MenuBuilderInterface
             $parentId = $slugMapItem['parent_id'];
 
             if (empty($parentId)) {
-                $parent->addChild($item);
+                if (1 === $slugMapItem['level'] - $parent->getLevel()) {
+                    $parent->addChild($item);
+                }
 
                 continue;
             }
@@ -288,7 +289,7 @@ class Builder implements MenuBuilderInterface
             $children[$slugMapItem->getId()] = [
                 'object'    => $slugMapItem,
                 'slug'      => $slugMapItem->getSlug(),
-                'level'     => substr_count($slugMapItem->getSlug(), $separator),
+                'level'     => substr_count($slugMapItem->getSlug(), $separator) + 1,
                 'parent_id' => null,
             ];
         }
