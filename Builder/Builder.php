@@ -163,7 +163,9 @@ class Builder implements MenuBuilderInterface
                     continue;
                 }
 
-                $parentSlugs[$entity->getId()] = $slugMapItem->getSlug().$separator;
+                if ($entity->isShowChildren()) {
+                    $parentSlugs[$entity->getId()] = $slugMapItem->getSlug().$separator;
+                }
             }
 
             $item = $this->menuItemFactory->createItem($entity);
