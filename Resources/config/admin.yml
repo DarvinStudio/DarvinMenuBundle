@@ -11,8 +11,6 @@ parameters:
 
     darvin_menu.admin.menu_item_sorter.class: Darvin\MenuBundle\Admin\Sorter\MenuItemSorter
 
-    darvin_menu.admin.preserve_menu_in_url_listener.class: Darvin\MenuBundle\EventListener\Admin\PreserveMenuInUrlListener
-
     darvin_menu.admin.slug_map_item_link_view_widget.class: Darvin\MenuBundle\Admin\View\SlugMapItemLinkWidget
 
 services:
@@ -64,15 +62,6 @@ services:
         class: "%darvin_menu.admin.menu_item_sorter.class%"
         arguments:
             - "@darvin_menu.slug_map.item_custom_object_loader"
-
-    darvin_menu.admin.preserve_menu_in_url_listener:
-        class: "%darvin_menu.admin.preserve_menu_in_url_listener.class%"
-        arguments:
-            - "@darvin_menu.configuration.menu"
-            - "@darvin_admin.metadata.manager"
-            - "@request_stack"
-        tags:
-            - { name: kernel.event_listener, event: darvin_admin.router.pre_generate, method: preRouteGenerate }
 
     darvin_menu.admin.slug_map_item_link_view_widget:
         class:  "%darvin_menu.admin.slug_map_item_link_view_widget.class%"
