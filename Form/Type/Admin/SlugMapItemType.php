@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\MenuBundle\Exception\DarvinMenuException;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Doctrine\ORM\EntityManager;
@@ -85,6 +86,14 @@ class SlugMapItemType extends AbstractType
 
         foreach ($propertiesByClasses as $class => $properties) {
             foreach ($properties as $property) {
+                if (!isset($classPropertyChoiceValues[$i])) {
+                    throw new DarvinMenuException(<<<MESSAGE
+Content slug map is invalid: please make sure you've replaced all overridden object classes in column "object_class" of
+table "content_slug_map" in database.
+MESSAGE
+                    );
+                }
+
                 $builder->add($classPropertyChoiceValues[$i], EntityType::class, [
                     'label'         => $classPropertyChoiceLabels[$i],
                     'class'         => SlugMapItem::class,
