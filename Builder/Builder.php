@@ -149,7 +149,7 @@ class Builder implements MenuBuilderInterface
     protected function addItems(ItemInterface $root, array $entities)
     {
         /** @var \Knp\Menu\ItemInterface[] $items */
-        $items = $parentSlugs = [];
+        $items = $parentSlugs = $separatorCounts = [];
 
         foreach ($entities as $key => $entity) {
             $slugMapItem = $entity->getSlugMapItem();
@@ -163,7 +163,10 @@ class Builder implements MenuBuilderInterface
                     continue;
                 }
 
-                $parentSlugs[$entity->getId()] = $slugMapItem->getSlug().$separator;
+                $parentSlug = $slugMapItem->getSlug().$separator;
+                $parentSlugs[$entity->getId()] = $parentSlug;
+
+                $separatorCounts[$entity->getId()] = substr_count($parentSlug, $separator);
             }
 
             $item = $this->menuItemFactory->createItem($entity);
@@ -186,16 +189,17 @@ class Builder implements MenuBuilderInterface
         }
         foreach ($this->getSlugMapItemRepository()->getBySlugsChildren(array_unique($parentSlugs)) as $parentSlug => $childSlugMapItems) {
             foreach (array_keys($parentSlugs, $parentSlug) as $entityId) {
-                $this->addChildren($items[$entityId], $childSlugMapItems);
+                $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childSlugMapItems);
             }
         }
     }
 
     /**
      * @param \Knp\Menu\ItemInterface                    $parent            Parent item
+     * @param int                                        $separators        Count of separators in the parent item's slug
      * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
      */
-    protected function addChildren(ItemInterface $parent, array $childSlugMapItems)
+    protected function addChildren(ItemInterface $parent, $separators, array $childSlugMapItems)
     {
         $childSlugMapItems = $this->prepareChildSlugMapItems($childSlugMapItems);
 
@@ -213,7 +217,7 @@ class Builder implements MenuBuilderInterface
             $parentId = $slugMapItem['parent_id'];
 
             if (empty($parentId)) {
-                if (1 === $slugMapItem['level'] - $parent->getLevel()) {
+                if (1 === $slugMapItem['separators'] - $separators) {
                     $parent->addChild($item);
                 }
 
@@ -287,15 +291,15 @@ class Builder implements MenuBuilderInterface
             }
 
             $children[$slugMapItem->getId()] = [
-                'object'    => $slugMapItem,
-                'slug'      => $slugMapItem->getSlug(),
-                'level'     => substr_count($slugMapItem->getSlug(), $separator) + 1,
-                'parent_id' => null,
+                'object'     => $slugMapItem,
+                'slug'       => $slugMapItem->getSlug(),
+                'separators' => substr_count($slugMapItem->getSlug(), $separator) + 1,
+                'parent_id'  => null,
             ];
         }
         foreach ($children as $childId => $child) {
             foreach ($children as $otherChildId => $otherChild) {
-                if (1 === $child['level'] - $otherChild['level'] && 0 === strpos($child['slug'], $otherChild['slug'].$separator)) {
+                if (1 === $child['separators'] - $otherChild['separators'] && 0 === strpos($child['slug'], $otherChild['slug'].$separator)) {
                     $children[$childId]['parent_id'] = $otherChildId;
                 }
             }
@@ -306,8 +310,8 @@ class Builder implements MenuBuilderInterface
         $sortableListener = $this->sortableListener;
 
         uasort($children, function (array $a, array $b) use ($em, $propertyAccessor, $sortableListener) {
-            if ($a['level'] !== $b['level']) {
-                return $a['level'] > $b['level'] ? 1 : -1;
+            if ($a['separators'] !== $b['separators']) {
+                return $a['separators'] > $b['separators'] ? 1 : -1;
             }
 
             /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItemA */
