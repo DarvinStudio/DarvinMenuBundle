@@ -11,7 +11,6 @@
 namespace Darvin\MenuBundle\Breadcrumbs;
 
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
-use Darvin\MenuBundle\Item\RootItemFactory;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\MatcherInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
@@ -23,6 +22,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class BreadcrumbsMenuProvider implements MenuProviderInterface
 {
+    /**
+     * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder
+     */
+    private $breadcrumbsMenuBuilder;
+
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
@@ -39,11 +43,6 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     private $menuConfig;
 
     /**
-     * @var \Darvin\MenuBundle\Item\RootItemFactory
-     */
-    private $rootItemFactory;
-
-    /**
      * @var string
      */
     private $menuName;
@@ -54,35 +53,35 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     private $optionsResolver;
 
     /**
-     * @var \Knp\Menu\ItemInterface
+     * @var array
      */
-    private $currentMenu;
+    private $currentMenus;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container       DI container
-     * @param \Knp\Menu\Matcher\MatcherInterface                        $matcher         Matcher
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration        $menuConfig      Menu configuration
-     * @param \Darvin\MenuBundle\Item\RootItemFactory                   $rootItemFactory Root item factory
-     * @param string                                                    $menuName        Breadcrumbs menu name
+     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder     $breadcrumbsMenuBuilder Breadcrumbs menu builder
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container              DI container
+     * @param \Knp\Menu\Matcher\MatcherInterface                        $matcher                Matcher
+     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration        $menuConfig             Menu configuration
+     * @param string                                                    $menuName               Breadcrumbs menu name
      */
     public function __construct(
+        BreadcrumbsMenuBuilder $breadcrumbsMenuBuilder,
         ContainerInterface $container,
         MatcherInterface $matcher,
         MenuConfiguration $menuConfig,
-        RootItemFactory $rootItemFactory,
         $menuName
     ) {
+        $this->breadcrumbsMenuBuilder = $breadcrumbsMenuBuilder;
         $this->container = $container;
         $this->matcher = $matcher;
         $this->menuConfig = $menuConfig;
-        $this->rootItemFactory = $rootItemFactory;
         $this->menuName = $menuName;
 
         $optionsResolver = new OptionsResolver();
         $this->configureOptions($optionsResolver);
         $this->optionsResolver = $optionsResolver;
 
-        $this->currentMenu = null;
+        $this->currentMenus = [];
     }
 
     /**
@@ -114,31 +113,34 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
      */
     private function getCurrentMenu(array $options)
     {
-        if (!empty($options['menu_alias'])) {
-            return $this->getGenericMenuProvider()->get($this->menuConfig->getMenu($options['menu_alias'])->getMenuServiceAlias());
+        $alias = $options['menu_alias'];
+
+        if (isset($this->currentMenus[$alias])) {
+            return $this->currentMenus[$alias];
         }
-        if (empty($this->currentMenu)) {
-            $genericMenuProvider = $this->getGenericMenuProvider();
+        if (!empty($alias)) {
+            $menu = $this->getGenericMenuProvider()->get($this->menuConfig->getMenu($alias)->getMenuServiceAlias());
 
-            foreach ($this->menuConfig->getMenus() as $config) {
-                if (!$config->isBreadcrumbsEnabled()) {
-                    continue;
-                }
-
-                $menu = $genericMenuProvider->get($config->getMenuServiceAlias());
-
-                if ($this->isMenuCurrent($menu)) {
-                    $this->currentMenu = $menu;
-
-                    break;
-                }
-            }
-            if (empty($this->currentMenu)) {
-                $this->currentMenu = $this->rootItemFactory->createItem($this->menuName);
-            }
+            return $this->currentMenus[$alias] = $this->isMenuCurrent($menu)
+                ? $menu
+                : $this->breadcrumbsMenuBuilder->buildMenu($this->menuName);
         }
 
-        return $this->currentMenu;
+        $genericMenuProvider = $this->getGenericMenuProvider();
+
+        foreach ($this->menuConfig->getMenus() as $config) {
+            if (!$config->isBreadcrumbsEnabled()) {
+                continue;
+            }
+
+            $menu = $genericMenuProvider->get($config->getMenuServiceAlias());
+
+            if ($this->isMenuCurrent($menu)) {
+                return $this->currentMenus[$alias] = $menu;
+            }
+        }
+
+        return $this->currentMenus[$alias] = $this->breadcrumbsMenuBuilder->buildMenu($this->menuName);
     }
 
     /**
