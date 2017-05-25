@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -36,7 +37,14 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             throw new \RuntimeException('Please register "KnpMenuBundle" in AppKernel.php.');
         }
 
-        (new ConfigInjector())->inject($this->processConfiguration(new Configuration(), $configs), $container, $this->getAlias());
+        $configs = $this->processConfiguration(new Configuration(), $configs);
+
+        (new ConfigInjector())->inject($configs, $container, $this->getAlias());
+
+        $container->setParameter(
+            'darvin_menu.breadcrumbs.slug_parameter_name',
+            $configs['breadcrumbs']['slug_parameter_name']
+        );
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 

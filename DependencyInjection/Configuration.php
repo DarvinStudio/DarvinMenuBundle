@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('breadcrumbs')->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('template')->defaultValue('DarvinMenuBundle::breadcrumbs.html.twig')->end()
+                        ->scalarNode('slug_parameter_name')->defaultValue('slug')->end()
                     ->end()
                 ->end()
                 ->arrayNode('menus')

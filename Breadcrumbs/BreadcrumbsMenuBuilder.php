@@ -56,12 +56,18 @@ class BreadcrumbsMenuBuilder
     private $slugMapItemFactory;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                              $em                            Entity manager
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface           $metadataFactory               Extended metadata factory
-     * @param \Symfony\Component\HttpFoundation\RequestStack           $requestStack                  Request stack
-     * @param \Darvin\MenuBundle\Item\RootItemFactory                  $rootItemFactory               Root item factory
+     * @var string
+     */
+    private $slugParameterName;
+
+    /**
+     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $metadataFactory Extended metadata factory
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack
+     * @param \Darvin\MenuBundle\Item\RootItemFactory $rootItemFactory Root item factory
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory               $slugMapItemFactory            Item from slug map item entity factory
+     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory $slugMapItemFactory Item from slug map item entity factory
+     * @param string $slugParameterName
      */
     public function __construct(
         EntityManager $em,
@@ -69,7 +75,8 @@ class BreadcrumbsMenuBuilder
         RequestStack $requestStack,
         RootItemFactory $rootItemFactory,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
-        SlugMapItemFactory $slugMapItemFactory
+        SlugMapItemFactory $slugMapItemFactory,
+        $slugParameterName
     ) {
         $this->em = $em;
         $this->metadataFactory = $metadataFactory;
@@ -77,6 +84,7 @@ class BreadcrumbsMenuBuilder
         $this->rootItemFactory = $rootItemFactory;
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
         $this->slugMapItemFactory = $slugMapItemFactory;
+        $this->slugParameterName = $slugParameterName;
     }
 
     /**
@@ -88,23 +96,18 @@ class BreadcrumbsMenuBuilder
     {
         $root = $this->rootItemFactory->createItem($name);
 
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMasterRequest();
 
         if (empty($request)) {
             return $root;
         }
 
-        $path = $request->getPathInfo();
-
-        if (empty($path)) {
+        $routeParams = $request->attributes->get('_route_params', []);
+        if (!isset($routeParams[$this->slugParameterName]) || empty($routeParams[$this->slugParameterName])) {
             return $root;
         }
 
-        $slug = preg_replace('/(^\/|.html$)/', '', $path);
-
-        if (empty($slug)) {
-            return $root;
-        }
+        $slug = $routeParams['slug'];
 
         $currentSlugMapItem = $this->getSlugMapItemRepository()->findOneBy([
             'slug' => $slug,
