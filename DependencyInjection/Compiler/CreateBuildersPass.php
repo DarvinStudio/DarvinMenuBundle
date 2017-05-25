@@ -44,7 +44,7 @@ class CreateBuildersPass implements CompilerPassInterface
             }
             $definitions[$id] = (new DefinitionDecorator(self::PARENT_ID))->addMethodCall(
                 'setMenuAlias', 
-                [$menu->getAlias()]
+                [$menu->getAlias(), $menu->getBuilderOptions()]
             );
         }
 

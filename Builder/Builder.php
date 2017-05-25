@@ -23,7 +23,9 @@ use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Sortable\SortableListener;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Builder
@@ -83,6 +85,11 @@ class Builder implements MenuBuilderInterface
     /**
      * @var array
      */
+    protected $buildOptions = [];
+
+    /**
+     * @var array
+     */
     protected $slugPartSeparators;
 
     /**
@@ -121,11 +128,18 @@ class Builder implements MenuBuilderInterface
     }
 
     /**
-     * @param string $menuAlias Menu alias
+     * @inheritdoc
      */
-    public function setMenuAlias($menuAlias)
+    public function setMenuAlias($menuAlias, array $buildOptions = [])
     {
         $this->menuAlias = $menuAlias;
+
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'build_hidden_slugmap_children' => false
+        ]);
+
+        $this->buildOptions = $resolver->resolve($buildOptions);
     }
 
     /**
@@ -163,10 +177,13 @@ class Builder implements MenuBuilderInterface
                     continue;
                 }
 
-                $parentSlug = $slugMapItem->getSlug().$separator;
-                $parentSlugs[$entity->getId()] = $parentSlug;
+                // dont get and build children slugmap item, if no need to this
+                if ($entity->isShowChildren() || $this->buildOptions['build_hidden_slugmap_children']===true) {
+                    $parentSlug = $slugMapItem->getSlug().$separator;
+                    $parentSlugs[$entity->getId()] = $parentSlug;
 
-                $separatorCounts[$entity->getId()] = substr_count($parentSlug, $separator);
+                    $separatorCounts[$entity->getId()] = substr_count($parentSlug, $separator);
+                }
             }
 
             $item = $this->menuItemFactory->createItem($entity);

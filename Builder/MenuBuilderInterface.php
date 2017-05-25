@@ -23,9 +23,10 @@ interface MenuBuilderInterface
 
     /**
      * Set menu alias value
-     * 
+     *
      * @param $menuAlias
+     * @param array $buildOptions
      * @return void
      */
-    public function setMenuAlias($menuAlias);
+    public function setMenuAlias($menuAlias, array $buildOptions = []);
 }

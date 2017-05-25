@@ -43,7 +43,15 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
                             ->booleanNode('breadcrumbs')->defaultTrue()->end()
-                            ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png');
+                            ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png')->end()
+                            ->arrayNode('build_options')->addDefaultsIfNotSet()
+                                ->children()
+                                    ->booleanNode('build_hidden_slugmap_children')->defaultFalse()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                ->end()
+            ;
 
         return $treeBuilder;
     }
