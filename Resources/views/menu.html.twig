@@ -1,18 +1,23 @@
 {% extends 'knp_menu.html.twig' %}
 
-{% block list %}
-    {% if item.hasChildren
-        and options.depth is not same as(0)
-        and item.displayChildren
-        and (not item.extras.hasSlugMapChildren or item.extras.showSlugMapChildren)
-    %}
-
-        {% import 'knp_menu.html.twig' as knp_menu %}
-
-        <ul{{ knp_menu.attributes(listAttributes) }}>
-            {{ block('children') }}
-        </ul>
+{% block children %}
+    {# save current variables #}
+    {% set currentOptions = options %}
+    {% set currentItem = item %}
+    {# update the depth for children #}
+    {% if options.depth is not none %}
+        {% set options = options|merge({'depth': currentOptions.depth - 1}) %}
     {% endif %}
+    {# update the matchingDepth for children #}
+    {% if options.matchingDepth is not none and options.matchingDepth > 0 %}
+        {% set options = options|merge({'matchingDepth': currentOptions.matchingDepth - 1}) %}
+    {% endif %}
+    {% for item in currentItem.children if not item.extras.isSlugMapItem or currentItem.extras.showSlugMapChildren %}
+        {{ block('item') }}
+    {% endfor %}
+    {# restore current variables #}
+    {% set item = currentItem %}
+    {% set options = currentOptions %}
 {% endblock %}
 
 {% block images %}
