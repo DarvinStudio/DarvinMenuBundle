@@ -109,6 +109,7 @@ abstract class AbstractItemFactory
     {
         foreach ([
             'hasSlugMapChildren',
+            'isSlugMapItem',
             'showSlugMapChildren',
         ] as $extra) {
             $resolver

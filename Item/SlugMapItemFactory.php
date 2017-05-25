@@ -97,6 +97,18 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     }
 
     /**
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     *
+     * @return array
+     */
+    protected function getExtras($slugMapItem)
+    {
+        return [
+            'isSlugMapItem' => true,
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getSupportedClass()
