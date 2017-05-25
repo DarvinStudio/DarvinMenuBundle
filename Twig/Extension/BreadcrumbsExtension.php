@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Twig\Extension;
 
+use Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Knp\Menu\Twig\Helper;
 
@@ -44,24 +45,32 @@ class BreadcrumbsExtension extends \Twig_Extension
     private $defaultTemplate;
 
     /**
+     * @var BreadcrumbsMenuBuilder
+     */
+    private $slugBreadCrumbsBuilder;
+
+    /**
      * @param \Knp\Menu\Provider\MenuProviderInterface $breadcrumbsMenuProvider Breadcrumbs menu provider
-     * @param \Knp\Menu\Twig\Helper                    $helper                  Helper
-     * @param string                                   $breadcrumbsMenuName     Breadcrumbs menu name
-     * @param array                                    $defaultOptions          Default options
-     * @param string                                   $defaultTemplate         Default template
+     * @param \Knp\Menu\Twig\Helper $helper Helper
+     * @param string $breadcrumbsMenuName Breadcrumbs menu name
+     * @param array $defaultOptions Default options
+     * @param string $defaultTemplate Default template
+     * @param BreadcrumbsMenuBuilder $breadcrumbsMenuBuilder
      */
     public function __construct(
         MenuProviderInterface $breadcrumbsMenuProvider,
         Helper $helper,
         $breadcrumbsMenuName,
         array $defaultOptions,
-        $defaultTemplate
+        $defaultTemplate,
+        BreadcrumbsMenuBuilder $breadcrumbsMenuBuilder
     ) {
         $this->breadcrumbsMenuProvider = $breadcrumbsMenuProvider;
         $this->helper = $helper;
         $this->breadcrumbsMenuName = $breadcrumbsMenuName;
         $this->defaultOptions = $defaultOptions;
         $this->defaultTemplate = $defaultTemplate;
+        $this->slugBreadCrumbsBuilder = $breadcrumbsMenuBuilder;
     }
 
     /**
@@ -71,6 +80,9 @@ class BreadcrumbsExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('darvin_menu_breadcrumbs', [$this, 'renderBreadcrumbs'], [
+                'is_safe' => ['html'],
+            ]),
+            new \Twig_SimpleFunction('darvin_menu_slug_breadcrumbs', [$this, 'renderSlugBreadcrumbs'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -98,5 +110,21 @@ class BreadcrumbsExtension extends \Twig_Extension
             $options,
             $renderer
         );
+    }
+
+    /**
+     * @param array $options
+     * @param null $renderer
+     * @return string
+     */
+    public function renderSlugBreadcrumbs(array $options = [], $renderer = null)
+    {
+        $options = array_merge($this->defaultOptions, $options);
+
+        if (!isset($options['template'])) {
+            $options['template'] = $this->defaultTemplate;
+        }
+
+        return $this->helper->render($this->slugBreadCrumbsBuilder->buildMenu(null), $options, $renderer);
     }
 }

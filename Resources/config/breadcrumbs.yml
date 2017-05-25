@@ -40,5 +40,6 @@ services:
             - "%darvin_menu.breadcrumbs.provider.menu_name%"
             - "%darvin_menu.breadcrumbs.twig_extension.default_options%"
             - "%darvin_menu.breadcrumbs.template%"
+            - "@darvin_menu.breadcrumbs.builder"
         tags:
             - { name: twig.extension }
