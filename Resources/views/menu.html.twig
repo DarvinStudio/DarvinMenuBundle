@@ -1,5 +1,26 @@
 {% extends 'knp_menu.html.twig' %}
 
+{% block list %}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {% set showChildren = item.extras.showSlugMapChildren %}
+        {% if not showChildren %}
+            {% for child in item.children if not child.extras.isSlugMapItem %}
+                {% set showChildren = true %}
+            {% endfor %}
+        {% endif %}
+        {% if showChildren %}
+            {{ block('listBody') }}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block listBody %}
+    {% import 'knp_menu.html.twig' as knp_menu %}
+    <ul{{ knp_menu.attributes(listAttributes) }}>
+        {{ block('children') }}
+    </ul>
+{% endblock %}
+
 {% block children %}
     {# save current variables #}
     {% set currentOptions = options %}
