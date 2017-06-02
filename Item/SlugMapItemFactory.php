@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Item;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\PageBundle\Configuration\Configuration;
+use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -44,6 +45,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     /**
      * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
      * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
+     * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
      * @param \Darvin\PageBundle\Configuration\Configuration $pageConfig         Page configuration
      * @param \Symfony\Component\Routing\RouterInterface     $router             Router
      * @param string                                         $genericUriRoute    Generic URI route
@@ -52,12 +54,13 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     public function __construct(
         FactoryInterface $genericItemFactory,
         EntityManager $em,
+        ObjectNamerInterface $objectNamer,
         Configuration $pageConfig,
         RouterInterface $router,
         $genericUriRoute,
         $homepageUriRoute
     ) {
-        parent::__construct($genericItemFactory, $em);
+        parent::__construct($genericItemFactory, $em, $objectNamer);
 
         $this->pageConfig = $pageConfig;
         $this->router = $router;
@@ -104,6 +107,8 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     protected function getExtras($slugMapItem)
     {
         return [
+            'objectName'    => $this->objectNamer->name($slugMapItem->getObjectClass()),
+            'objectId'      => $slugMapItem->getObjectId(),
             'isSlugMapItem' => true,
         ];
     }

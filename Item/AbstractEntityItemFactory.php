@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Item;
 
+use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
@@ -25,14 +26,21 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
     protected $em;
 
     /**
-     * @param \Knp\Menu\FactoryInterface  $genericItemFactory Generic item factory
-     * @param \Doctrine\ORM\EntityManager $em                 Entity manager
+     * @var \Darvin\Utils\ObjectNamer\ObjectNamerInterface
      */
-    public function __construct(FactoryInterface $genericItemFactory, EntityManager $em)
+    protected $objectNamer;
+
+    /**
+     * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
+     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
+     * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
+     */
+    public function __construct(FactoryInterface $genericItemFactory, EntityManager $em, ObjectNamerInterface $objectNamer)
     {
         parent::__construct($genericItemFactory);
 
         $this->em = $em;
+        $this->objectNamer = $objectNamer;
     }
 
     /**

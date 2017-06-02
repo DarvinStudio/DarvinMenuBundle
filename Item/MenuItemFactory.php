@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,16 +34,18 @@ class MenuItemFactory extends AbstractEntityItemFactory
     /**
      * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
      * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
+     * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack       Request stack
      * @param \Darvin\MenuBundle\Item\SlugMapItemFactory     $slugMapItemFactory Item from slug map item factory
      */
     public function __construct(
         FactoryInterface $genericItemFactory,
         EntityManager $em,
+        ObjectNamerInterface $objectNamer,
         RequestStack $requestStack,
         SlugMapItemFactory $slugMapItemFactory
     ) {
-        parent::__construct($genericItemFactory, $em);
+        parent::__construct($genericItemFactory, $em, $objectNamer);
 
         $this->requestStack = $requestStack;
         $this->slugMapItemFactory = $slugMapItemFactory;
@@ -98,18 +101,29 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getExtras($menuItem)
     {
+        $objectName = $objectId = null;
         $image = $menuItem->getImage();
         $hoverImage = $menuItem->getHoverImage();
-        
-        if ($image==null && interface_exists('Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface')) {
-            $object = $menuItem->getSlugMapItem() ? $menuItem->getSlugMapItem()->getObject() : null;
-            if ($object instanceof \Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface) {
-                $image = $object->getImage();
-                $hoverImage = $hoverImage!=null ? $hoverImage : $object->getImage();
+
+        if (null !== $menuItem->getSlugMapItem() && null !== $menuItem->getSlugMapItem()->getObject()) {
+            $slugMapItem = $menuItem->getSlugMapItem();
+
+            $objectName = $this->objectNamer->name($slugMapItem->getObjectClass());
+            $objectId = $slugMapItem->getObjectId();
+
+            $object = $slugMapItem->getObject();
+
+            if (empty($image) && interface_exists('Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface')) {
+                if ($object instanceof \Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface) {
+                    $image = $object->getImage();
+                    $hoverImage = !empty($hoverImage) ? $hoverImage : $object->getImage();
+                }
             }
         }
-        
+
         return array_merge(parent::getExtras($menuItem), [
+            'objectName'          => $objectName,
+            'objectId'            => $objectId,
             'image'               => $image,
             'hoverImage'          => $hoverImage,
             'showSlugMapChildren' => $menuItem->isShowChildren(),

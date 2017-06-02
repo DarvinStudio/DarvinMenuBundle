@@ -25,6 +25,7 @@ services:
         abstract: true
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@darvin_utils.object_namer"
 
     darvin_menu.item_factory.root:
         class:  "%darvin_menu.item_factory.root.class%"

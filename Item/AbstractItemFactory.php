@@ -107,6 +107,21 @@ abstract class AbstractItemFactory
      */
     protected function configureExtras(OptionsResolver $resolver)
     {
+        $resolver
+            ->setDefaults([
+                'objectName' => null,
+                'objectId'   => null,
+            ])
+            ->setAllowedTypes('objectName', [
+                'string',
+                'null',
+            ])
+            ->setAllowedTypes('objectId', [
+                'integer',
+                'string',
+                'null',
+            ]);
+
         foreach ([
             'hasSlugMapChildren',
             'isSlugMapItem',
