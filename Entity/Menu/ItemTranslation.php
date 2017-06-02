@@ -17,6 +17,7 @@ use Knp\DoctrineBehaviors\Model\Translatable\Translation;
  * Menu item translation
  *
  * @ORM\Entity
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="menu_item_translation")
  */
 class ItemTranslation
@@ -28,21 +29,21 @@ class ItemTranslation
      *
      * @ORM\Column(type="boolean")
      */
-    private $enabled;
+    protected $enabled;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $title;
+    protected $title;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $url;
+    protected $url;
 
     /**
      * Constructor

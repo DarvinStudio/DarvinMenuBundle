@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Menu item
  *
  * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\Menu\ItemRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="menu_item")
  *
  * @Gedmo\Tree(type="materializedPath")
@@ -44,7 +45,7 @@ class Item
      *
      * @Gedmo\TreePathSource
      */
-    private $id;
+    protected $id;
 
     /**
      * @var Item
@@ -54,14 +55,14 @@ class Item
      * @Gedmo\TreeParent
      * @Gedmo\SortableGroup
      */
-    private $parent;
+    protected $parent;
 
     /**
      * @var Item[]|\Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Item", mappedBy="parent", cascade={"remove"})
      */
-    private $children;
+    protected $children;
 
     /**
      * @var \Darvin\ContentBundle\Entity\SlugMapItem
@@ -69,7 +70,7 @@ class Item
      * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\SlugMapItem")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $slugMapItem;
+    protected $slugMapItem;
 
     /**
      * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
@@ -79,7 +80,7 @@ class Item
      *
      * @Assert\Valid
      */
-    private $image;
+    protected $image;
 
     /**
      * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
@@ -89,7 +90,7 @@ class Item
      *
      * @Assert\Valid
      */
-    private $hoverImage;
+    protected $hoverImage;
 
     /**
      * @var string
@@ -100,14 +101,14 @@ class Item
      *
      * @Gedmo\SortableGroup
      */
-    private $menu;
+    protected $menu;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean")
      */
-    private $showChildren;
+    protected $showChildren;
 
     /**
      * @var int
@@ -116,7 +117,7 @@ class Item
      *
      * @Gedmo\SortablePosition
      */
-    private $position;
+    protected $position;
 
     /**
      * @var string
@@ -125,7 +126,7 @@ class Item
      *
      * @Gedmo\TreePath(separator="/", appendId="false")
      */
-    private $treePath;
+    protected $treePath;
 
     /**
      * @var int
@@ -134,7 +135,7 @@ class Item
      *
      * @Gedmo\TreeLevel
      */
-    private $level;
+    protected $level;
 
     /**
      * Constructor
