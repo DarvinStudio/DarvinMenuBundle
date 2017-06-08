@@ -87,8 +87,8 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
         $class = ClassUtils::getClass($entity);
         $supportedClass = $this->getSupportedClass();
 
-        if ($class !== $supportedClass) {
-            throw new ItemFactoryException(sprintf('Entity must instance of "%s", got "%s".', $supportedClass, $class));
+        if ($class !== $supportedClass && !in_array($supportedClass, class_parents($class))) {
+            throw new ItemFactoryException(sprintf('Entity must be instance of "%s", got "%s".', $supportedClass, $class));
         }
     }
 }
