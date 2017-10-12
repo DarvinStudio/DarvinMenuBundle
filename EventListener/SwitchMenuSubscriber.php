@@ -16,6 +16,7 @@ use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Switcher\MenuSwitcher;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
 
@@ -64,8 +65,40 @@ class SwitchMenuSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return [
+            Events::onFlush,
             Events::preFlush,
         ];
+    }
+
+    /**
+     * @param \Doctrine\ORM\Event\OnFlushEventArgs $args Event arguments
+     */
+    public function onFlush(OnFlushEventArgs $args)
+    {
+        $this->em = $em = $args->getEntityManager();
+        $uow = $em->getUnitOfWork();
+
+        $computeChangeSets = false;
+
+        foreach ($uow->getScheduledEntityInsertions() as $slugMapItem) {
+            if (!$slugMapItem instanceof SlugMapItem) {
+                continue;
+            }
+            foreach ($this->menuSwitcher->getToEnable() as $menuAlias => $entities) {
+                foreach ($entities as $entity) {
+                    if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
+                        && $slugMapItem->getObjectId() === $this->getEntityId($entity)
+                    ) {
+                        $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
+
+                        $computeChangeSets = true;
+                    }
+                }
+            }
+        }
+        if ($computeChangeSets) {
+            $uow->computeChangeSets();
+        }
     }
 
     /**
