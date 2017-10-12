@@ -56,7 +56,6 @@ menu_item:
         slug_map_item:    Объект
         title:            Название
         url:              Ссылка
-
-menu_manager:
-    form:
-        label: Показывать в меню
+    manager:
+        form:
+            label: Показывать в меню

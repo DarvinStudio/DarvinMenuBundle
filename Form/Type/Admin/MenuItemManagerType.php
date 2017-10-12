@@ -16,9 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Menu manager admin form type
+ * Menu item manager admin form type
  */
-class MenuManagerType extends AbstractType
+class MenuItemManagerType extends AbstractType
 {
     /**
      * @var \Darvin\MenuBundle\Configuration\MenuConfiguration
@@ -39,7 +39,7 @@ class MenuManagerType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'label'    => 'menu_manager.form.label',
+            'label'    => 'menu_item.manager.form.label',
             'mapped'   => false,
             'choices'  => $this->buildChoices(),
             'multiple' => true,
