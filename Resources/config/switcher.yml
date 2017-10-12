@@ -1,18 +1,18 @@
 parameters:
-    darvin_menu.item_manager.admin.base_form_type_extension.class: Darvin\MenuBundle\Form\Extension\Admin\ItemManagerBaseTypeExtension
+    darvin_menu.switcher.admin.base_form_type_extension.class: Darvin\MenuBundle\Form\Extension\Admin\SwitcherBaseTypeExtension
 
     darvin_menu.switcher.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuSwitcherType
 
-    darvin_menu.item_manager.class: Darvin\MenuBundle\Item\MenuItemManager
+    darvin_menu.switcher.class: Darvin\MenuBundle\Switcher\MenuSwitcher
 
-    darvin_menu.item_manager.manage_event_subscriber.class: Darvin\MenuBundle\EventListener\ManageItemsSubscriber
+    darvin_menu.switcher.switch_event_subscriber.class: Darvin\MenuBundle\EventListener\SwitchMenuSubscriber
 
 services:
-    darvin_menu.item_manager.admin.base_form_type_extension:
-        class: "%darvin_menu.item_manager.admin.base_form_type_extension.class%"
+    darvin_menu.switcher.admin.base_form_type_extension:
+        class: "%darvin_menu.switcher.admin.base_form_type_extension.class%"
         arguments:
             - "@darvin_menu.configuration.menu"
-            - "@darvin_menu.item_manager"
+            - "@darvin_menu.switcher"
         tags:
             - { name: form.type_extension, extended_type: Darvin\AdminBundle\Form\Type\BaseType }
 
@@ -20,21 +20,21 @@ services:
         class: "%darvin_menu.switcher.admin.form_type.class%"
         arguments:
             - "@darvin_menu.configuration.menu"
-            - "@darvin_menu.item_manager"
+            - "@darvin_menu.switcher"
         tags:
             - { name: form.type }
 
-    darvin_menu.item_manager:
-        class:  "%darvin_menu.item_manager.class%"
+    darvin_menu.switcher:
+        class:  "%darvin_menu.switcher.class%"
         public: false
         arguments:
             - "@doctrine.orm.entity_manager"
 
-    darvin_menu.item_manager.manage_event_subscriber:
-        class:  "%darvin_menu.item_manager.manage_event_subscriber.class%"
+    darvin_menu.switcher.switch_event_subscriber:
+        class:  "%darvin_menu.switcher.switch_event_subscriber.class%"
         public: false
         arguments:
-            - "@darvin_menu.item_manager"
+            - "@darvin_menu.switcher"
             - "@darvin_content.translatable.translations_initializer"
             - "%locales%"
         tags:

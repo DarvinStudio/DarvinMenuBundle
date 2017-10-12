@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
-use Darvin\MenuBundle\Item\MenuItemManager;
+use Darvin\MenuBundle\Switcher\MenuSwitcher;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,18 +30,18 @@ class MenuSwitcherType extends AbstractType
     private $menuConfig;
 
     /**
-     * @var \Darvin\MenuBundle\Item\MenuItemManager
+     * @var \Darvin\MenuBundle\Switcher\MenuSwitcher
      */
-    private $menuItemManager;
+    private $menuSwitcher;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig      Menu configuration
-     * @param \Darvin\MenuBundle\Item\MenuItemManager            $menuItemManager Menu item manager
+     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig   Menu configuration
+     * @param \Darvin\MenuBundle\Switcher\MenuSwitcher           $menuSwitcher Menu switcher
      */
-    public function __construct(MenuConfiguration $menuConfig, MenuItemManager $menuItemManager)
+    public function __construct(MenuConfiguration $menuConfig, MenuSwitcher $menuSwitcher)
     {
         $this->menuConfig = $menuConfig;
-        $this->menuItemManager = $menuItemManager;
+        $this->menuSwitcher = $menuSwitcher;
     }
 
     /**
@@ -49,16 +49,16 @@ class MenuSwitcherType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $menuConfig      = $this->menuConfig;
-        $menuItemManager = $this->menuItemManager;
+        $menuConfig   = $this->menuConfig;
+        $menuSwitcher = $this->menuSwitcher;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuItemManager) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
             $entity = $event->getForm()->getParent()->getData();
 
             $data = [];
 
             foreach ($menuConfig->getMenus() as $menu) {
-                if ($menuItemManager->exists($menu->getAlias(), $entity)) {
+                if ($menuSwitcher->isEnabled($menu->getAlias(), $entity)) {
                     $data[] = $menu->getAlias();
                 }
             }

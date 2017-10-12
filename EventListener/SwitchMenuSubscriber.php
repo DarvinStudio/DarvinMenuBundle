@@ -13,21 +13,21 @@ namespace Darvin\MenuBundle\EventListener;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Translatable\TranslationsInitializerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\MenuBundle\Item\MenuItemManager;
+use Darvin\MenuBundle\Switcher\MenuSwitcher;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
 
 /**
- * Manage menu items event subscriber
+ * Switch menu event subscriber
  */
-class ManageItemsSubscriber implements EventSubscriber
+class SwitchMenuSubscriber implements EventSubscriber
 {
     /**
-     * @var \Darvin\MenuBundle\Item\MenuItemManager
+     * @var \Darvin\MenuBundle\Switcher\MenuSwitcher
      */
-    private $menuItemManager;
+    private $menuSwitcher;
 
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslationsInitializerInterface
@@ -45,13 +45,13 @@ class ManageItemsSubscriber implements EventSubscriber
     private $em;
 
     /**
-     * @param \Darvin\MenuBundle\Item\MenuItemManager                             $menuItemManager         Menu item manager
+     * @param \Darvin\MenuBundle\Switcher\MenuSwitcher                            $menuSwitcher            Menu switcher
      * @param \Darvin\ContentBundle\Translatable\TranslationsInitializerInterface $translationsInitializer Translation initializer
      * @param string[]                                                            $locales                 Locales
      */
-    public function __construct(MenuItemManager $menuItemManager, TranslationsInitializerInterface $translationsInitializer, array $locales)
+    public function __construct(MenuSwitcher $menuSwitcher, TranslationsInitializerInterface $translationsInitializer, array $locales)
     {
-        $this->menuItemManager = $menuItemManager;
+        $this->menuSwitcher = $menuSwitcher;
         $this->translationInitializer = $translationsInitializer;
         $this->locales = $locales;
 
@@ -75,7 +75,7 @@ class ManageItemsSubscriber implements EventSubscriber
     {
         $this->em = $em = $args->getEntityManager();
 
-        foreach ($this->menuItemManager->getScheduledForAdding() as $menuAlias => $entities) {
+        foreach ($this->menuSwitcher->getToEnable() as $menuAlias => $entities) {
             foreach ($entities as $entity) {
                 $slugMapItem = $this->getSlugMapItem($entity);
 
@@ -86,7 +86,7 @@ class ManageItemsSubscriber implements EventSubscriber
                 $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
             }
         }
-        foreach ($this->menuItemManager->getScheduledForRemoval() as $menuAlias => $entities) {
+        foreach ($this->menuSwitcher->getToDisable() as $menuAlias => $entities) {
             foreach ($entities as $entity) {
                 $slugMapItem = $this->getSlugMapItem($entity);
 

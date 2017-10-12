@@ -12,17 +12,17 @@ namespace Darvin\MenuBundle\Form\Extension\Admin;
 
 use Darvin\AdminBundle\Form\Type\BaseType;
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
-use Darvin\MenuBundle\Form\Type\Admin\MenuItemManagerType;
-use Darvin\MenuBundle\Item\MenuItemManager;
+use Darvin\MenuBundle\Form\Type\Admin\MenuSwitcherType;
+use Darvin\MenuBundle\Switcher\MenuSwitcher;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 /**
- * Menu item manager base admin form type extension
+ * Menu switcher base admin form type extension
  */
-class ItemManagerBaseTypeExtension extends AbstractTypeExtension
+class SwitcherBaseTypeExtension extends AbstractTypeExtension
 {
     /**
      * @var \Darvin\MenuBundle\Configuration\MenuConfiguration
@@ -30,18 +30,18 @@ class ItemManagerBaseTypeExtension extends AbstractTypeExtension
     private $menuConfig;
 
     /**
-     * @var \Darvin\MenuBundle\Item\MenuItemManager
+     * @var \Darvin\MenuBundle\Switcher\MenuSwitcher
      */
-    private $menuItemManager;
+    private $menuSwitcher;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig      Menu configuration
-     * @param \Darvin\MenuBundle\Item\MenuItemManager            $menuItemManager Menu item manager
+     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig   Menu configuration
+     * @param \Darvin\MenuBundle\Switcher\MenuSwitcher           $menuSwitcher Menu switcher
      */
-    public function __construct(MenuConfiguration $menuConfig, MenuItemManager $menuItemManager)
+    public function __construct(MenuConfiguration $menuConfig, MenuSwitcher $menuSwitcher)
     {
         $this->menuConfig = $menuConfig;
-        $this->menuItemManager = $menuItemManager;
+        $this->menuSwitcher = $menuSwitcher;
     }
 
     /**
@@ -53,7 +53,7 @@ class ItemManagerBaseTypeExtension extends AbstractTypeExtension
 
         /** @var \Symfony\Component\Form\FormBuilderInterface $field */
         foreach ($builder->all() as $name => $field) {
-            if ($field->getType()->getInnerType() instanceof MenuItemManagerType) {
+            if ($field->getType()->getInnerType() instanceof MenuSwitcherType) {
                 $fieldName = $name;
 
                 break;
@@ -63,18 +63,18 @@ class ItemManagerBaseTypeExtension extends AbstractTypeExtension
             return;
         }
 
-        $menuConfig      = $this->menuConfig;
-        $menuItemManager = $this->menuItemManager;
+        $menuConfig   = $this->menuConfig;
+        $menuSwitcher = $this->menuSwitcher;
 
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($fieldName, $menuConfig, $menuItemManager) {
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($fieldName, $menuConfig, $menuSwitcher) {
             $entity      = $event->getData();
             $menuAliases = $event->getForm()->get($fieldName)->getData();
 
             foreach ($menuConfig->getMenus() as $menu) {
                 if (in_array($menu->getAlias(), $menuAliases)) {
-                    $menuItemManager->scheduleForAdding($menu->getAlias(), $entity);
+                    $menuSwitcher->enable($menu->getAlias(), $entity);
                 } else {
-                    $menuItemManager->scheduleForRemoval($menu->getAlias(), $entity);
+                    $menuSwitcher->disable($menu->getAlias(), $entity);
                 }
             }
         });
