@@ -1,7 +1,7 @@
 parameters:
     darvin_menu.item_manager.admin.base_form_type_extension.class: Darvin\MenuBundle\Form\Extension\Admin\ItemManagerBaseTypeExtension
 
-    darvin_menu.item_manager.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuSelectType
+    darvin_menu.switcher.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuSwitcherType
 
     darvin_menu.item_manager.class: Darvin\MenuBundle\Item\MenuItemManager
 
@@ -16,8 +16,8 @@ services:
         tags:
             - { name: form.type_extension, extended_type: Darvin\AdminBundle\Form\Type\BaseType }
 
-    darvin_menu.item_manager.admin.form_type:
-        class: "%darvin_menu.item_manager.admin.form_type.class%"
+    darvin_menu.switcher.admin.form_type:
+        class: "%darvin_menu.switcher.admin.form_type.class%"
         arguments:
             - "@darvin_menu.configuration.menu"
             - "@darvin_menu.item_manager"

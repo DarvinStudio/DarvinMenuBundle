@@ -57,5 +57,5 @@ menu_item:
         title:            Название
         url:              Ссылка
 
-menu_select:
+menu_switcher:
     title: В меню

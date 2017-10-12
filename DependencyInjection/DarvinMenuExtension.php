@@ -54,8 +54,8 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'configuration',
             'item_factory',
             'menu',
-            'menu_select',
             'slug_map',
+             'switcher',
             'voter',
         ] as $resource) {
             $loader->load($resource.'.yml');
