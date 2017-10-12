@@ -86,6 +86,24 @@ class ManageItemsSubscriber implements EventSubscriber
                 $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
             }
         }
+        foreach ($this->menuItemManager->getScheduledForRemoval() as $menuAlias => $entities) {
+            foreach ($entities as $entity) {
+                $slugMapItem = $this->getSlugMapItem($entity);
+
+                if (empty($slugMapItem)) {
+                    continue;
+                }
+
+                $menuItems = $em->getRepository(Item::class)->findBy([
+                    'menu'        => $menuAlias,
+                    'slugMapItem' => $slugMapItem,
+                ]);
+
+                foreach ($menuItems as $menuItem) {
+                    $em->remove($menuItem);
+                }
+            }
+        }
     }
 
     /**
