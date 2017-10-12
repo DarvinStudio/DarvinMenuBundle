@@ -18,6 +18,7 @@ services:
         class: "%darvin_menu.item_manager.admin.form_type.class%"
         arguments:
             - "@darvin_menu.configuration.menu"
+            - "@darvin_menu.item_manager"
         tags:
             - { name: form.type }
 

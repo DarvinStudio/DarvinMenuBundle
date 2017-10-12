@@ -11,8 +11,12 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
+use Darvin\MenuBundle\Item\MenuItemManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -26,11 +30,41 @@ class MenuItemManagerType extends AbstractType
     private $menuConfig;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig Menu configuration
+     * @var \Darvin\MenuBundle\Item\MenuItemManager
      */
-    public function __construct(MenuConfiguration $menuConfig)
+    private $menuItemManager;
+
+    /**
+     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig      Menu configuration
+     * @param \Darvin\MenuBundle\Item\MenuItemManager            $menuItemManager Menu item manager
+     */
+    public function __construct(MenuConfiguration $menuConfig, MenuItemManager $menuItemManager)
     {
         $this->menuConfig = $menuConfig;
+        $this->menuItemManager = $menuItemManager;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $menuConfig      = $this->menuConfig;
+        $menuItemManager = $this->menuItemManager;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuItemManager) {
+            $entity = $event->getForm()->getParent()->getData();
+
+            $data = [];
+
+            foreach ($menuConfig->getMenus() as $menu) {
+                if ($menuItemManager->exists($menu->getAlias(), $entity)) {
+                    $data[] = $menu->getAlias();
+                }
+            }
+
+            $event->setData($data);
+        });
     }
 
     /**
