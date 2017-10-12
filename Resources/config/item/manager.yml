@@ -5,6 +5,8 @@ parameters:
 
     darvin_menu.item_manager.class: Darvin\MenuBundle\Item\MenuItemManager
 
+    darvin_menu.item_manager.manage_event_subscriber.class: Darvin\MenuBundle\EventListener\ManageItemsSubscriber
+
 services:
     darvin_menu.item_manager.admin.base_form_type_extension:
         class: "%darvin_menu.item_manager.admin.base_form_type_extension.class%"
@@ -27,3 +29,13 @@ services:
         public: false
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    darvin_menu.item_manager.manage_event_subscriber:
+        class:  "%darvin_menu.item_manager.manage_event_subscriber.class%"
+        public: false
+        arguments:
+            - "@darvin_menu.item_manager"
+            - "@darvin_content.translatable.translations_initializer"
+            - "%locales%"
+        tags:
+            - { name: doctrine.event_subscriber }
