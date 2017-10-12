@@ -24,3 +24,5 @@ services:
     darvin_menu.item_manager:
         class:  "%darvin_menu.item_manager.class%"
         public: false
+        arguments:
+            - "@doctrine.orm.entity_manager"

@@ -42,6 +42,37 @@ class ItemRepository extends EntityRepository
     }
 
     /**
+     * @return array
+     */
+    public function getForItemManager()
+    {
+        $qb = $this->createDefaultQueryBuilder()
+            ->select('o.menu')
+            ->addSelect('slug_map_item.objectClass class')
+            ->addSelect('slug_map_item.objectId id');
+        $this->joinSlugMapItem($qb, false, true);
+
+        $items = [];
+
+        foreach ($qb->getQuery()->getScalarResult() as $row) {
+            $menu  = $row['menu'];
+            $class = $row['class'];
+            $id    = $row['id'];
+
+            if (!isset($items[$menu])) {
+                $items[$menu] = [];
+            }
+            if (!isset($items[$menu][$class])) {
+                $items[$menu][$class] = [];
+            }
+
+            $items[$menu][$class][$id] = $id;
+        }
+
+        return $items;
+    }
+
+    /**
      * @param string $menu   Menu alias
      * @param string $locale Locale
      *
@@ -97,15 +128,21 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
+     * @param bool                       $addSelect Whether to add select
+     * @param bool                       $inner     Whether to use inner join
      *
      * @return ItemRepository
      */
-    private function joinSlugMapItem(QueryBuilder $qb)
+    private function joinSlugMapItem(QueryBuilder $qb, $addSelect = true, $inner = false)
     {
-        $qb
-            ->addSelect('slug_map_item')
-            ->leftJoin('o.slugMapItem', 'slug_map_item');
+        $inner
+            ? $qb->innerJoin('o.slugMapItem', 'slug_map_item')
+            : $qb->leftJoin('o.slugMapItem', 'slug_map_item');
+
+        if ($addSelect) {
+            $qb->addSelect('slug_map_item');
+        }
 
         return $this;
     }

@@ -10,11 +10,24 @@
 
 namespace Darvin\MenuBundle\Item;
 
+use Darvin\MenuBundle\Entity\Menu\Item;
+use Doctrine\ORM\EntityManager;
+
 /**
  * Menu item manager
  */
 class MenuItemManager
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @var array
+     */
+    private $items;
+
     /**
      * @var array
      */
@@ -26,10 +39,13 @@ class MenuItemManager
     private $scheduledForRemoval;
 
     /**
-     * Menu item manager constructor.
+     * @param \Doctrine\ORM\EntityManager $em Entity manager
      */
-    public function __construct()
+    public function __construct(EntityManager $em)
     {
+        $this->em = $em;
+
+        $this->items = null;
         $this->scheduledForAdding = $this->scheduledForRemoval = [];
     }
 
@@ -73,5 +89,25 @@ class MenuItemManager
     public function getScheduledForRemoval()
     {
         return $this->scheduledForRemoval;
+    }
+
+    /**
+     * @return array
+     */
+    private function getItems()
+    {
+        if (null === $this->items) {
+            $this->items = $this->getMenuItemRepository()->getForItemManager();
+        }
+
+        return $this->items;
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
+     */
+    private function getMenuItemRepository()
+    {
+        return $this->em->getRepository(Item::class);
     }
 }
