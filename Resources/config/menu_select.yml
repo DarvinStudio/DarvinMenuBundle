@@ -1,7 +1,7 @@
 parameters:
     darvin_menu.item_manager.admin.base_form_type_extension.class: Darvin\MenuBundle\Form\Extension\Admin\ItemManagerBaseTypeExtension
 
-    darvin_menu.item_manager.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuItemManagerType
+    darvin_menu.item_manager.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuSelectType
 
     darvin_menu.item_manager.class: Darvin\MenuBundle\Item\MenuItemManager
 

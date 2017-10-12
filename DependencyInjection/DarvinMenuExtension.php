@@ -52,9 +52,9 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'breadcrumbs',
             'builder',
             'configuration',
-            'item/factory',
-            'item/manager',
+            'item_factory',
             'menu',
+            'menu_select',
             'slug_map',
             'voter',
         ] as $resource) {
