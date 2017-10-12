@@ -1,0 +1,19 @@
+parameters:
+    darvin_menu.menu_manager.admin.base_form_type_extension.class: Darvin\MenuBundle\Form\Extension\Admin\MenuManagerBaseTypeExtension
+
+    darvin_menu.menu_manager.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuManagerType
+
+services:
+    darvin_menu.menu_manager.admin.base_form_type_extension:
+        class: "%darvin_menu.menu_manager.admin.base_form_type_extension.class%"
+        arguments:
+            - "@darvin_menu.configuration.menu"
+        tags:
+            - { name: form.type_extension, extended_type: Darvin\AdminBundle\Form\Type\BaseType }
+
+    darvin_menu.menu_manager.admin.form_type:
+        class: "%darvin_menu.menu_manager.admin.form_type.class%"
+        arguments:
+            - "@darvin_menu.configuration.menu"
+        tags:
+            - { name: form.type }

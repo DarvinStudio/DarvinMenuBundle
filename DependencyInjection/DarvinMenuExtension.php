@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -55,6 +54,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'configuration',
             'item_factory',
             'menu',
+            'menu_manager',
             'slug_map',
             'voter',
         ] as $resource) {

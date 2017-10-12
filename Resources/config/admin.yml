@@ -5,8 +5,6 @@ parameters:
 
     darvin_menu.admin.form_type.menu_item_parent.class: Darvin\MenuBundle\Form\Type\Admin\MenuItemParentType
 
-    darvin_menu.admin.form_type.menu_manager.class: Darvin\MenuBundle\Form\Type\Admin\MenuManagerType
-
     darvin_menu.admin.form_type.slug_map_item.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemType
 
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
@@ -38,13 +36,6 @@ services:
             - "@darvin_utils.locale.provider"
             - "@darvin_menu.admin.menu_item_sorter"
             - "@darvin_menu.slug_map.item_custom_object_loader"
-        tags:
-            - { name: form.type }
-
-    darvin_menu.admin.form_type.menu_manager:
-        class: "%darvin_menu.admin.form_type.menu_manager.class%"
-        arguments:
-            - "@darvin_menu.configuration.menu"
         tags:
             - { name: form.type }
 
