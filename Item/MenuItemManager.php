@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -55,6 +56,9 @@ class MenuItemManager
      */
     public function scheduleForAdding($menuAlias, $entity)
     {
+        if ($this->exists($menuAlias, $entity)) {
+            return;
+        }
         if (!isset($this->scheduledForAdding[$menuAlias])) {
             $this->scheduledForAdding[$menuAlias] = [];
         }
@@ -68,6 +72,9 @@ class MenuItemManager
      */
     public function scheduleForRemoval($menuAlias, $entity)
     {
+        if (!$this->exists($menuAlias, $entity)) {
+            return;
+        }
         if (!isset($this->scheduledForRemoval[$menuAlias])) {
             $this->scheduledForRemoval[$menuAlias] = [];
         }
@@ -89,6 +96,21 @@ class MenuItemManager
     public function getScheduledForRemoval()
     {
         return $this->scheduledForRemoval;
+    }
+
+    /**
+     * @param string $menuAlias Menu alias
+     * @param object $entity    Entity
+     *
+     * @return bool
+     */
+    public function exists($menuAlias, $entity)
+    {
+        $items       = $this->getItems();
+        $entityClass = ClassUtils::getClass($entity);
+        $entityIds   = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
+
+        return isset($items[$menuAlias][$entityClass][reset($entityIds)]);
     }
 
     /**
