@@ -42,9 +42,30 @@ class ItemRepository extends EntityRepository
     }
 
     /**
+     * @param string $menu        Menu alias
+     * @param string $entityClass Entity class
+     * @param mixed  $entityId    Entity ID
+     *
+     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     */
+    public function getByMenuAndEntity($menu, $entityClass, $entityId)
+    {
+        $qb = $this->createDefaultQueryBuilder()
+            ->andWhere('slug_map_item.objectClass = :entity_class')
+            ->setParameter('entity_class', $entityClass)
+            ->andWhere('slug_map_item.objectId = :entity_id')
+            ->setParameter('entity_id', $entityId);
+        $this
+            ->joinSlugMapItem($qb)
+            ->addMenuFilter($qb, $menu);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @return array
      */
-    public function getForItemManager()
+    public function getForMenuSwitcher()
     {
         $qb = $this->createDefaultQueryBuilder()
             ->select('o.menu')

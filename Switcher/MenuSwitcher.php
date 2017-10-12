@@ -119,7 +119,7 @@ class MenuSwitcher
     private function getMenuItems()
     {
         if (null === $this->menuItems) {
-            $this->menuItems = $this->getMenuItemRepository()->getForItemManager();
+            $this->menuItems = $this->getMenuItemRepository()->getForMenuSwitcher();
         }
 
         return $this->menuItems;

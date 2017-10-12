@@ -88,16 +88,11 @@ class SwitchMenuSubscriber implements EventSubscriber
         }
         foreach ($this->menuSwitcher->getToDisable() as $menuAlias => $entities) {
             foreach ($entities as $entity) {
-                $slugMapItem = $this->getSlugMapItem($entity);
-
-                if (empty($slugMapItem)) {
-                    continue;
-                }
-
-                $menuItems = $em->getRepository(Item::class)->findBy([
-                    'menu'        => $menuAlias,
-                    'slugMapItem' => $slugMapItem,
-                ]);
+                $menuItems = $this->getMenuItemRepository()->getByMenuAndEntity(
+                    $menuAlias,
+                    ClassUtils::getClass($entity),
+                    $this->getEntityId($entity)
+                );
 
                 foreach ($menuItems as $menuItem) {
                     $em->remove($menuItem);
@@ -114,13 +109,13 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function createMenuItem($menuAlias, SlugMapItem $slugMapItem)
     {
-        $item = (new Item())
+        $menuItem = (new Item())
             ->setMenu($menuAlias)
             ->setSlugMapItem($slugMapItem);
 
-        $this->translationInitializer->initializeTranslations($item, $this->locales);
+        $this->translationInitializer->initializeTranslations($menuItem, $this->locales);
 
-        return $item;
+        return $menuItem;
     }
 
     /**
@@ -130,13 +125,30 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getSlugMapItem($entity)
     {
-        $entityClass = ClassUtils::getClass($entity);
-        $entityIds   = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
-
-        return $this->getSlugMapItemRepository()->getByEntityBuilder($entityClass, $entityIds)
+        return $this->getSlugMapItemRepository()->getByEntityBuilder(ClassUtils::getClass($entity), $this->getEntityId($entity))
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * @param object $entity Entity
+     *
+     * @return mixed
+     */
+    private function getEntityId($entity)
+    {
+        $ids = $this->em->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
+
+        return reset($ids);
+    }
+
+    /**
+     * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
+     */
+    private function getMenuItemRepository()
+    {
+        return $this->em->getRepository(Item::class);
     }
 
     /**
