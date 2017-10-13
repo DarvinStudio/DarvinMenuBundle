@@ -52,3 +52,5 @@ menu_item:
         slug_map_item: وجوه
         title: العنوان
         url: URL
+menu_switcher:
+    title: القائمة

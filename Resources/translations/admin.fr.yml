@@ -52,3 +52,5 @@ menu_item:
         slug_map_item: Objet
         title: Titre
         url: URL
+menu_switcher:
+    title: Menu

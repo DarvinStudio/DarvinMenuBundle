@@ -56,3 +56,6 @@ menu_item:
         slug_map_item:    Object
         title:            Title
         url:              URL
+
+menu_switcher:
+    title: Menu
