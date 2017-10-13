@@ -65,13 +65,15 @@ class Configuration implements ConfigurationInterface
                                 ->ifTrue(function (array $defaultMenus) {
                                     foreach (array_keys($defaultMenus) as $entity) {
                                         if (!class_exists($entity) && !interface_exists($entity)) {
-                                            return true;
+                                            throw new \RuntimeException(
+                                                sprintf('Entity class or interface "%s" does not exist.', $entity)
+                                            );
                                         }
                                     }
 
                                     return false;
                                 })
-                                ->thenInvalid('Entity class or interface %s does not exist.')
+                                ->thenInvalid(null)
                             ->end()
                         ->end()
                     ->end()
@@ -87,7 +89,7 @@ class Configuration implements ConfigurationInterface
                         foreach ($defaultMenuAliases as $defaultMenuAlias) {
                             if (!in_array($defaultMenuAlias, $menuAliases)) {
                                 throw new \RuntimeException(
-                                    sprintf('Menu switcher default menu "%s" does not defined in the "menus" section.', $defaultMenuAlias)
+                                    sprintf('Menu "%s" does not defined in the "menus" section.', $defaultMenuAlias)
                                 );
                             }
                         }
