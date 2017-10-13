@@ -72,6 +72,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
         foreach ([
             'darvin_admin',
             'knp_menu',
+            'twig',
         ] as $extension) {
             if ($container->hasExtension($extension)) {
                 $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yml')))[$extension]);

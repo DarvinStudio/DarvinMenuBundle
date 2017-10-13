@@ -54,8 +54,7 @@ class MenuSwitcherType extends AbstractType
 
         foreach ($menuConfig->getMenus() as $menu) {
             $builder->add($menu->getAlias(), CheckboxType::class, [
-                'label'    => $menu->getTitle(),
-                'required' => false,
+                'label' => $menu->getTitle(),
             ]);
         }
 
@@ -94,8 +93,17 @@ class MenuSwitcherType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'label'  => 'menu_switcher.title',
-            'mapped' => false,
+            'label'    => 'menu_switcher.title',
+            'mapped'   => false,
+            'required' => false,
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'darvin_menu_switcher';
     }
 }
