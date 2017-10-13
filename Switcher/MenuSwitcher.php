@@ -32,12 +32,12 @@ class MenuSwitcher
     /**
      * @var array
      */
-    private $toEnable;
+    private $menusToEnable;
 
     /**
      * @var array
      */
-    private $toDisable;
+    private $menusToDisable;
 
     /**
      * @param \Doctrine\ORM\EntityManager $em Entity manager
@@ -47,7 +47,7 @@ class MenuSwitcher
         $this->em = $em;
 
         $this->menuItems = null;
-        $this->toEnable = $this->toDisable = [];
+        $this->menusToEnable = $this->menusToDisable = [];
     }
 
     /**
@@ -60,10 +60,10 @@ class MenuSwitcher
             return;
         }
         if (!isset($this->toEnable[$menuAlias])) {
-            $this->toEnable[$menuAlias] = [];
+            $this->menusToEnable[$menuAlias] = [];
         }
 
-        $this->toEnable[$menuAlias][] = $entity;
+        $this->menusToEnable[$menuAlias][] = $entity;
     }
 
     /**
@@ -76,10 +76,10 @@ class MenuSwitcher
             return;
         }
         if (!isset($this->toDisable[$menuAlias])) {
-            $this->toDisable[$menuAlias] = [];
+            $this->menusToDisable[$menuAlias] = [];
         }
 
-        $this->toDisable[$menuAlias][] = $entity;
+        $this->menusToDisable[$menuAlias][] = $entity;
     }
 
     /**
@@ -116,17 +116,17 @@ class MenuSwitcher
     /**
      * @return array
      */
-    public function getToEnable()
+    public function getMenusToEnable()
     {
-        return $this->toEnable;
+        return $this->menusToEnable;
     }
 
     /**
      * @return array
      */
-    public function getToDisable()
+    public function getMenusToDisable()
     {
-        return $this->toDisable;
+        return $this->menusToDisable;
     }
 
     /**

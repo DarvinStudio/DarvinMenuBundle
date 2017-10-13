@@ -84,7 +84,7 @@ class SwitchMenuSubscriber implements EventSubscriber
             if (!$slugMapItem instanceof SlugMapItem) {
                 continue;
             }
-            foreach ($this->menuSwitcher->getToEnable() as $menuAlias => $entities) {
+            foreach ($this->menuSwitcher->getMenusToEnable() as $menuAlias => $entities) {
                 foreach ($entities as $entity) {
                     if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
                         && $slugMapItem->getObjectId() === $this->getEntityId($entity)
@@ -116,7 +116,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     {
         $this->em = $em = $args->getEntityManager();
 
-        foreach ($this->menuSwitcher->getToEnable() as $menuAlias => $entities) {
+        foreach ($this->menuSwitcher->getMenusToEnable() as $menuAlias => $entities) {
             foreach ($entities as $entity) {
                 $slugMapItem = $this->getSlugMapItem($entity);
 
@@ -127,7 +127,7 @@ class SwitchMenuSubscriber implements EventSubscriber
                 $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
             }
         }
-        foreach ($this->menuSwitcher->getToDisable() as $menuAlias => $entities) {
+        foreach ($this->menuSwitcher->getMenusToDisable() as $menuAlias => $entities) {
             foreach ($entities as $entity) {
                 foreach ($this->getMenuItems($entity, $menuAlias) as $menuItem) {
                     $em->remove($menuItem);
