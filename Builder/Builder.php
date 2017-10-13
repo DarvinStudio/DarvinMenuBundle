@@ -25,7 +25,6 @@ use Gedmo\Sortable\SortableListener;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Builder

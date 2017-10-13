@@ -51,12 +51,12 @@ class MenuSwitcher
     }
 
     /**
-     * @param string $menuAlias Menu alias
      * @param object $entity    Entity
+     * @param string $menuAlias Menu alias
      */
-    public function enable($menuAlias, $entity)
+    public function enableMenu($entity, $menuAlias)
     {
-        if ($this->isEnabled($menuAlias, $entity)) {
+        if ($this->isMenuEnabled($entity, $menuAlias)) {
             return;
         }
         if (!isset($this->toEnable[$menuAlias])) {
@@ -67,12 +67,12 @@ class MenuSwitcher
     }
 
     /**
-     * @param string $menuAlias Menu alias
      * @param object $entity    Entity
+     * @param string $menuAlias Menu alias
      */
-    public function disable($menuAlias, $entity)
+    public function disableMenu($entity, $menuAlias)
     {
-        if (!$this->isEnabled($menuAlias, $entity)) {
+        if (!$this->isMenuEnabled($entity, $menuAlias)) {
             return;
         }
         if (!isset($this->toDisable[$menuAlias])) {
@@ -87,10 +87,10 @@ class MenuSwitcher
      *
      * @return bool
      */
-    public function hasEnabled($entity)
+    public function hasEnabledMenus($entity)
     {
         foreach (array_keys($this->getMenuItems()) as $menuAlias) {
-            if ($this->isEnabled($menuAlias, $entity)) {
+            if ($this->isMenuEnabled($entity, $menuAlias)) {
                 return true;
             }
         }
@@ -99,12 +99,12 @@ class MenuSwitcher
     }
 
     /**
-     * @param string $menuAlias Menu alias
      * @param object $entity    Entity
+     * @param string $menuAlias Menu alias
      *
      * @return bool
      */
-    public function isEnabled($menuAlias, $entity)
+    public function isMenuEnabled($entity, $menuAlias)
     {
         $menuItems   = $this->getMenuItems();
         $entityClass = ClassUtils::getClass($entity);

@@ -59,7 +59,7 @@ class MenuSwitcherType extends AbstractType
                 $menuAliases = [];
 
                 foreach ($menuConfig->getMenus() as $menu) {
-                    if ($menuSwitcher->isEnabled($menu->getAlias(), $entity)) {
+                    if ($menuSwitcher->isMenuEnabled($entity, $menu->getAlias())) {
                         $menuAliases[] = $menu->getAlias();
                     }
                 }
@@ -73,9 +73,9 @@ class MenuSwitcherType extends AbstractType
 
                 foreach ($menuConfig->getMenus() as $menu) {
                     if (in_array($menu->getAlias(), $menuAliases)) {
-                        $menuSwitcher->enable($menu->getAlias(), $entity);
+                        $menuSwitcher->enableMenu($entity, $menu->getAlias());
                     } else {
-                        $menuSwitcher->disable($menu->getAlias(), $entity);
+                        $menuSwitcher->disableMenu($entity, $menu->getAlias());
                     }
                 }
             });

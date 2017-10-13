@@ -97,7 +97,7 @@ class SwitchMenuSubscriber implements EventSubscriber
             }
         }
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
-            if (!$this->menuSwitcher->hasEnabled($entity)) {
+            if (!$this->menuSwitcher->hasEnabledMenus($entity)) {
                 continue;
             }
             foreach ($this->getMenuItems($entity) as $menuItem) {
