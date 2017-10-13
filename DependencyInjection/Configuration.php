@@ -82,7 +82,7 @@ class Configuration implements ConfigurationInterface
                     foreach ($config['switcher']['default_menus'] as $defaultMenuAlias) {
                         if (!in_array($defaultMenuAlias, $menuAliases)) {
                             throw new \RuntimeException(
-                                sprintf('Menu switcher default menu "%s" does not exist.', $defaultMenuAlias)
+                                sprintf('Menu switcher default menu "%s" does not defined in the "menus" section.', $defaultMenuAlias)
                             );
                         }
                     }
