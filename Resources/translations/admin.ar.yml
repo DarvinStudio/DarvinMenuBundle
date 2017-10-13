@@ -53,4 +53,4 @@ menu_item:
         title: العنوان
         url: URL
 menu_switcher:
-    title: القائمة
+    title: 'تظهر في القائمة'
