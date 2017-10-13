@@ -51,8 +51,23 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                    ->end()
                 ->end()
-            ;
+                ->arrayNode('switcher')->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('default_menus')->useAttributeAsKey('entity')
+                            ->prototype('scalar')->cannotBeEmpty()->end()
+                            ->validate()
+                                ->ifTrue(function (array $defaultMenus) {
+                                    foreach (array_keys($defaultMenus) as $entity) {
+                                        if (!class_exists($entity) && !interface_exists($entity)) {
+                                            return true;
+                                        }
+                                    }
+
+                                    return false;
+                                })
+                                ->thenInvalid('Entity class or interface %s does not exist.');
 
         return $treeBuilder;
     }
