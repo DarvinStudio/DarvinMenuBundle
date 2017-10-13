@@ -67,7 +67,29 @@ class Configuration implements ConfigurationInterface
 
                                     return false;
                                 })
-                                ->thenInvalid('Entity class or interface %s does not exist.');
+                                ->thenInvalid('Entity class or interface %s does not exist.')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+            ->validate()
+                ->ifTrue(function (array $config) {
+                    $menuAliases = array_map(function (array $menu) {
+                        return $menu['alias'];
+                    }, $config['menus']);
+
+                    foreach ($config['switcher']['default_menus'] as $defaultMenuAlias) {
+                        if (!in_array($defaultMenuAlias, $menuAliases)) {
+                            throw new \RuntimeException(
+                                sprintf('Menu switcher default menu "%s" does not exist.', $defaultMenuAlias)
+                            );
+                        }
+                    }
+
+                    return false;
+                })
+                ->thenInvalid(null);
 
         return $treeBuilder;
     }
