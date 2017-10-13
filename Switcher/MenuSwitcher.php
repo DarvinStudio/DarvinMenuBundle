@@ -58,6 +58,22 @@ class MenuSwitcher
     }
 
     /**
+     * @param object $entity Entity
+     *
+     * @return string|null
+     */
+    public function getDefaultMenu($entity)
+    {
+        foreach ($this->defaultMenuAliases as $entityClass => $defaultMenuAlias) {
+            if ($entity instanceof $entityClass) {
+                return $defaultMenuAlias;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return array
      */
     public function getMenusToEnable()
@@ -102,23 +118,6 @@ class MenuSwitcher
         $entityIds   = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
         return isset($menuItems[$menuAlias][$entityClass][reset($entityIds)]);
-    }
-
-    /**
-     * @param object $entity    Entity
-     * @param string $menuAlias Menu alias
-     *
-     * @return bool
-     */
-    public function isDefaultMenu($entity, $menuAlias)
-    {
-        foreach ($this->defaultMenuAliases as $entityClass => $defaultMenuAlias) {
-            if ($entity instanceof $entityClass && $menuAlias === $defaultMenuAlias) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
