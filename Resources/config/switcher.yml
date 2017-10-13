@@ -1,6 +1,4 @@
 parameters:
-    darvin_menu.switcher.admin.base_form_type_extension.class: Darvin\MenuBundle\Form\Extension\Admin\SwitcherBaseTypeExtension
-
     darvin_menu.switcher.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuSwitcherType
 
     darvin_menu.switcher.class: Darvin\MenuBundle\Switcher\MenuSwitcher
@@ -8,14 +6,6 @@ parameters:
     darvin_menu.switcher.switch_event_subscriber.class: Darvin\MenuBundle\EventListener\SwitchMenuSubscriber
 
 services:
-    darvin_menu.switcher.admin.base_form_type_extension:
-        class: "%darvin_menu.switcher.admin.base_form_type_extension.class%"
-        arguments:
-            - "@darvin_menu.configuration.menu"
-            - "@darvin_menu.switcher"
-        tags:
-            - { name: form.type_extension, extended_type: Darvin\AdminBundle\Form\Type\BaseType }
-
     darvin_menu.switcher.admin.form_type:
         class: "%darvin_menu.switcher.admin.form_type.class%"
         arguments:

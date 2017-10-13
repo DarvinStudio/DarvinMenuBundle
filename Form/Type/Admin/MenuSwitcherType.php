@@ -52,19 +52,33 @@ class MenuSwitcherType extends AbstractType
         $menuConfig   = $this->menuConfig;
         $menuSwitcher = $this->menuSwitcher;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
-            $entity = $event->getForm()->getParent()->getData();
+        $builder
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
+                $entity = $event->getForm()->getParent()->getData();
 
-            $data = [];
+                $menuAliases = [];
 
-            foreach ($menuConfig->getMenus() as $menu) {
-                if ($menuSwitcher->isEnabled($menu->getAlias(), $entity)) {
-                    $data[] = $menu->getAlias();
+                foreach ($menuConfig->getMenus() as $menu) {
+                    if ($menuSwitcher->isEnabled($menu->getAlias(), $entity)) {
+                        $menuAliases[] = $menu->getAlias();
+                    }
                 }
-            }
 
-            $event->setData($data);
-        });
+                $event->setData($menuAliases);
+            })
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
+                $entity = $event->getForm()->getParent()->getData();
+
+                $menuAliases = $event->getData();
+
+                foreach ($menuConfig->getMenus() as $menu) {
+                    if (in_array($menu->getAlias(), $menuAliases)) {
+                        $menuSwitcher->enable($menu->getAlias(), $entity);
+                    } else {
+                        $menuSwitcher->disable($menu->getAlias(), $entity);
+                    }
+                }
+            });
     }
 
     /**
