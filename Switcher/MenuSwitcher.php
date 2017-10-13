@@ -27,6 +27,11 @@ class MenuSwitcher
     /**
      * @var array
      */
+    private $defaultMenuAliases;
+
+    /**
+     * @var array
+     */
     private $menuItems;
 
     /**
@@ -40,11 +45,13 @@ class MenuSwitcher
     private $menusToDisable;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em Entity manager
+     * @param \Doctrine\ORM\EntityManager $em                 Entity manager
+     * @param array                       $defaultMenuAliases Default menu aliases
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, array $defaultMenuAliases)
     {
         $this->em = $em;
+        $this->defaultMenuAliases = $defaultMenuAliases;
 
         $this->menuItems = null;
         $this->menusToEnable = $this->menusToDisable = [];
@@ -111,6 +118,23 @@ class MenuSwitcher
         $entityIds   = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
         return isset($menuItems[$menuAlias][$entityClass][reset($entityIds)]);
+    }
+
+    /**
+     * @param object $entity    Entity
+     * @param string $menuAlias Menu alias
+     *
+     * @return bool
+     */
+    public function isDefaultMenu($entity, $menuAlias)
+    {
+        foreach ($this->defaultMenuAliases as $entityClass => $defaultMenuAlias) {
+            if ($entity instanceof $entityClass && $menuAlias === $defaultMenuAlias) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

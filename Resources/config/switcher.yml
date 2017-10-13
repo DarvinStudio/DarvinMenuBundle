@@ -19,6 +19,7 @@ services:
         public: false
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "%darvin_menu.switcher.default_menus%"
 
     darvin_menu.switcher.switch_event_subscriber:
         class:  "%darvin_menu.switcher.switch_event_subscriber.class%"
