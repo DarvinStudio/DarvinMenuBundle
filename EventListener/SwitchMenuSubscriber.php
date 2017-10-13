@@ -96,6 +96,14 @@ class SwitchMenuSubscriber implements EventSubscriber
                 }
             }
         }
+        foreach ($uow->getScheduledEntityDeletions() as $entity) {
+            if (!$this->menuSwitcher->hasEnabled($entity)) {
+                continue;
+            }
+            foreach ($this->getMenuItems($entity) as $menuItem) {
+                $em->remove($menuItem);
+            }
+        }
         if ($computeChangeSets) {
             $uow->computeChangeSets();
         }
@@ -121,13 +129,7 @@ class SwitchMenuSubscriber implements EventSubscriber
         }
         foreach ($this->menuSwitcher->getToDisable() as $menuAlias => $entities) {
             foreach ($entities as $entity) {
-                $menuItems = $this->getMenuItemRepository()->getByMenuAndEntity(
-                    $menuAlias,
-                    ClassUtils::getClass($entity),
-                    $this->getEntityId($entity)
-                );
-
-                foreach ($menuItems as $menuItem) {
+                foreach ($this->getMenuItems($entity, $menuAlias) as $menuItem) {
                     $em->remove($menuItem);
                 }
             }
@@ -149,6 +151,17 @@ class SwitchMenuSubscriber implements EventSubscriber
         $this->translationInitializer->initializeTranslations($menuItem, $this->locales);
 
         return $menuItem;
+    }
+
+    /**
+     * @param object      $entity    Entity
+     * @param string|null $menuAlias Menu alias
+     *
+     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     */
+    private function getMenuItems($entity, $menuAlias = null)
+    {
+        return $this->getMenuItemRepository()->getByEntity(ClassUtils::getClass($entity), $this->getEntityId($entity), $menuAlias);
     }
 
     /**

@@ -83,6 +83,22 @@ class MenuSwitcher
     }
 
     /**
+     * @param object $entity Entity
+     *
+     * @return bool
+     */
+    public function hasEnabled($entity)
+    {
+        foreach (array_keys($this->getMenuItems()) as $menuAlias) {
+            if ($this->isEnabled($menuAlias, $entity)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param string $menuAlias Menu alias
      * @param object $entity    Entity
      *
