@@ -33,7 +33,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * @var \Darvin\ContentBundle\Translatable\TranslationsInitializerInterface
      */
-    private $translationInitializer;
+    private $translationsInitializer;
 
     /**
      * @var string[]
@@ -47,13 +47,13 @@ class SwitchMenuSubscriber implements EventSubscriber
 
     /**
      * @param \Darvin\MenuBundle\Switcher\MenuSwitcher                            $menuSwitcher            Menu switcher
-     * @param \Darvin\ContentBundle\Translatable\TranslationsInitializerInterface $translationsInitializer Translation initializer
+     * @param \Darvin\ContentBundle\Translatable\TranslationsInitializerInterface $translationsInitializer Translations initializer
      * @param string[]                                                            $locales                 Locales
      */
     public function __construct(MenuSwitcher $menuSwitcher, TranslationsInitializerInterface $translationsInitializer, array $locales)
     {
         $this->menuSwitcher = $menuSwitcher;
-        $this->translationInitializer = $translationsInitializer;
+        $this->translationsInitializer = $translationsInitializer;
         $this->locales = $locales;
 
         $this->em = null;
@@ -120,11 +120,9 @@ class SwitchMenuSubscriber implements EventSubscriber
             foreach ($entities as $entity) {
                 $slugMapItem = $this->getSlugMapItem($entity);
 
-                if (empty($slugMapItem)) {
-                    continue;
+                if (!empty($slugMapItem)) {
+                    $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
                 }
-
-                $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
             }
         }
         foreach ($this->menuSwitcher->getMenusToDisable() as $menuAlias => $entities) {
@@ -148,7 +146,7 @@ class SwitchMenuSubscriber implements EventSubscriber
             ->setMenu($menuAlias)
             ->setSlugMapItem($slugMapItem);
 
-        $this->translationInitializer->initializeTranslations($menuItem, $this->locales);
+        $this->translationsInitializer->initializeTranslations($menuItem, $this->locales);
 
         return $menuItem;
     }
