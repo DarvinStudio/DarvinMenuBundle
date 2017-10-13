@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
 use Darvin\MenuBundle\Switcher\MenuSwitcher;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -52,6 +52,13 @@ class MenuSwitcherType extends AbstractType
         $menuConfig   = $this->menuConfig;
         $menuSwitcher = $this->menuSwitcher;
 
+        foreach ($menuConfig->getMenus() as $menu) {
+            $builder->add($menu->getAlias(), CheckboxType::class, [
+                'label'    => $menu->getTitle(),
+                'required' => false,
+            ]);
+        }
+
         $builder
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
                 $parentForm = $event->getForm()->getParent();
@@ -59,29 +66,24 @@ class MenuSwitcherType extends AbstractType
                 $entity      = $parentForm->getData();
                 $isNewAction = 'new' === $parentForm->getConfig()->getOption('action_type');
 
-                $menuAliases = [];
+                $data = [];
 
                 foreach ($menuConfig->getMenus() as $menu) {
                     if ($menuSwitcher->isMenuEnabled($entity, $menu->getAlias())
                         || ($isNewAction && $menuSwitcher->isDefaultMenu($entity, $menu->getAlias()))
                     ) {
-                        $menuAliases[] = $menu->getAlias();
+                        $data[$menu->getAlias()] = true;
                     }
                 }
 
-                $event->setData($menuAliases);
+                $event->setData($data);
             })
             ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
+                $data   = $event->getData();
                 $entity = $event->getForm()->getParent()->getData();
 
-                $menuAliases = $event->getData();
-
                 foreach ($menuConfig->getMenus() as $menu) {
-                    if (in_array($menu->getAlias(), $menuAliases)) {
-                        $menuSwitcher->enableMenu($entity, $menu->getAlias());
-                    } else {
-                        $menuSwitcher->disableMenu($entity, $menu->getAlias());
-                    }
+                    $menuSwitcher->toggleMenu($entity, $menu->getAlias(), $data[$menu->getAlias()]);
                 }
             });
     }
@@ -92,33 +94,8 @@ class MenuSwitcherType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'label'    => 'menu_switcher.title',
-            'mapped'   => false,
-            'choices'  => $this->buildChoices(),
-            'multiple' => true,
-            'expanded' => true,
+            'label'  => 'menu_switcher.title',
+            'mapped' => false,
         ]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return ChoiceType::class;
-    }
-
-    /**
-     * @return array
-     */
-    private function buildChoices()
-    {
-        $choices = [];
-
-        foreach ($this->menuConfig->getMenus() as $menu) {
-            $choices[$menu->getTitle()] = $menu->getAlias();
-        }
-
-        return $choices;
     }
 }
