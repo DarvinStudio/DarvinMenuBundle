@@ -21,5 +21,6 @@ You can configure entity's parent input selector using form option "parent_selec
 darvin_menu:
     switcher:
         default_menus:
-            Darvin\PageBundle\Entity\Page: main
+            Darvin\ECommerceBundle\Entity\Product\CatalogInterface: [ main, footer ]
+            Darvin\PageBundle\Entity\Page:                          main
 ```

@@ -2,29 +2,33 @@
     {{ form_widget(form) }}
     <script>
         $(function () {
-            var $checkbox = $('#{{ id }} input[type="checkbox"][data-default]:first');
+            var $checkboxes = $('#{{ id }} input[type="checkbox"][data-default]');
 
-            if (!$checkbox.length) {
+            if (!$checkboxes.length) {
                 return;
             }
 
-            var $parent = $checkbox.closest('form').find('{{ parent_selector }}:first');
+            var $parent = $checkboxes.closest('form').find('{{ parent_selector }}:first');
 
             if (!$parent.length) {
                 return;
             }
 
-            $checkbox.click(function () {
-                $checkbox.data('manual', true);
+            $checkboxes.click(function () {
+                $(this).data('manual', true);
             });
 
-            var toggleCheckbox;
-            (toggleCheckbox = function () {
-                if (!$checkbox.data('manual')) {
-                    $checkbox[0].checked = '' === $parent.val();
-                }
+            var toggleCheckboxes;
+            (toggleCheckboxes = function () {
+                $checkboxes.each(function () {
+                    var $checkbox = $(this);
+
+                    if (!$checkbox.data('manual')) {
+                        $checkbox[0].checked = '' === $parent.val();
+                    }
+                });
             })();
-            $parent.change(toggleCheckbox);
+            $parent.change(toggleCheckboxes);
         });
     </script>
 {% endblock %}

@@ -56,7 +56,11 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('switcher')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('default_menus')->useAttributeAsKey('entity')
-                            ->prototype('scalar')->cannotBeEmpty()->end()
+                            ->prototype('array')
+                                ->prototype('scalar')->cannotBeEmpty()->end()
+                                ->beforeNormalization()->castToArray()->end()
+                                ->requiresAtLeastOneElement()
+                            ->end()
                             ->validate()
                                 ->ifTrue(function (array $defaultMenus) {
                                     foreach (array_keys($defaultMenus) as $entity) {
@@ -79,11 +83,13 @@ class Configuration implements ConfigurationInterface
                         return $menu['alias'];
                     }, $config['menus']);
 
-                    foreach ($config['switcher']['default_menus'] as $defaultMenuAlias) {
-                        if (!in_array($defaultMenuAlias, $menuAliases)) {
-                            throw new \RuntimeException(
-                                sprintf('Menu switcher default menu "%s" does not defined in the "menus" section.', $defaultMenuAlias)
-                            );
+                    foreach ($config['switcher']['default_menus'] as $defaultMenuAliases) {
+                        foreach ($defaultMenuAliases as $defaultMenuAlias) {
+                            if (!in_array($defaultMenuAlias, $menuAliases)) {
+                                throw new \RuntimeException(
+                                    sprintf('Menu switcher default menu "%s" does not defined in the "menus" section.', $defaultMenuAlias)
+                                );
+                            }
                         }
                     }
 

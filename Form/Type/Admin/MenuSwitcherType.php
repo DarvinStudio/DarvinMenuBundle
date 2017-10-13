@@ -60,14 +60,14 @@ class MenuSwitcherType extends AbstractType
 
                 $entity = $parentForm->getData();
 
-                $defaultMenuAlias = 'new' === $parentForm->getConfig()->getOption('action_type')
-                    ? $menuSwitcher->getDefaultMenu($entity)
-                    : null;
+                $defaultMenuAliases = 'new' === $parentForm->getConfig()->getOption('action_type')
+                    ? $menuSwitcher->getDefaultMenus($entity)
+                    : [];
 
                 foreach ($menuConfig->getMenus() as $menu) {
                     $attr = [];
 
-                    if ($menu->getAlias() === $defaultMenuAlias) {
+                    if (in_array($menu->getAlias(), $defaultMenuAliases)) {
                         $attr['data-default'] = 1;
                     }
 
@@ -80,7 +80,9 @@ class MenuSwitcherType extends AbstractType
                 $data = [];
 
                 foreach ($menuConfig->getMenus() as $menu) {
-                    if ($menuSwitcher->isMenuEnabled($entity, $menu->getAlias()) || $menu->getAlias() === $defaultMenuAlias) {
+                    if ($menuSwitcher->isMenuEnabled($entity, $menu->getAlias())
+                        || in_array($menu->getAlias(), $defaultMenuAliases)
+                    ) {
                         $data[$menu->getAlias()] = true;
                     }
                 }

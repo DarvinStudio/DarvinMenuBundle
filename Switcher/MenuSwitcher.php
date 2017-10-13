@@ -60,17 +60,17 @@ class MenuSwitcher
     /**
      * @param object $entity Entity
      *
-     * @return string|null
+     * @return string[]
      */
-    public function getDefaultMenu($entity)
+    public function getDefaultMenus($entity)
     {
-        foreach ($this->defaultMenuAliases as $entityClass => $defaultMenuAlias) {
+        foreach ($this->defaultMenuAliases as $entityClass => $entityDefaultMenuAliases) {
             if ($entity instanceof $entityClass) {
-                return $defaultMenuAlias;
+                return $entityDefaultMenuAliases;
             }
         }
 
-        return null;
+        return [];
     }
 
     /**
