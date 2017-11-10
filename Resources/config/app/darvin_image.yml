@@ -1,0 +1,9 @@
+darvin_image:
+    imagine:
+        filter_sets:
+            menu_hover:
+                filters:
+                    thumbnail: { size: [ 50, 50 ], mode: outbound }
+            menu_main:
+                filters:
+                    thumbnail: { size: [ 50, 50 ], mode: outbound }

@@ -71,6 +71,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
 
         foreach ([
             'darvin_admin',
+            'darvin_image',
             'knp_menu',
             'twig',
         ] as $extension) {

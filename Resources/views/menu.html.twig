@@ -43,10 +43,10 @@
 
 {% block images %}
     {% if image_exists(item.extras.image) %}
-        <img src="{{ item.extras.image|image_crop('menu_item_image') }}" alt="" title="">
+        <img src="{{ item.extras.image|image_filter('menu_main') }}" alt="" title="">
     {% endif %}
     {% if image_exists(item.extras.hoverImage) %}
-        <img src="{{ item.extras.hoverImage|image_crop('menu_item_hover_image') }}" class="hover" alt="" title="">
+        <img src="{{ item.extras.hoverImage|image_filter('menu_hover') }}" class="hover" alt="" title="">
     {% endif %}
 {% endblock %}
 
