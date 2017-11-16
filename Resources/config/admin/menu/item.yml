@@ -15,11 +15,9 @@ order_by:
     level:    asc
     position: asc
 joins:
-    hover_image:       hoverImage
-    hover_image_sizes: hover_image.sizes
-    image:             image
-    image_sizes:       image.sizes
-    slug_map_item:     slugMapItem
+    hover_image:   hoverImage
+    image:         image
+    slug_map_item: slugMapItem
 view:
     index:
         fields:

@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Repository\Menu;
 
+use Darvin\ImageBundle\Entity\Image\AbstractImage;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -127,9 +128,13 @@ class ItemRepository extends EntityRepository
     {
         $qb
             ->addSelect('image')
-            ->addSelect('image_sizes')
-            ->leftJoin('o.image', 'image')
-            ->leftJoin('image.sizes', 'image_sizes');
+            ->leftJoin('o.image', 'image');
+
+        if ($this->_em->getClassMetadata(AbstractImage::class)->hasAssociation('sizes')) {
+            $qb
+                ->addSelect('image_sizes')
+                ->leftJoin('image.sizes', 'image_sizes');
+        }
 
         return $this;
     }
@@ -143,9 +148,13 @@ class ItemRepository extends EntityRepository
     {
         $qb
             ->addSelect('hover_image')
-            ->addSelect('hover_image_sizes')
-            ->leftJoin('o.hoverImage', 'hover_image')
-            ->leftJoin('hover_image.sizes', 'hover_image_sizes');
+            ->leftJoin('o.hoverImage', 'hover_image');
+
+        if ($this->_em->getClassMetadata(AbstractImage::class)->hasAssociation('sizes')) {
+            $qb
+                ->addSelect('hover_image_sizes')
+                ->leftJoin('hover_image.sizes', 'hover_image_sizes');
+        }
 
         return $this;
     }
