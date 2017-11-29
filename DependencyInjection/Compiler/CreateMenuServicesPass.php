@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
 use Darvin\MenuBundle\Builder\MenuBuilderInterface;
 use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuPass;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,6 +49,18 @@ class CreateMenuServicesPass implements CompilerPassInterface
         $container->addDefinitions($definitions);
 
         (new MenuPass())->process($container);
+
+        if ($container->hasDefinition('knp_menu.menu_provider.lazy')) {
+            $provider = $container->getDefinition('knp_menu.menu_provider.lazy');
+
+            $menus = $provider->getArgument(0);
+
+            foreach ($definitions as $id => $definition) {
+                $menus[$definition->getTag('knp_menu.menu')[0]['alias']] = new ServiceClosureArgument(new Reference($id));
+            }
+
+            $provider->replaceArgument(0, $menus);
+        }
     }
 
     /**
