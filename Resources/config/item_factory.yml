@@ -43,6 +43,7 @@ services:
         parent: darvin_menu.item_factory.abstract_entity
         arguments:
             - "@darvin_page.configuration"
+            - "@darvin_utils.routing.route_manager"
             - "@router"
             - "%darvin_menu.item_factory.slug_map_item_entity.generic_uri_route%"
             - "%darvin_menu.item_factory.slug_map_item_entity.homepage_uri_route%"

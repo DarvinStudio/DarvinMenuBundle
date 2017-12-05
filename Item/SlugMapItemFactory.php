@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\Item;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\PageBundle\Configuration\Configuration;
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
+use Darvin\Utils\Routing\RouteManagerInterface;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -26,6 +27,11 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
      * @var \Darvin\PageBundle\Configuration\Configuration
      */
     protected $pageConfig;
+
+    /**
+     * @var \Darvin\Utils\Routing\RouteManagerInterface
+     */
+    protected $routeManager;
 
     /**
      * @var \Symfony\Component\Routing\RouterInterface
@@ -47,6 +53,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
      * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
      * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
      * @param \Darvin\PageBundle\Configuration\Configuration $pageConfig         Page configuration
+     * @param \Darvin\Utils\Routing\RouteManagerInterface    $routeManager       Route manager
      * @param \Symfony\Component\Routing\RouterInterface     $router             Router
      * @param string                                         $genericUriRoute    Generic URI route
      * @param string                                         $homepageUriRoute   Homepage URI route
@@ -56,6 +63,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
         EntityManager $em,
         ObjectNamerInterface $objectNamer,
         Configuration $pageConfig,
+        RouteManagerInterface $routeManager,
         RouterInterface $router,
         $genericUriRoute,
         $homepageUriRoute
@@ -63,6 +71,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
         parent::__construct($genericItemFactory, $em, $objectNamer);
 
         $this->pageConfig = $pageConfig;
+        $this->routeManager = $routeManager;
         $this->router = $router;
         $this->genericUriRoute = $genericUriRoute;
         $this->homepageUriRoute = $homepageUriRoute;
@@ -92,7 +101,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
         $route = $this->getUriRoute($slugMapItem);
         $params = [];
 
-        if ($this->router->getRouteCollection()->get($route)->hasRequirement('slug')) {
+        if ($this->routeManager->hasRequirement($route, 'slug')) {
             $params['slug'] = $slugMapItem->getSlug();
         }
 
