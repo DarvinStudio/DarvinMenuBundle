@@ -118,6 +118,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
         return [
             'objectName'    => $this->objectNamer->name($slugMapItem->getObjectClass()),
             'objectId'      => $slugMapItem->getObjectId(),
+            'object'        => $slugMapItem->getObject(),
             'isSlugMapItem' => true,
         ];
     }

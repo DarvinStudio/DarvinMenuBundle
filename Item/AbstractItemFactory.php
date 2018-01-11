@@ -111,6 +111,7 @@ abstract class AbstractItemFactory
             ->setDefaults([
                 'objectName' => null,
                 'objectId'   => null,
+                'object'     => null,
             ])
             ->setAllowedTypes('objectName', [
                 'string',
@@ -119,6 +120,10 @@ abstract class AbstractItemFactory
             ->setAllowedTypes('objectId', [
                 'integer',
                 'string',
+                'null',
+            ])
+            ->addAllowedTypes('object', [
+                'object',
                 'null',
             ]);
 

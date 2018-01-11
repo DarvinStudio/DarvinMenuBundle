@@ -101,7 +101,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getExtras($menuItem)
     {
-        $objectName = $objectId = null;
+        $objectName = $objectId = $object = null;
         $image = $menuItem->getImage();
         $hoverImage = $menuItem->getHoverImage();
 
@@ -124,6 +124,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
         return array_merge(parent::getExtras($menuItem), [
             'objectName'          => $objectName,
             'objectId'            => $objectId,
+            'object'              => $object,
             'image'               => $image,
             'hoverImage'          => $hoverImage,
             'showSlugMapChildren' => $menuItem->isShowChildren(),
