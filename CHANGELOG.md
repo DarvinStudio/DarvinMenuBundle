@@ -1,0 +1,1 @@
+6.7.0: Pass associated object to item extras. It can be accessed for example in Twig using "{{ item.extras.object }}".
