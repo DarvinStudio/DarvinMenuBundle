@@ -29,4 +29,4 @@ services:
             - "@darvin_content.translatable.translations_initializer"
             - "%locales%"
         tags:
-            - { name: doctrine.event_subscriber }
+            - { name: doctrine.event_subscriber, priority: 100 }
