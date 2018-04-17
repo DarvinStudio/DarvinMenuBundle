@@ -11,25 +11,36 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
+use Darvin\AdminBundle\Metadata\MetadataManager;
+use Darvin\AdminBundle\Metadata\SortCriteriaDetector;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Exception\DarvinMenuException;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
+use Gedmo\Tree\TreeListener;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * Slug map item admin form type
  */
 class SlugMapItemType extends AbstractType
 {
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -41,23 +52,58 @@ class SlugMapItemType extends AbstractType
     private $entityNamer;
 
     /**
+     * @var \Darvin\AdminBundle\Metadata\MetadataManager
+     */
+    private $metadataManager;
+
+    /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
+     */
+    private $propertyAccessor;
+
+    /**
      * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
      */
     private $slugMapItemCustomObjectLoader;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                              $em                            Entity manager
-     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface     $entityNamer                   Entity namer
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @var \Darvin\AdminBundle\Metadata\SortCriteriaDetector
+     */
+    private $sortCriteriaDetector;
+
+    /**
+     * @var \Gedmo\Tree\TreeListener
+     */
+    private $treeListener;
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container                     DI container
+     * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
+     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer                   Entity namer
+     * @param \Darvin\AdminBundle\Metadata\MetadataManager                $metadataManager               Metadata manager
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetector           $sortCriteriaDetector          Sort criteria detector
+     * @param \Gedmo\Tree\TreeListener                                    $treeListener                  Tree event listener
      */
     public function __construct(
+        ContainerInterface $container,
         EntityManager $em,
         EntityNamerInterface $entityNamer,
-        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader
+        MetadataManager $metadataManager,
+        PropertyAccessorInterface $propertyAccessor,
+        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
+        SortCriteriaDetector $sortCriteriaDetector,
+        TreeListener $treeListener
     ) {
+        $this->container = $container;
         $this->em = $em;
         $this->entityNamer = $entityNamer;
+        $this->metadataManager = $metadataManager;
+        $this->propertyAccessor = $propertyAccessor;
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
+        $this->sortCriteriaDetector = $sortCriteriaDetector;
+        $this->treeListener = $treeListener;
     }
 
     /**
@@ -143,18 +189,54 @@ MESSAGE
             if ('entity' !== $field->vars['block_prefixes'][2]) {
                 continue;
             }
-            /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
+
+            /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView[] $choices */
+            $choices = $entities = [];
+
             foreach ($field->vars['choices'] as $key => $choice) {
                 /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
                 $slugMapItem = $choice->data;
 
                 if (null === $slugMapItem->getObject()) {
-                    unset($field->vars['choices'][$key]);
-
                     continue;
                 }
 
-                $choice->label = $slugMapItem->getObject();
+                $choices[$key] = $choice;
+
+                $entities[] = $slugMapItem->getObject();
+            }
+            if (empty($entities)) {
+                continue;
+            }
+
+            $class = ClassUtils::getClass(reset($entities));
+
+            $entities = $this->sortEntities($entities, $class);
+
+            $treeConfig = $this->treeListener->getConfiguration($this->em, $class);
+            $levelProperty = !empty($treeConfig) ? $treeConfig['level'] : null;
+
+            $field->vars['choices'] = [];
+
+            foreach ($entities as $entity) {
+                foreach ($choices as $key => $choice) {
+                    /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
+                    $slugMapItem = $choice->data;
+
+                    if ($slugMapItem->getObject() !== $entity) {
+                        continue;
+                    }
+
+                    $choice->label = '';
+
+                    if (!empty($levelProperty)) {
+                        $choice->label .= str_repeat('---', $this->propertyAccessor->getValue($entity, $levelProperty) - 1);
+                    }
+
+                    $choice->label .= (string)$entity;
+
+                    $field->vars['choices'][$key] = $choice;
+                }
             }
         }
     }
@@ -165,6 +247,55 @@ MESSAGE
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('label', false);
+    }
+
+    /**
+     * @param object[] $entities Entities
+     * @param string   $class    Entity class
+     *
+     * @return object[]
+     */
+    private function sortEntities(array $entities, $class)
+    {
+        if (empty($entities) || !$this->metadataManager->hasMetadata($class)) {
+            return $entities;
+        }
+
+        $sortCriteria = $this->sortCriteriaDetector->detect($class);
+
+        if (!empty($sortCriteria)) {
+            $propertyAccessor = $this->propertyAccessor;
+
+            usort($entities, function ($entityA, $entityB) use ($propertyAccessor, $sortCriteria) {
+                foreach ($sortCriteria as $property => $direction) {
+                    $valueA = $propertyAccessor->getValue($entityA, $property);
+                    $valueB = $propertyAccessor->getValue($entityB, $property);
+
+                    if ($valueA === $valueB) {
+                        continue;
+                    }
+
+                    $result = $valueA > $valueB ? 1 : -1;
+
+                    if ('desc' === $direction) {
+                        $result *= -1;
+                    }
+
+                    return $result;
+                }
+
+                return 0;
+            });
+        }
+
+        $config = $this->metadataManager->getConfiguration($class);
+
+        if (isset($config['sorter'])) {
+            $sortCallback = [$this->container->get($config['sorter']['id']), $config['sorter']['method']];
+            $entities = $sortCallback($entities);
+        }
+
+        return $entities;
     }
 
     /**

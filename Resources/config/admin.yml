@@ -42,9 +42,14 @@ services:
     darvin_menu.admin.form_type.slug_map_item:
         class: "%darvin_menu.admin.form_type.slug_map_item.class%"
         arguments:
+            - "@service_container"
             - "@doctrine.orm.entity_manager"
             - "@darvin_admin.entity_namer"
+            - "@darvin_admin.metadata.manager"
+            - "@property_accessor"
             - "@darvin_menu.slug_map.item_custom_object_loader"
+            - "@darvin_admin.metadata.sort_criteria_detector"
+            - "@stof_doctrine_extensions.listener.tree"
         tags:
             - { name: form.type }
 
