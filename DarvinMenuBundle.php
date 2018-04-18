@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle;
 
 use Darvin\MenuBundle\DependencyInjection\Compiler\CreateBuildersPass;
 use Darvin\MenuBundle\DependencyInjection\Compiler\CreateMenuServicesPass;
+use Darvin\MenuBundle\DependencyInjection\Compiler\OverrideMatcherPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -29,6 +30,7 @@ class DarvinMenuBundle extends Bundle
     {
         $container
             ->addCompilerPass(new CreateBuildersPass())
-            ->addCompilerPass(new CreateMenuServicesPass());
+            ->addCompilerPass(new CreateMenuServicesPass())
+            ->addCompilerPass(new OverrideMatcherPass());
     }
 }

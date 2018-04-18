@@ -53,10 +53,10 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'builder',
             'configuration',
             'item_factory',
+            'matcher',
             'menu',
             'slug_map',
-             'switcher',
-            'voter',
+            'switcher',
         ] as $resource) {
             $loader->load($resource.'.yml');
         }
