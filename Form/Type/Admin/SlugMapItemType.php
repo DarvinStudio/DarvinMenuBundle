@@ -77,6 +77,11 @@ class SlugMapItemType extends AbstractType
     private $treeListener;
 
     /**
+     * @var array
+     */
+    private $entityConfig;
+
+    /**
      * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container                     DI container
      * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
      * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer                   Entity namer
@@ -85,6 +90,7 @@ class SlugMapItemType extends AbstractType
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
      * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetector           $sortCriteriaDetector          Sort criteria detector
      * @param \Gedmo\Tree\TreeListener                                    $treeListener                  Tree event listener
+     * @param array                                                       $entityConfig                  Entity configuration
      */
     public function __construct(
         ContainerInterface $container,
@@ -94,7 +100,8 @@ class SlugMapItemType extends AbstractType
         PropertyAccessorInterface $propertyAccessor,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
         SortCriteriaDetector $sortCriteriaDetector,
-        TreeListener $treeListener
+        TreeListener $treeListener,
+        array $entityConfig
     ) {
         $this->container = $container;
         $this->em = $em;
@@ -104,6 +111,7 @@ class SlugMapItemType extends AbstractType
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
         $this->sortCriteriaDetector = $sortCriteriaDetector;
         $this->treeListener = $treeListener;
+        $this->entityConfig = $entityConfig;
     }
 
     /**
@@ -322,14 +330,27 @@ MESSAGE
      */
     private function getPropertiesByClasses()
     {
-        $rows = $this->getSlugMapItemRepository()->createQueryBuilder('o')
+        $classBlacklist = [];
+
+        foreach ($this->entityConfig as $class => $config) {
+            if (!$config['admin']) {
+                $classBlacklist[] = $class;
+            }
+        }
+
+        $qb = $this->getSlugMapItemRepository()->createQueryBuilder('o')
             ->select('o.objectClass')
-            ->addSelect('o.property')
-            ->getQuery()
-            ->getScalarResult();
+            ->addSelect('o.property');
+
+        if (!empty($classBlacklist)) {
+            $qb
+                ->andWhere($qb->expr()->notIn('o.objectClass', ':class_blacklist'))
+                ->setParameter('class_blacklist', $classBlacklist);
+        }
+
         $properties = [];
 
-        foreach ($rows as $row) {
+        foreach ($qb->getQuery()->getScalarResult() as $row) {
             $class = $row['objectClass'];
             $property = $row['property'];
 

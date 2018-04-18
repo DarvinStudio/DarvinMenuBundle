@@ -39,6 +39,24 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('slug_parameter_name')->defaultValue('slug')->end()
                     ->end()
                 ->end()
+                ->arrayNode('entities')->useAttributeAsKey('entity')
+                    ->prototype('array')
+                        ->children()
+                            ->booleanNode('admin')->defaultTrue()->info('Whether to allow to add entities to menu in admin panel')->end()
+                            ->booleanNode('slug_children')->defaultTrue()->info('Whether to show entities in slug map children')->end()
+                        ->end()
+                    ->end()
+                    ->validate()
+                        ->ifTrue(function (array $entities) {
+                            foreach (array_keys($entities) as $entity) {
+                                if (!class_exists($entity)) {
+                                    throw new \RuntimeException(sprintf('Entity class "%s" does not exist.', $entity));
+                                }
+                            }
+                        })
+                        ->thenInvalid(null)
+                    ->end()
+                ->end()
                 ->arrayNode('menus')
                     ->prototype('array')
                         ->children()

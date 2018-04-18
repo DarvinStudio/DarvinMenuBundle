@@ -77,6 +77,11 @@ class Builder implements MenuBuilderInterface
     protected $sortableListener;
 
     /**
+     * @var array
+     */
+    protected $entityConfig;
+
+    /**
      * @var string
      */
     protected $menuAlias;
@@ -101,6 +106,7 @@ class Builder implements MenuBuilderInterface
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
      * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                  $slugMapItemFactory            Item from slug map item entity factory
      * @param \Gedmo\Sortable\SortableListener                            $sortableListener              Sortable event listener
+     * @param array                                                       $entityConfig                  Entity configuration
      */
     public function __construct(
         EntityManager $em,
@@ -111,7 +117,8 @@ class Builder implements MenuBuilderInterface
         RootItemFactory $rootItemFactory,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
         SlugMapItemFactory $slugMapItemFactory,
-        SortableListener $sortableListener
+        SortableListener $sortableListener,
+        array $entityConfig
     ) {
         $this->em = $em;
         $this->localeProvider = $localeProvider;
@@ -122,6 +129,7 @@ class Builder implements MenuBuilderInterface
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
         $this->slugMapItemFactory = $slugMapItemFactory;
         $this->sortableListener = $sortableListener;
+        $this->entityConfig = $entityConfig;
 
         $this->slugPartSeparators = [];
     }
@@ -203,7 +211,15 @@ class Builder implements MenuBuilderInterface
         if (empty($parentSlugs)) {
             return;
         }
-        foreach ($this->getSlugMapItemRepository()->getBySlugsChildren(array_unique($parentSlugs)) as $parentSlug => $childSlugMapItems) {
+
+        $classBlacklist = [];
+
+        foreach ($this->entityConfig as $class => $config) {
+            if (!$config['slug_children']) {
+                $classBlacklist[] = $class;
+            }
+        }
+        foreach ($this->getSlugMapItemRepository()->getBySlugsChildren(array_unique($parentSlugs), $classBlacklist) as $parentSlug => $childSlugMapItems) {
             foreach (array_keys($parentSlugs, $parentSlug) as $entityId) {
                 $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childSlugMapItems);
             }

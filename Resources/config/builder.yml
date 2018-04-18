@@ -16,3 +16,4 @@ services:
             - "@darvin_menu.slug_map.item_custom_object_loader"
             - "@darvin_menu.item_factory.slug_map_item_entity"
             - "@stof_doctrine_extensions.listener.sortable"
+            - "%darvin_menu.entities%"
