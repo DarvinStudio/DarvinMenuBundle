@@ -32,3 +32,5 @@ darvin_menu:
         AppBundle\Entity\PostCategory:
             admin: false
 ```
+
+6.8.1: Do not consider an ancestor item with empty URI.

@@ -49,6 +49,12 @@ class Matcher extends BaseMatcher
 
         $path = $request->getBaseUrl().$request->getPathInfo();
 
+        $itemUri = $item->getUri();
+
+        if (empty($itemUri)) {
+            return false;
+        }
+
         $itemUri = rtrim($item->getUri(), '/').'/';
 
         return 0 === strpos($path, $itemUri);
