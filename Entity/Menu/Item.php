@@ -31,6 +31,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @method string getTitle()
  * @method string getUrl()
+ *
+ * @method \Darvin\MenuBundle\Entity\Menu\ItemTranslation[]|\Doctrine\Common\Collections\Collection getTranslations()
  */
 class Item
 {

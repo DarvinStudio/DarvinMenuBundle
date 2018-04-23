@@ -40,11 +40,17 @@ class MenuItemValidValidator extends ConstraintValidator
 
             throw new DarvinMenuException($message);
         }
+        if (null !== $menuItem->getSlugMapItem()) {
+            return;
+        }
+        foreach ($menuItem->getTranslations() as $translation) {
+            $title = $translation->getTitle();
 
-        $title = $menuItem->getTitle();
+            if (empty($title)) {
+                $this->context->buildViolation($constraint->message)->addViolation();
 
-        if (empty($title) && null === $menuItem->getSlugMapItem()) {
-            $this->context->buildViolation($constraint->message)->addViolation();
+                return;
+            }
         }
     }
 }
