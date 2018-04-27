@@ -87,9 +87,9 @@ form:
                 type: Darvin\ImageBundle\Form\Type\Image\ImageType
                 options:
                     data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
-                    filters:    ~
+                    filters:    [ menu_main ]
             hoverImage:
                 type: Darvin\ImageBundle\Form\Type\Image\ImageType
                 options:
                     data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
-                    filters:    ~
+                    filters:    [ menu_hover ]
