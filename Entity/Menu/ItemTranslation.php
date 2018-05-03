@@ -54,6 +54,23 @@ class ItemTranslation
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function isEmpty()
+    {
+        foreach (get_object_vars($this) as $var => $value) {
+            if (in_array($var, ['translatable', 'locale'])) {
+                continue;
+            }
+            if (!empty($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param boolean $enabled enabled
      *
      * @return ItemTranslation
