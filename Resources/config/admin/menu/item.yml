@@ -10,14 +10,14 @@ searchable_fields:
 sorter:
     id:     darvin_menu.admin.menu_item_sorter
     method: sort
-order_by:
-    menu:     asc
-    level:    asc
-    position: asc
 joins:
     hover_image:   hoverImage
     image:         image
     slug_map_item: slugMapItem
+order_by:
+    menu:     asc
+    level:    asc
+    position: asc
 view:
     index:
         fields:
@@ -32,22 +32,18 @@ view:
             url:
                 widget:
                     alias: simple_link
-    show:
+    extend~index~show:
         fields:
-            menuTitle:    ~
-            enabled:      ~
-            showChildren: ~
-            title:        ~
-            url:
-                widget:
-                    alias: simple_link
+            remove~position:    ~
+            remove~slugMapItem: ~
 form:
     index:
         fields:
             position:
                 options:
                     attr:
-                        class: position
+                        class:            position
+                        data-reload-page: 1
             enabled:      ~
             showChildren: ~
     filter:
