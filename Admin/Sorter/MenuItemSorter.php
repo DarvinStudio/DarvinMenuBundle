@@ -10,8 +10,8 @@
 
 namespace Darvin\MenuBundle\Admin\Sorter;
 
-use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
+use Darvin\Utils\Tree\TreeSorter;
 
 /**
  * Menu item sorter
@@ -24,17 +24,25 @@ class MenuItemSorter
     private $slugMapItemCustomObjectLoader;
 
     /**
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @var \Darvin\Utils\Tree\TreeSorter
      */
-    public function __construct(SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader)
+    private $treeSorter;
+
+    /**
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @param \Darvin\Utils\Tree\TreeSorter                            $treeSorter                    Tree sorter
+     */
+    public function __construct(SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader, TreeSorter $treeSorter)
     {
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
+        $this->treeSorter = $treeSorter;
     }
 
     /**
      * @param \Darvin\MenuBundle\Entity\Menu\Item[] $menuItems Menu items
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     * @throws \Darvin\Utils\Tree\Exception\ClassIsNotTreeException
      */
     public function sort(array $menuItems)
     {
@@ -42,54 +50,16 @@ class MenuItemSorter
             return [];
         }
 
-        $children = $slugMapItems = [];
+        $slugMapItems = [];
 
         foreach ($menuItems as $menuItem) {
             if (null !== $menuItem->getSlugMapItem()) {
                 $slugMapItems[] = $menuItem->getSlugMapItem();
             }
-            if (null === $menuItem->getParent()) {
-                continue;
-            }
-
-            $parentId = $menuItem->getParent()->getId();
-
-            if (!isset($children[$parentId])) {
-                $children[$parentId] = [];
-            }
-
-            $children[$parentId][] = $menuItem;
-        }
-
-        $sorted = [];
-
-        foreach ($menuItems as $menuItem) {
-            $this->addMenuItem($sorted, $menuItem, $children);
         }
 
         $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
 
-        return $sorted;
-    }
-
-    /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item[] $sorted   Sorted menu items
-     * @param \Darvin\MenuBundle\Entity\Menu\Item   $menuItem Menu item to add
-     * @param array                                 $children Child menu items
-     */
-    private function addMenuItem(array &$sorted, Item $menuItem, array $children)
-    {
-        if (isset($sorted[$menuItem->getId()])) {
-            return;
-        }
-
-        $sorted[$menuItem->getId()] = $menuItem;
-
-        if (!isset($children[$menuItem->getId()])) {
-            return;
-        }
-        foreach ($children[$menuItem->getId()] as $child) {
-            $this->addMenuItem($sorted, $child, $children);
-        }
+        return $this->treeSorter->sortTree($menuItems);
     }
 }

@@ -40,3 +40,5 @@ darvin_menu:
 6.8.3: Configure image sizes in admin section config.
 
 6.8.5: Add Menu\ItemTranslation::isEmpty() to override method from translation trait.
+
+6.8.6: Use generic tree sorter in menu item sorter.
