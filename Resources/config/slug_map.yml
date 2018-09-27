@@ -2,6 +2,9 @@ parameters:
     darvin_menu.slug_map.item_custom_object_loader.class: Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
 
 services:
+    _defaults:
+        public: true
+
     darvin_menu.slug_map.item_custom_object_loader:
         class:  "%darvin_menu.slug_map.item_custom_object_loader.class%"
         public: false

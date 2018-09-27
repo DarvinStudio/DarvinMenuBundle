@@ -4,6 +4,9 @@ parameters:
     darvin_menu.configuration.menu.class: Darvin\MenuBundle\Configuration\MenuConfiguration
 
 services:
+    _defaults:
+        public: true
+
     darvin_menu.configuration:
         class:  "%darvin_menu.configuration.class%"
         public: false

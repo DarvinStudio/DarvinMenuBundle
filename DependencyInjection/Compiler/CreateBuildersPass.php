@@ -12,10 +12,10 @@ namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
 use Darvin\MenuBundle\Builder\MenuBuilderInterface;
 use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuBuilderPass;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
 /**
  * Create builders compiler pass
@@ -42,7 +42,7 @@ class CreateBuildersPass implements CompilerPassInterface
                 }
                 continue;
             }
-            $definitions[$id] = (new DefinitionDecorator(self::PARENT_ID))->addMethodCall(
+            $definitions[$id] = (new ChildDefinition(self::PARENT_ID))->addMethodCall(
                 'setMenuAlias', 
                 [$menu->getAlias(), $menu->getBuilderOptions()]
             );

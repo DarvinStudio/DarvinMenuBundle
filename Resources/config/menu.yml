@@ -2,6 +2,9 @@ parameters:
     darvin_menu.menu.abstract.class: Knp\Menu\MenuItem
 
 services:
+    _defaults:
+        public: true
+
     darvin_menu.menu.abstract:
         class:    "%darvin_menu.menu.abstract.class%"
         abstract: true

@@ -2,6 +2,9 @@ parameters:
     darvin_menu.matcher.voter.uri.class: Darvin\MenuBundle\Matcher\Voter\UriVoter
 
 services:
+    _defaults:
+        public: true
+
     darvin_menu.matcher.voter.uri:
         class: "%darvin_menu.matcher.voter.uri.class%"
         arguments:

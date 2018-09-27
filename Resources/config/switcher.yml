@@ -6,6 +6,9 @@ parameters:
     darvin_menu.switcher.switch_event_subscriber.class: Darvin\MenuBundle\EventListener\SwitchMenuSubscriber
 
 services:
+    _defaults:
+        public: true
+
     darvin_menu.switcher.admin.form_type:
         class: "%darvin_menu.switcher.admin.form_type.class%"
         arguments:
