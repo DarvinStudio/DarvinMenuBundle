@@ -1,20 +1,9 @@
-configuration:
-    darvin_menu:
-        parameter:
-            image_sizes: Размеры изображений
-        title: Настройки модуля «Меню»
-
 entity_name:
     multiple:
         menu_item: Пункты меню
     single:
         menu_item:             Пункт меню
         menu_item_translation: Пункт меню (перевод)
-
-image_size:
-    menu:
-        menu_item_hover_image: Изображение пункта меню при наведении
-        menu_item_image:       Изображение пункта меню
 
 menu:
     group:
