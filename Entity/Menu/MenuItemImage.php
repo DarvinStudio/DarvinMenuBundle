@@ -11,7 +11,6 @@
 namespace Darvin\MenuBundle\Entity\Menu;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
-use Darvin\MenuBundle\Configuration\Configuration;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,8 +23,8 @@ class MenuItemImage extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function getSizeGroupName()
+    public function getUploadDir()
     {
-        return Configuration::IMAGE_SIZE_GROUP_NAME;
+        return 'menu';
     }
 }

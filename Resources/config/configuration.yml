@@ -1,18 +1,9 @@
 parameters:
-    darvin_menu.configuration.class: Darvin\MenuBundle\Configuration\Configuration
-
     darvin_menu.configuration.menu.class: Darvin\MenuBundle\Configuration\MenuConfiguration
 
 services:
     _defaults:
         public: true
-
-    darvin_menu.configuration:
-        class:  "%darvin_menu.configuration.class%"
-        public: false
-        tags:
-            - { name: darvin_config.configuration }
-            - { name: darvin_image.configuration }
 
     darvin_menu.configuration.menu:
         class: "%darvin_menu.configuration.menu.class%"
