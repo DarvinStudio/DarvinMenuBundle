@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\PageBundle\Configuration\Configuration;
+use Darvin\PageBundle\Config\PageConfig;
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Darvin\Utils\Routing\RouteManagerInterface;
 use Doctrine\ORM\EntityManager;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 class SlugMapItemFactory extends AbstractEntityItemFactory
 {
     /**
-     * @var \Darvin\PageBundle\Configuration\Configuration
+     * @var \Darvin\PageBundle\Config\PageConfig
      */
     protected $pageConfig;
 
@@ -52,7 +52,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
      * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
      * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
      * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
-     * @param \Darvin\PageBundle\Configuration\Configuration $pageConfig         Page configuration
+     * @param \Darvin\PageBundle\Config\PageConfig           $pageConfig         Page configuration
      * @param \Darvin\Utils\Routing\RouteManagerInterface    $routeManager       Route manager
      * @param \Symfony\Component\Routing\RouterInterface     $router             Router
      * @param string                                         $genericUriRoute    Generic URI route
@@ -62,7 +62,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
         FactoryInterface $genericItemFactory,
         EntityManager $em,
         ObjectNamerInterface $objectNamer,
-        Configuration $pageConfig,
+        PageConfig $pageConfig,
         RouteManagerInterface $routeManager,
         RouterInterface $router,
         $genericUriRoute,
