@@ -58,13 +58,21 @@ class MenuSwitcherType extends AbstractType
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
                 $parentForm = $event->getForm()->getParent();
 
+                $menus = $menuConfig->getMenus();
+
+                if (empty($menus)) {
+                    $parentForm->remove($event->getForm()->getName());
+
+                    return;
+                }
+
                 $entity = $parentForm->getData();
 
                 $defaultMenuAliases = 'new' === $parentForm->getConfig()->getOption('action_type')
                     ? $menuSwitcher->getDefaultMenus($entity)
                     : [];
 
-                foreach ($menuConfig->getMenus() as $menu) {
+                foreach ($menus as $menu) {
                     $attr = [];
 
                     if (in_array($menu->getAlias(), $defaultMenuAliases)) {
@@ -79,7 +87,7 @@ class MenuSwitcherType extends AbstractType
 
                 $data = [];
 
-                foreach ($menuConfig->getMenus() as $menu) {
+                foreach ($menus as $menu) {
                     if ($menuSwitcher->isMenuEnabled($entity, $menu->getAlias())
                         || in_array($menu->getAlias(), $defaultMenuAliases)
                     ) {
