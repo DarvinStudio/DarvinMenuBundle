@@ -8,7 +8,7 @@ parameters:
     darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\MenuItemFactory
 
     darvin_menu.item_factory.slug_map_item_entity.class:              Darvin\MenuBundle\Item\SlugMapItemFactory
-    darvin_menu.item_factory.slug_map_item_entity.generic_uri_route:  darvin_content_content_show
+    darvin_menu.item_factory.slug_map_item_entity.generic_uri_route:  darvin_content_show
     darvin_menu.item_factory.slug_map_item_entity.homepage_uri_route: darvin_page_homepage
 
 services:
