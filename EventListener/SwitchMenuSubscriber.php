@@ -169,7 +169,11 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getSlugMapItem($entity)
     {
-        return $this->getSlugMapItemRepository()->getByEntityBuilder(ClassUtils::getClass($entity), $this->getEntityId($entity))
+        return $this->getSlugMapItemRepository()->createQueryBuilder('o')
+            ->andWhere('o.objectClass = :entity_class')
+            ->setParameter('entity_class', ClassUtils::getClass($entity))
+            ->andWhere('o.objectId = :entity_id')
+            ->setParameter('entity_id', $this->getEntityId($entity))
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
