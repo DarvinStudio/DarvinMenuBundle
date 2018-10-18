@@ -44,3 +44,5 @@ darvin_menu:
 6.8.6: Use generic tree sorter in menu item sorter.
 
 6.8.7: Force make services public by default.
+
+6.8.8: Keep menu order in admin sidebar.
