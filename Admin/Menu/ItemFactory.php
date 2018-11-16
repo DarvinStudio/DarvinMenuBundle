@@ -52,7 +52,7 @@ class ItemFactory implements ItemFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getItems()
+    public function getItems(): iterable
     {
         $items = [];
 
