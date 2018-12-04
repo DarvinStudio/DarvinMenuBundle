@@ -1,3 +1,3 @@
 twig:
     form_themes:
-        - DarvinMenuBundle::fields.html.twig
+        - '@DarvinMenu/fields.html.twig'
