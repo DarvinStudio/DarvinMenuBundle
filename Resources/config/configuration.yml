@@ -6,6 +6,6 @@ services:
         public: true
 
     darvin_menu.configuration.menu:
-        class: "%darvin_menu.configuration.menu.class%"
+        class: '%darvin_menu.configuration.menu.class%'
         arguments:
-            - "%darvin_menu.menus%"
+            - '%darvin_menu.menus%'

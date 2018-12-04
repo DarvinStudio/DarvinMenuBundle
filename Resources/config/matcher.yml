@@ -6,8 +6,8 @@ services:
         public: true
 
     darvin_menu.matcher.voter.uri:
-        class: "%darvin_menu.matcher.voter.uri.class%"
+        class: '%darvin_menu.matcher.voter.uri.class%'
         arguments:
-            - "@request_stack"
+            - '@request_stack'
         tags:
             - { name: knp_menu.voter }

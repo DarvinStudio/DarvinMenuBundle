@@ -12,37 +12,37 @@ services:
         public: true
 
     darvin_menu.breadcrumbs.builder:
-        class:  "%darvin_menu.breadcrumbs.builder.class%"
+        class:  '%darvin_menu.breadcrumbs.builder.class%'
         public: false
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@darvin_utils.mapping.metadata_factory"
-            - "@request_stack"
-            - "@darvin_menu.item_factory.root"
-            - "@darvin_menu.slug_map.item_custom_object_loader"
-            - "@darvin_menu.item_factory.slug_map_item_entity"
-            - "%darvin_menu.breadcrumbs.slug_parameter_name%"
+            - '@doctrine.orm.entity_manager'
+            - '@darvin_utils.mapping.metadata_factory'
+            - '@request_stack'
+            - '@darvin_menu.item_factory.root'
+            - '@darvin_menu.slug_map.item_custom_object_loader'
+            - '@darvin_menu.item_factory.slug_map_item_entity'
+            - '%darvin_menu.breadcrumbs.slug_parameter_name%'
 
     darvin_menu.breadcrumbs.provider:
-        class: "%darvin_menu.breadcrumbs.provider.class%"
+        class: '%darvin_menu.breadcrumbs.provider.class%'
         arguments:
-            - "@darvin_menu.breadcrumbs.builder"
-            - "@service_container"
-            - "@knp_menu.matcher"
-            - "@darvin_menu.configuration.menu"
-            - "%darvin_menu.breadcrumbs.provider.menu_name%"
+            - '@darvin_menu.breadcrumbs.builder'
+            - '@service_container'
+            - '@knp_menu.matcher'
+            - '@darvin_menu.configuration.menu'
+            - '%darvin_menu.breadcrumbs.provider.menu_name%'
         tags:
             - { name: knp_menu.provider }
 
     darvin_menu.breadcrumbs.twig_extension:
-        class:  "%darvin_menu.breadcrumbs.twig_extension.class%"
+        class:  '%darvin_menu.breadcrumbs.twig_extension.class%'
         public: false
         arguments:
-            - "@darvin_menu.breadcrumbs.provider"
-            - "@knp_menu.helper"
-            - "%darvin_menu.breadcrumbs.provider.menu_name%"
-            - "%darvin_menu.breadcrumbs.twig_extension.default_options%"
-            - "%darvin_menu.breadcrumbs.template%"
-            - "@darvin_menu.breadcrumbs.builder"
+            - '@darvin_menu.breadcrumbs.provider'
+            - '@knp_menu.helper'
+            - '%darvin_menu.breadcrumbs.provider.menu_name%'
+            - '%darvin_menu.breadcrumbs.twig_extension.default_options%'
+            - '%darvin_menu.breadcrumbs.template%'
+            - '@darvin_menu.breadcrumbs.builder'
         tags:
             - { name: twig.extension }

@@ -5,12 +5,12 @@ darvin_admin:
                 name:     menu
                 position: 20
                 colors:
-                    main:    "#cb9023"
-                    sidebar: "#a4ce23"
+                    main:    '#cb9023'
+                    sidebar: '#a4ce23'
                 icons:
                     main:    bundles/darvinmenu/images/admin/menus_main.png
                     sidebar: bundles/darvinmenu/images/admin/menus_sidebar.png
     sections:
         -
             entity: Darvin\MenuBundle\Entity\Menu\Item
-            config: "@DarvinMenuBundle/Resources/config/admin/menu/item.yml"
+            config: '@DarvinMenuBundle/Resources/config/admin/menu/item.yml'

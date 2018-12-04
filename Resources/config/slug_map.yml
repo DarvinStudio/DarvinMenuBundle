@@ -6,10 +6,10 @@ services:
         public: true
 
     darvin_menu.slug_map.item_custom_object_loader:
-        class:  "%darvin_menu.slug_map.item_custom_object_loader.class%"
+        class:  '%darvin_menu.slug_map.item_custom_object_loader.class%'
         public: false
         arguments:
-            - "@darvin_utils.custom_object.loader"
-            - "@darvin_image.orm.image_joiner"
-            - "@darvin_utils.locale.provider"
-            - "@darvin_content.translatable.translation_joiner"
+            - '@darvin_utils.custom_object.loader'
+            - '@darvin_image.orm.image_joiner'
+            - '@darvin_utils.locale.provider'
+            - '@darvin_content.translatable.translation_joiner'

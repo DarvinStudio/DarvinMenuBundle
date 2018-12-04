@@ -10,26 +10,26 @@ services:
         public: true
 
     darvin_menu.switcher.admin.form_type:
-        class: "%darvin_menu.switcher.admin.form_type.class%"
+        class: '%darvin_menu.switcher.admin.form_type.class%'
         arguments:
-            - "@darvin_menu.configuration.menu"
-            - "@darvin_menu.switcher"
+            - '@darvin_menu.configuration.menu'
+            - '@darvin_menu.switcher'
         tags:
             - { name: form.type }
 
     darvin_menu.switcher:
-        class:  "%darvin_menu.switcher.class%"
+        class:  '%darvin_menu.switcher.class%'
         public: false
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "%darvin_menu.switcher.default_menus%"
+            - '@doctrine.orm.entity_manager'
+            - '%darvin_menu.switcher.default_menus%'
 
     darvin_menu.switcher.switch_event_subscriber:
-        class:  "%darvin_menu.switcher.switch_event_subscriber.class%"
+        class:  '%darvin_menu.switcher.switch_event_subscriber.class%'
         public: false
         arguments:
-            - "@darvin_menu.switcher"
-            - "@darvin_content.translatable.translations_initializer"
-            - "%locales%"
+            - '@darvin_menu.switcher'
+            - '@darvin_content.translatable.translations_initializer'
+            - '%locales%'
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }
