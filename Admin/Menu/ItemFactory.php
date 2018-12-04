@@ -58,7 +58,7 @@ class ItemFactory implements ItemFactoryInterface
 
         $filterFormTypeName = $this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName();
 
-        foreach ($this->menuConfig->getMenus() as $position => $menu) {
+        foreach (array_values($this->menuConfig->getMenus()) as $position => $menu) {
             $items[] = $this->createItem($menu, $filterFormTypeName, $position);
         }
 
