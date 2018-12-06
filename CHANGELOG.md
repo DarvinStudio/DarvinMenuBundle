@@ -47,4 +47,6 @@ darvin_menu:
 
 6.8.8: Keep menu order in admin sidebar.
 
+6.8.9: Breadcrumbs menu builder: do not reset menu item URL if associated object is hidden.
+
 7.0.0: Remove menu switcher from form if no menus configured.
