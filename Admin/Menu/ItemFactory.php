@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Admin\Menu;
 
 use Darvin\AdminBundle\Menu\ItemFactoryInterface;
-use Darvin\AdminBundle\Metadata\MetadataManager;
+use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Route\AdminRouterInterface;
 use Darvin\MenuBundle\Configuration\Menu;
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
@@ -33,16 +33,16 @@ class ItemFactory implements ItemFactoryInterface
     private $menuConfig;
 
     /**
-     * @var \Darvin\AdminBundle\Metadata\MetadataManager
+     * @var \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface
      */
     private $metadataManager;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouterInterface     $adminRouter     Admin router
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig      Menu configuration
-     * @param \Darvin\AdminBundle\Metadata\MetadataManager       $metadataManager Metadata manager
+     * @param \Darvin\AdminBundle\Route\AdminRouterInterface             $adminRouter     Admin router
+     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration         $menuConfig      Menu configuration
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface $metadataManager Metadata manager
      */
-    public function __construct(AdminRouterInterface $adminRouter, MenuConfiguration $menuConfig, MetadataManager $metadataManager)
+    public function __construct(AdminRouterInterface $adminRouter, MenuConfiguration $menuConfig, AdminMetadataManagerInterface $metadataManager)
     {
         $this->adminRouter = $adminRouter;
         $this->menuConfig = $menuConfig;

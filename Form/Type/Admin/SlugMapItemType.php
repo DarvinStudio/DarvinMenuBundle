@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
-use Darvin\AdminBundle\Metadata\MetadataManager;
+use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Metadata\SortCriteriaDetector;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
@@ -52,7 +52,7 @@ class SlugMapItemType extends AbstractType
     private $entityNamer;
 
     /**
-     * @var \Darvin\AdminBundle\Metadata\MetadataManager
+     * @var \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface
      */
     private $metadataManager;
 
@@ -85,7 +85,7 @@ class SlugMapItemType extends AbstractType
      * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container                     DI container
      * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
      * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer                   Entity namer
-     * @param \Darvin\AdminBundle\Metadata\MetadataManager                $metadataManager               Metadata manager
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager               Metadata manager
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
      * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetector           $sortCriteriaDetector          Sort criteria detector
@@ -96,7 +96,7 @@ class SlugMapItemType extends AbstractType
         ContainerInterface $container,
         EntityManager $em,
         EntityNamerInterface $entityNamer,
-        MetadataManager $metadataManager,
+        AdminMetadataManagerInterface $metadataManager,
         PropertyAccessorInterface $propertyAccessor,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
         SortCriteriaDetector $sortCriteriaDetector,
