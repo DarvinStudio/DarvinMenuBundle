@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Admin\View;
 
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
-use Darvin\AdminBundle\Route\AdminRouter;
+use Darvin\AdminBundle\Route\AdminRouterInterface;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
@@ -24,7 +24,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class SlugMapItemLinkWidget extends AbstractWidget
 {
     /**
-     * @var \Darvin\AdminBundle\Route\AdminRouter
+     * @var \Darvin\AdminBundle\Route\AdminRouterInterface
      */
     private $adminRouter;
 
@@ -44,9 +44,9 @@ class SlugMapItemLinkWidget extends AbstractWidget
     private $translator;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouter $adminRouter Admin router
+     * @param \Darvin\AdminBundle\Route\AdminRouterInterface $adminRouter Admin router
      */
-    public function setAdminRouter(AdminRouter $adminRouter)
+    public function setAdminRouter(AdminRouterInterface $adminRouter)
     {
         $this->adminRouter = $adminRouter;
     }

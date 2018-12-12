@@ -12,7 +12,7 @@ namespace Darvin\MenuBundle\Admin\Menu;
 
 use Darvin\AdminBundle\Menu\ItemFactoryInterface;
 use Darvin\AdminBundle\Metadata\MetadataManager;
-use Darvin\AdminBundle\Route\AdminRouter;
+use Darvin\AdminBundle\Route\AdminRouterInterface;
 use Darvin\MenuBundle\Configuration\Menu;
 use Darvin\MenuBundle\Configuration\MenuConfiguration;
 use Darvin\MenuBundle\Entity\Menu\Item;
@@ -23,7 +23,7 @@ use Darvin\MenuBundle\Entity\Menu\Item;
 class ItemFactory implements ItemFactoryInterface
 {
     /**
-     * @var \Darvin\AdminBundle\Route\AdminRouter
+     * @var \Darvin\AdminBundle\Route\AdminRouterInterface
      */
     private $adminRouter;
 
@@ -38,11 +38,11 @@ class ItemFactory implements ItemFactoryInterface
     private $metadataManager;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouter              $adminRouter     Admin router
+     * @param \Darvin\AdminBundle\Route\AdminRouterInterface     $adminRouter     Admin router
      * @param \Darvin\MenuBundle\Configuration\MenuConfiguration $menuConfig      Menu configuration
      * @param \Darvin\AdminBundle\Metadata\MetadataManager       $metadataManager Metadata manager
      */
-    public function __construct(AdminRouter $adminRouter, MenuConfiguration $menuConfig, MetadataManager $metadataManager)
+    public function __construct(AdminRouterInterface $adminRouter, MenuConfiguration $menuConfig, MetadataManager $metadataManager)
     {
         $this->adminRouter = $adminRouter;
         $this->menuConfig = $menuConfig;
@@ -82,8 +82,8 @@ class ItemFactory implements ItemFactoryInterface
 
         return (new \Darvin\AdminBundle\Menu\Item('menu_'.$menu->getAlias()))
             ->setIndexTitle($menu->getTitle())
-            ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouter::TYPE_INDEX, $routeParams))
-            ->setNewUrl($this->adminRouter->generate(null, Item::class, AdminRouter::TYPE_NEW, $routeParams))
+            ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_INDEX, $routeParams))
+            ->setNewUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_NEW, $routeParams))
             ->setNewTitle($this->metadataManager->getMetadata(Item::class)->getBaseTranslationPrefix().'action.new.link')
             ->setMainIcon($menu->getIcon())
             ->setPosition($position)
