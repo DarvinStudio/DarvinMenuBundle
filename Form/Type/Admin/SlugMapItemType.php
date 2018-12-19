@@ -12,7 +12,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
-use Darvin\AdminBundle\Metadata\SortCriteriaDetector;
+use Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Exception\DarvinMenuException;
@@ -67,7 +67,7 @@ class SlugMapItemType extends AbstractType
     private $slugMapItemCustomObjectLoader;
 
     /**
-     * @var \Darvin\AdminBundle\Metadata\SortCriteriaDetector
+     * @var \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface
      */
     private $sortCriteriaDetector;
 
@@ -88,7 +88,7 @@ class SlugMapItemType extends AbstractType
      * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager               Metadata manager
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetector           $sortCriteriaDetector          Sort criteria detector
+     * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface  $sortCriteriaDetector          Sort criteria detector
      * @param \Gedmo\Tree\TreeListener                                    $treeListener                  Tree event listener
      * @param array                                                       $entityConfig                  Entity configuration
      */
@@ -99,7 +99,7 @@ class SlugMapItemType extends AbstractType
         AdminMetadataManagerInterface $metadataManager,
         PropertyAccessorInterface $propertyAccessor,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
-        SortCriteriaDetector $sortCriteriaDetector,
+        SortCriteriaDetectorInterface $sortCriteriaDetector,
         TreeListener $treeListener,
         array $entityConfig
     ) {
@@ -268,7 +268,7 @@ MESSAGE
             return $entities;
         }
 
-        $sortCriteria = $this->sortCriteriaDetector->detect($class);
+        $sortCriteria = $this->sortCriteriaDetector->detectSortCriteria($class);
 
         if (!empty($sortCriteria)) {
             $propertyAccessor = $this->propertyAccessor;
