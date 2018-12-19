@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
-use Darvin\AdminBundle\Form\Type\BaseType;
+use Darvin\AdminBundle\Form\Type\EntityType;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Component\Form\AbstractType;
@@ -69,6 +69,6 @@ class MenuItemType extends AbstractType
      */
     public function getParent()
     {
-        return BaseType::class;
+        return EntityType::class;
     }
 }
