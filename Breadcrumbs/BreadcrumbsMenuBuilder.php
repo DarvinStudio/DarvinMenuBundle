@@ -12,7 +12,6 @@ namespace Darvin\MenuBundle\Breadcrumbs;
 
 use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\MenuBundle\Item\RootItemFactory;
 use Darvin\MenuBundle\Item\SlugMapItemFactory;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
@@ -159,9 +158,7 @@ class BreadcrumbsMenuBuilder
 
             $object = $slugMapItem->getObject();
 
-            if (($object instanceof DisableableInterface && !$object->isEnabled())
-                || ($object instanceof HideableInterface && $object->isHidden())
-            ) {
+            if ($object instanceof DisableableInterface && !$object->isEnabled()) {
                 $item->setUri(null);
             }
 
