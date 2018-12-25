@@ -54,12 +54,12 @@ class ItemFactory implements ItemFactoryInterface
      */
     public function getItems()
     {
-        $items = [];
-
+        $items              = [];
         $filterFormTypeName = $this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName();
+        $position           = 0;
 
-        foreach ($this->menuConfig->getMenus() as $position => $menu) {
-            $items[] = $this->createItem($menu, $filterFormTypeName, $position);
+        foreach ($this->menuConfig->getMenus() as $menu) {
+            $items[] = $this->createItem($menu, $filterFormTypeName, $position++);
         }
 
         return $items;
