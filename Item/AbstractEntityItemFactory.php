@@ -11,7 +11,6 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\FactoryInterface;
 
@@ -67,7 +66,7 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
      */
     protected function getItemName($entity)
     {
-        $class = ClassUtils::getClass($entity);
+        $class = get_class($entity);
         $ids = $this->em->getClassMetadata($class)->getIdentifierValues($entity);
 
         return uniqid(sprintf('%s-%s-', $class, reset($ids)), true);
@@ -88,7 +87,7 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
 
         if (!$entity instanceof $supportedClass) {
             throw new ItemFactoryException(
-                sprintf('Entity must be instance of "%s", got "%s".', $supportedClass, ClassUtils::getClass($entity))
+                sprintf('Entity must be instance of "%s", got "%s".', $supportedClass, get_class($entity))
             );
         }
     }

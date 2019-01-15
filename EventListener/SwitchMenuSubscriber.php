@@ -15,7 +15,6 @@ use Darvin\ContentBundle\Translatable\TranslationsInitializerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Switcher\MenuSwitcher;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
@@ -86,7 +85,7 @@ class SwitchMenuSubscriber implements EventSubscriber
             }
             foreach ($this->menuSwitcher->getMenusToEnable() as $menuAlias => $entities) {
                 foreach ($entities as $entity) {
-                    if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
+                    if ($slugMapItem->getObjectClass() === get_class($entity)
                         && $slugMapItem->getObjectId() === $this->getEntityId($entity)
                     ) {
                         $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
@@ -159,7 +158,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getMenuItems($entity, $menuAlias = null)
     {
-        return $this->getMenuItemRepository()->getByEntity(ClassUtils::getClass($entity), $this->getEntityId($entity), $menuAlias);
+        return $this->getMenuItemRepository()->getByEntity(get_class($entity), $this->getEntityId($entity), $menuAlias);
     }
 
     /**
@@ -171,7 +170,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     {
         return $this->getSlugMapItemRepository()->createQueryBuilder('o')
             ->andWhere('o.objectClass = :entity_class')
-            ->setParameter('entity_class', ClassUtils::getClass($entity))
+            ->setParameter('entity_class', get_class($entity))
             ->andWhere('o.objectId = :entity_id')
             ->setParameter('entity_id', $this->getEntityId($entity))
             ->setMaxResults(1)
@@ -186,7 +185,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getEntityId($entity)
     {
-        $ids = $this->em->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
+        $ids = $this->em->getClassMetadata(get_class($entity))->getIdentifierValues($entity);
 
         return reset($ids);
     }

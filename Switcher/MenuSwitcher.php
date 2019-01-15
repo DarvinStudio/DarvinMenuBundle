@@ -11,7 +11,6 @@
 namespace Darvin\MenuBundle\Switcher;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -114,7 +113,7 @@ class MenuSwitcher
     public function isMenuEnabled($entity, $menuAlias)
     {
         $menuItems   = $this->getMenuItems();
-        $entityClass = ClassUtils::getClass($entity);
+        $entityClass = get_class($entity);
         $entityIds   = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
         return isset($menuItems[$menuAlias][$entityClass][reset($entityIds)]);
