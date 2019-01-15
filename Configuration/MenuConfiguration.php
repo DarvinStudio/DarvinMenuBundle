@@ -29,9 +29,7 @@ class MenuConfiguration
     {
         $this->menus = [];
 
-        foreach ($configs as $config) {
-            $alias = $config['alias'];
-
+        foreach ($configs as $alias => $config) {
             if (isset($this->menus[$alias])) {
                 throw new ConfigurationException(sprintf('Menu with alias "%s" already exists.', $alias));
             }

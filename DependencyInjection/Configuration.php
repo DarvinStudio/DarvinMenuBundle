@@ -59,10 +59,9 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid(null)
                     ->end()
                 ->end()
-                ->arrayNode('menus')
+                ->arrayNode('menus')->useAttributeAsKey('alias')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('alias')->isRequired()->cannotBeEmpty()->end()
                             ->booleanNode('breadcrumbs')->defaultTrue()->end()
                             ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png')->end()
                             ->arrayNode('build_options')->addDefaultsIfNotSet()
@@ -101,16 +100,10 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->validate()
                 ->ifTrue(function (array $config) {
-                    $menuAliases = array_map(function (array $menu) {
-                        return $menu['alias'];
-                    }, $config['menus']);
-
-                    foreach ($config['switcher']['default_menus'] as $defaultMenuAliases) {
-                        foreach ($defaultMenuAliases as $defaultMenuAlias) {
-                            if (!in_array($defaultMenuAlias, $menuAliases)) {
-                                throw new \RuntimeException(
-                                    sprintf('Menu "%s" does not defined in the "menus" section.', $defaultMenuAlias)
-                                );
+                    foreach ($config['switcher']['default_menus'] as $aliases) {
+                        foreach ($aliases as $alias) {
+                            if (!isset($config['menus'][$alias])) {
+                                throw new \RuntimeException(sprintf('Menu "%s" does not defined in the "menus" section.', $alias));
                             }
                         }
                     }
