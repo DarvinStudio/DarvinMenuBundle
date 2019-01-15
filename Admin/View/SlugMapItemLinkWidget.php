@@ -16,7 +16,7 @@ use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Slug map item link admin view widget
@@ -39,7 +39,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
     private $showLinkWidget;
 
     /**
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var \Symfony\Contracts\Translation\TranslatorInterface
      */
     private $translator;
 
@@ -68,7 +68,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
     }
 
     /**
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator Translator
+     * @param \Symfony\Contracts\Translation\TranslatorInterface $translator Translator
      */
     public function setTranslator(TranslatorInterface $translator)
     {
