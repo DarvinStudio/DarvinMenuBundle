@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2016-2018, Darvin Studio
@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
 use Darvin\MenuBundle\Builder\MenuBuilderInterface;
-use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuBuilderPass;
+use Darvin\MenuBundle\Configuration\MenuConfiguration;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,34 +22,39 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CreateBuildersPass implements CompilerPassInterface
 {
-    const PARENT_ID = 'darvin_menu.builder.abstract';
-
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $definitions = [];
+
         foreach ($this->getMenuConfig($container)->getMenus() as $menu) {
             $id = $menu->getBuilderId();
+
             if ($container->hasDefinition($id)) {
                 $class = new \ReflectionClass($container->getDefinition($id)->getClass());
+
                 if (!$class->implementsInterface(MenuBuilderInterface::class)) {
                     throw new \RuntimeException(sprintf(
                         'Service "%s" already exists and it\'s not instance of MenuBuilderInterface. Please change the menu alias.', 
                         $id
                     ));
                 }
+
                 continue;
             }
-            $definitions[$id] = (new ChildDefinition(self::PARENT_ID))->addMethodCall(
-                'setMenuAlias', 
-                [$menu->getAlias(), $menu->getBuilderOptions()]
-            );
+
+            $definition = new ChildDefinition('darvin_menu.builder.abstract');
+            $definition->addMethodCall('setMenuAlias', [
+                $menu->getAlias(),
+                $menu->getBuilderOptions(),
+            ]);
+
+            $definitions[$id] = $definition;
         }
 
         $container->addDefinitions($definitions);
-        (new MenuBuilderPass())->process($container);
     }
 
     /**
@@ -57,7 +62,7 @@ class CreateBuildersPass implements CompilerPassInterface
      *
      * @return \Darvin\MenuBundle\Configuration\MenuConfiguration
      */
-    private function getMenuConfig(ContainerInterface $container)
+    private function getMenuConfig(ContainerInterface $container): MenuConfiguration
     {
         return $container->get('darvin_menu.configuration.menu');
     }

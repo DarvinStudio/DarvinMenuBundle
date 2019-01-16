@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2017-2018, Darvin Studio
@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
 use Darvin\MenuBundle\Builder\MenuBuilderInterface;
-use Knp\Bundle\MenuBundle\DependencyInjection\Compiler\MenuPass;
+use Darvin\MenuBundle\Configuration\MenuConfiguration;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,45 +23,30 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class CreateMenuServicesPass implements CompilerPassInterface
 {
-    const PARENT_ID = 'darvin_menu.menu.abstract';
-
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $definitions = [];
 
         foreach ($this->getMenuConfig($container)->getMenus() as $menu) {
-            $definitions[$menu->getMenuServiceId()] = (new ChildDefinition(self::PARENT_ID))
-                ->setFactory([new Reference($menu->getBuilderId()), MenuBuilderInterface::BUILD_METHOD])
-                ->addTag('knp_menu.menu', [
-                    'alias' => $menu->getMenuServiceAlias(),
-                ]);
-        }
-        foreach ($definitions as $id => $definition) {
+            $id = $menu->getMenuServiceId();
+
             if ($container->hasDefinition($id)) {
                 throw new \RuntimeException(sprintf('Service "%s" already exists. Please change menu alias.', $id));
             }
+
+            $definition = new ChildDefinition('darvin_menu.menu.abstract');
+            $definition->setFactory([new Reference($menu->getBuilderId()), MenuBuilderInterface::BUILD_METHOD]);
+            $definition->addTag('knp_menu.menu', [
+                'alias' => $menu->getMenuServiceAlias(),
+            ]);
+
+            $definitions[$id] = $definition;
         }
 
         $container->addDefinitions($definitions);
-
-        (new MenuPass())->process($container);
-
-        $serviceClosureArgumentClass = 'Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument';
-
-        if ($container->hasDefinition('knp_menu.menu_provider.lazy') && class_exists($serviceClosureArgumentClass)) {
-            $provider = $container->getDefinition('knp_menu.menu_provider.lazy');
-
-            $menus = $provider->getArgument(0);
-
-            foreach ($definitions as $id => $definition) {
-                $menus[$definition->getTag('knp_menu.menu')[0]['alias']] = new $serviceClosureArgumentClass(new Reference($id));
-            }
-
-            $provider->replaceArgument(0, $menus);
-        }
     }
 
     /**
@@ -69,7 +54,7 @@ class CreateMenuServicesPass implements CompilerPassInterface
      *
      * @return \Darvin\MenuBundle\Configuration\MenuConfiguration
      */
-    private function getMenuConfig(ContainerInterface $container)
+    private function getMenuConfig(ContainerInterface $container): MenuConfiguration
     {
         return $container->get('darvin_menu.configuration.menu');
     }
