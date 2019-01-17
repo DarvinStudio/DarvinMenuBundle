@@ -13,4 +13,4 @@ darvin_admin:
     sections:
         -
             entity: Darvin\MenuBundle\Entity\Menu\Item
-            config: '@DarvinMenuBundle/Resources/config/admin/menu/item.yml'
+            config: '@DarvinMenuBundle/Resources/config/admin/menu/item.yaml'

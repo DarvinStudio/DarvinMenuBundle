@@ -58,7 +58,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'slug_map',
             'switcher',
         ] as $resource) {
-            $loader->load($resource.'.yml');
+            $loader->load($resource.'.yaml');
         }
     }
 
@@ -76,7 +76,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'twig',
         ] as $extension) {
             if ($container->hasExtension($extension)) {
-                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yml')))[$extension]);
+                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yaml')))[$extension]);
             }
         }
     }
