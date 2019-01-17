@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2016-2018, Darvin Studio
@@ -11,12 +11,11 @@
 namespace Darvin\MenuBundle\DependencyInjection;
 
 use Darvin\Utils\DependencyInjection\ConfigInjector;
-use Symfony\Component\Config\FileLocator;
+use Darvin\Utils\DependencyInjection\ConfigLoader;
+use Darvin\Utils\DependencyInjection\ExtensionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -28,7 +27,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $bundles = $container->getParameter('kernel.bundles');
 
@@ -36,18 +35,16 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             throw new \RuntimeException('Please register "KnpMenuBundle" in AppKernel.php.');
         }
 
-        $configs = $this->processConfiguration(new Configuration(), $configs);
+        $config = $this->processConfiguration(new Configuration(), $configs);
 
-        (new ConfigInjector())->inject($configs, $container, $this->getAlias());
+        (new ConfigInjector())->inject($config, $container, $this->getAlias());
 
         $container->setParameter(
             'darvin_menu.breadcrumbs.slug_parameter_name',
-            $configs['breadcrumbs']['slug_parameter_name']
+            $config['breadcrumbs']['slug_parameter_name']
         );
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-
-        foreach ([
+        (new ConfigLoader($container, __DIR__.'/../Resources/config'))->load([
             'admin',
             'breadcrumbs',
             'builder',
@@ -57,27 +54,19 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'menu',
             'slug_map',
             'switcher',
-        ] as $resource) {
-            $loader->load($resource.'.yaml');
-        }
+        ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
-        $fileLocator = new FileLocator(__DIR__.'/../Resources/config/app');
-
-        foreach ([
+        (new ExtensionConfigurator(__DIR__.'/../Resources/config/app'))->configure($container, [
             'darvin_admin',
             'darvin_image',
             'knp_menu',
             'twig',
-        ] as $extension) {
-            if ($container->hasExtension($extension)) {
-                $container->prependExtensionConfig($extension, Yaml::parse(file_get_contents($fileLocator->locate($extension.'.yaml')))[$extension]);
-            }
-        }
+        ]);
     }
 }
