@@ -26,12 +26,10 @@ view:
             enabled:      ~
             showChildren: ~
             slugMapItem:
-                widget:
-                    alias: slug_map_item_link
+                widget: slug_map_item_link
             title: ~
             url:
-                widget:
-                    alias: simple_link
+                widget: simple_link
     extend~index~show:
         fields:
             remove~position:    ~
