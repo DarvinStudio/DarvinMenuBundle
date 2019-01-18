@@ -1,8 +1,7 @@
 darvin_admin:
     menu:
         groups:
-            -
-                name:     menu
+            menu:
                 position: 20
                 colors:
                     main:    '#cb9023'
