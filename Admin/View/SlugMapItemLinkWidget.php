@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -78,11 +78,10 @@ class SlugMapItemLinkWidget extends AbstractWidget
     /**
      * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
      * @param array                               $options  Options
-     * @param string                              $property Property name
      *
      * @return string
      */
-    protected function createContent($menuItem, array $options, $property)
+    protected function createContent($menuItem, array $options): ?string
     {
         if (null === $menuItem->getSlugMapItem()) {
             return null;
@@ -110,7 +109,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    protected function getAllowedEntityClasses()
+    protected function getAllowedEntityClasses(): array
     {
         return [
             Item::class,
@@ -120,7 +119,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
     /**
      * {@inheritdoc}
      */
-    protected function getRequiredPermissions()
+    protected function getRequiredPermissions(): array
     {
         return [
             Permission::VIEW,
