@@ -100,7 +100,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
         );
 
         $showLink = $this->showLinkWidget->getContent($entity, [
-            'text_link' => true,
+            'text' => true,
         ]);
 
         return $content.(!empty($showLink) ? $showLink : $entity);
