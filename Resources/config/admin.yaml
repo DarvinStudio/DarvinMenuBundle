@@ -77,10 +77,10 @@ services:
         class:  '%darvin_menu.admin.slug_map_item_link_view_widget.class%'
         parent: darvin_admin.view.widget.abstract
         public: false
-        calls:
-            - [ setAdminRouter,    [ '@darvin_admin.router' ] ]
-            - [ setEntityNamer,    [ '@darvin_admin.entity_namer' ] ]
-            - [ setShowLinkWidget, [ '@darvin_admin.view.widget.show_link' ] ]
-            - [ setTranslator,     [ '@translator' ] ]
+        arguments:
+            - '@darvin_admin.router'
+            - '@darvin_admin.entity_namer'
+            - '@darvin_admin.view.widget.show_link'
+            - '@translator'
         tags:
             - { name: darvin_admin.view_widget }

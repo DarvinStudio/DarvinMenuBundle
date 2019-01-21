@@ -44,34 +44,20 @@ class SlugMapItemLinkWidget extends AbstractWidget
     private $translator;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouterInterface $adminRouter Admin router
-     */
-    public function setAdminRouter(AdminRouterInterface $adminRouter)
-    {
-        $this->adminRouter = $adminRouter;
-    }
-
-    /**
-     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface $entityNamer Entity namer
-     */
-    public function setEntityNamer(EntityNamerInterface $entityNamer)
-    {
-        $this->entityNamer = $entityNamer;
-    }
-
-    /**
+     * @param \Darvin\AdminBundle\Route\AdminRouterInterface        $adminRouter    Admin router
+     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface  $entityNamer    Entity namer
      * @param \Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget $showLinkWidget Show link admin view widget
+     * @param \Symfony\Contracts\Translation\TranslatorInterface    $translator     Translator
      */
-    public function setShowLinkWidget(ShowLinkWidget $showLinkWidget)
-    {
+    public function __construct(
+        AdminRouterInterface $adminRouter,
+        EntityNamerInterface $entityNamer,
+        ShowLinkWidget $showLinkWidget,
+        TranslatorInterface $translator
+    ) {
+        $this->adminRouter = $adminRouter;
+        $this->entityNamer = $entityNamer;
         $this->showLinkWidget = $showLinkWidget;
-    }
-
-    /**
-     * @param \Symfony\Contracts\Translation\TranslatorInterface $translator Translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
-    {
         $this->translator = $translator;
     }
 
