@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class LoadItemData implements FixtureInterface, ContainerAwareInterface
 {
-    const COUNT_PER_MENU = 30;
+    private const COUNT_PER_MENU = 30;
 
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface

@@ -14,7 +14,7 @@ namespace Darvin\MenuBundle\Builder;
  */
 interface MenuBuilderInterface
 {
-    const BUILD_METHOD = 'buildMenu';   
+    public const BUILD_METHOD = 'buildMenu';
     
     /**
      * @return \Knp\Menu\ItemInterface
