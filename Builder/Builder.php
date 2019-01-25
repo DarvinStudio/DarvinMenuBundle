@@ -219,7 +219,7 @@ class Builder implements MenuBuilderInterface
                 $classBlacklist[] = $class;
             }
         }
-        foreach ($this->getSlugMapItemRepository()->getBySlugsChildren(array_unique($parentSlugs), $classBlacklist) as $parentSlug => $childSlugMapItems) {
+        foreach ($this->getSlugMapItemRepository()->getChildrenBySlugs(array_unique($parentSlugs), $classBlacklist) as $parentSlug => $childSlugMapItems) {
             foreach (array_keys($parentSlugs, $parentSlug) as $entityId) {
                 $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childSlugMapItems);
             }
