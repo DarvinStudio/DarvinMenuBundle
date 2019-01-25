@@ -29,7 +29,7 @@ services:
         public: false
         arguments:
             - '@darvin_menu.switcher'
-            - '@darvin_content.translatable.translations_initializer'
+            - '@darvin_content.translatable.translation_initializer'
             - '%locales%'
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }
