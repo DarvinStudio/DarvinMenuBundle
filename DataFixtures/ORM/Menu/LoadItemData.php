@@ -92,10 +92,11 @@ class LoadItemData extends AbstractFixture
         $item->setMenu($menu);
 
         if ($this->getFaker()->boolean(80)) {
-            $item->setImage($this->createImage());
-        }
-        if ($this->getFaker()->boolean(80)) {
-            $item->setHoverImage($this->createImage());
+            $item->setImage($this->createImage(true));
+
+            if ($this->getFaker()->boolean(80)) {
+                $item->setHoverImage($this->createImage());
+            }
         }
         if ($this->getFaker()->boolean(90)) {
             $item->setParent($this->getParentItem($menu));
@@ -115,13 +116,15 @@ class LoadItemData extends AbstractFixture
     }
 
     /**
+     * @param bool $grayscale Whether to generate grayscale image
+     *
      * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
      */
-    private function createImage(): MenuItemImage
+    private function createImage(bool $grayscale = false): MenuItemImage
     {
         /** @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage $image */
         $image = $this->instantiateEntity(MenuItemImage::class);
-        $image->setFile($this->generateImageFile());
+        $image->setFile($this->generateImageFile(320, 240, null, $grayscale ? 'fff' : null, $grayscale ? 'ccc' : null));
 
         return $image;
     }
