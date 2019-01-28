@@ -125,6 +125,6 @@ class BreadcrumbsExtension extends \Twig_Extension
             $options['template'] = $this->defaultTemplate;
         }
 
-        return $this->helper->render($this->slugBreadCrumbsBuilder->buildMenu(null), $options, $renderer);
+        return $this->helper->render($this->slugBreadCrumbsBuilder->buildMenu('breadcrumbs'), $options, $renderer);
     }
 }
