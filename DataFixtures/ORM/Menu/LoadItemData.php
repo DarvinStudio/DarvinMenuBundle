@@ -44,11 +44,6 @@ class LoadItemData extends AbstractFixture
     private $items;
 
     /**
-     * @var int[]|null
-     */
-    private $slugMapItemIds;
-
-    /**
      * @param int $minCount Minimum count
      * @param int $maxCount Maximum count
      * @param int $maxLevel Maximum level
@@ -59,8 +54,7 @@ class LoadItemData extends AbstractFixture
         $this->maxCount = $maxCount;
         $this->maxLevel = $maxLevel;
 
-        $this->items          = [];
-        $this->slugMapItemIds = null;
+        $this->items = [];
     }
 
     /**
