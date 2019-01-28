@@ -55,7 +55,7 @@ class Matcher extends BaseMatcher
             return false;
         }
 
-        $itemUri = rtrim($item->getUri(), '/').'/';
+        $itemUri = rtrim($itemUri, '/').'/';
 
         return 0 === strpos($path, $itemUri);
     }
