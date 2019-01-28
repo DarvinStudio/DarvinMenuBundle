@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -16,26 +16,24 @@ namespace Darvin\MenuBundle\Configuration;
 class MenuConfiguration
 {
     /**
-     * @var \Darvin\MenuBundle\Configuration\Menu[]
+     * @var array
+     */
+    private $configs;
+
+    /**
+     * @var \Darvin\MenuBundle\Configuration\Menu[]|null
      */
     private $menus;
 
     /**
-     * @param array[] $configs Configs
-     *
-     * @throws \LogicException
+     * @param array $configs Configs
      */
     public function __construct(array $configs)
     {
-        $this->menus = [];
+        $this->configs = $configs;
 
-        foreach ($configs as $alias => $config) {
-            if (isset($this->menus[$alias])) {
-                throw new \LogicException(sprintf('Menu with alias "%s" already exists.', $alias));
-            }
+        $this->menus = null;
 
-            $this->menus[$alias] = new Menu($alias, $config['breadcrumbs'], $config['icon'], $config['build_options']);
-        }
     }
 
     /**
@@ -44,20 +42,38 @@ class MenuConfiguration
      * @return \Darvin\MenuBundle\Configuration\Menu
      * @throws \InvalidArgumentException
      */
-    public function getMenu($alias)
+    public function getMenu(string $alias): Menu
     {
-        if (!isset($this->menus[$alias])) {
+        $menus = $this->getMenus();
+
+        if (!isset($menus[$alias])) {
             throw new \InvalidArgumentException(sprintf('Menu with alias "%s" does not exist.', $alias));
         }
 
-        return $this->menus[$alias];
+        return $menus[$alias];
     }
 
     /**
      * @return \Darvin\MenuBundle\Configuration\Menu[]
+     *
+     * @throws \LogicException
      */
-    public function getMenus()
+    public function getMenus(): array
     {
+        if (null === $this->menus) {
+            $menus = [];
+
+            foreach ($this->configs as $alias => $config) {
+                if (isset($menus[$alias])) {
+                    throw new \LogicException(sprintf('Menu with alias "%s" already exists.', $alias));
+                }
+
+                $menus[$alias] = new Menu($alias, $config['breadcrumbs'], $config['icon'], $config['build_options']);
+            }
+
+            $this->menus = $menus;
+        }
+
         return $this->menus;
     }
 }
