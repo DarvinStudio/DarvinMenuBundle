@@ -97,8 +97,11 @@ class LoadItemData extends AbstractFixture
         $item->setLevel(1);
         $item->setMenu($menu);
 
-        foreach ($this->getFakerLocales() as $locale => $fakerLocale) {
-            $item->addTranslation($this->createTranslation($locale, $fakerLocale));
+        if ($this->getFaker()->boolean(80)) {
+            $item->setImage($this->createImage());
+        }
+        if ($this->getFaker()->boolean(80)) {
+            $item->setHoverImage($this->createImage());
         }
         if ($this->getFaker()->boolean(90)) {
             $item->setParent($this->getParentItem($menu));
@@ -107,14 +110,11 @@ class LoadItemData extends AbstractFixture
                 $item->setLevel($item->getLevel() + $item->getParent()->getLevel());
             }
         }
-        if ($this->getFaker()->boolean(80)) {
-            $item->setImage($this->createImage());
-        }
-        if ($this->getFaker()->boolean(80)) {
-            $item->setHoverImage($this->createImage());
-        }
-        if ($this->getFaker()->boolean(90)) {
+        if ($this->getFaker()->boolean(75)) {
             $item->setSlugMapItem($this->getRandomEntity(SlugMapItem::class));
+        }
+        foreach ($this->getFakerLocales() as $locale => $fakerLocale) {
+            $item->addTranslation($this->createTranslation($item, $locale, $fakerLocale));
         }
 
         return $item;
@@ -133,12 +133,13 @@ class LoadItemData extends AbstractFixture
     }
 
     /**
-     * @param string $locale      Locale
-     * @param string $fakerLocale Faker locale
+     * @param \Darvin\MenuBundle\Entity\Menu\Item $item        Menu item
+     * @param string                              $locale      Locale
+     * @param string                              $fakerLocale Faker locale
      *
      * @return \Darvin\MenuBundle\Entity\Menu\ItemTranslation|\Knp\DoctrineBehaviors\Model\Translatable\Translation
      */
-    private function createTranslation(string $locale, string $fakerLocale): ItemTranslation
+    private function createTranslation(Item $item, string $locale, string $fakerLocale): ItemTranslation
     {
         /** @var \Darvin\MenuBundle\Entity\Menu\ItemTranslation $translation */
         $translation = $this->instantiateTranslation(Item::class);
@@ -146,10 +147,12 @@ class LoadItemData extends AbstractFixture
 
         $translation->setLocale($locale);
 
-        $translation->setTitle($faker->realText(20));
+        if (null === $item->getSlugMapItem()) {
+            $translation->setTitle($faker->sentence(3));
 
-        if ($faker->boolean(10)) {
-            $translation->setUrl($faker->url);
+            if ($faker->boolean(90)) {
+                $translation->setUrl($faker->url);
+            }
         }
 
         return $translation;
