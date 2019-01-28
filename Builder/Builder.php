@@ -146,7 +146,7 @@ class Builder implements MenuBuilderInterface
 
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
-            'build_hidden_slugmap_children' => false
+            'build_hidden_slug_map_children' => false
         ]);
 
         $this->buildOptions = $resolver->resolve($buildOptions);
@@ -187,8 +187,8 @@ class Builder implements MenuBuilderInterface
                     continue;
                 }
 
-                // dont get and build children slugmap item, if no need to this
-                if ($entity->isShowChildren() || $this->buildOptions['build_hidden_slugmap_children']===true) {
+                // dont get and build children slug map item, if no need to this
+                if ($entity->isShowChildren() || $this->buildOptions['build_hidden_slug_map_children']===true) {
                     $parentSlug = $slugMapItem->getSlug().$separator;
                     $parentSlugs[$entity->getId()] = $parentSlug;
 
