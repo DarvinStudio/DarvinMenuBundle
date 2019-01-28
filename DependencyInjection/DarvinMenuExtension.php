@@ -54,6 +54,8 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'menu',
             'slug_map',
             'switcher',
+
+            'dev/fixture' => ['env' => 'dev'],
         ]);
     }
 
