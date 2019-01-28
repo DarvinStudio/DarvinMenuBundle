@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016-2018, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -13,10 +13,12 @@ namespace Darvin\MenuBundle\Builder;
 use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
+use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Item\MenuItemFactory;
 use Darvin\MenuBundle\Item\RootItemFactory;
 use Darvin\MenuBundle\Item\SlugMapItemFactory;
+use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
@@ -135,9 +137,10 @@ class Builder implements MenuBuilderInterface
     }
 
     /**
-     * @inheritdoc
+     * @param string $menuAlias    Menu alias
+     * @param array  $buildOptions Build options
      */
-    public function setMenuAlias($menuAlias, array $buildOptions = [])
+    public function setMenuAlias(string $menuAlias, array $buildOptions = []): void
     {
         $this->menuAlias = $menuAlias;
 
@@ -150,9 +153,9 @@ class Builder implements MenuBuilderInterface
     }
 
     /**
-     * @return \Knp\Menu\ItemInterface
+     * {@inheritDoc}
      */
-    public function buildMenu()
+    public function buildMenu(): ItemInterface
     {
         $root = $this->rootItemFactory->createItem($this->menuAlias);
 
@@ -167,7 +170,7 @@ class Builder implements MenuBuilderInterface
      * @param \Knp\Menu\ItemInterface               $root     Root item
      * @param \Darvin\MenuBundle\Entity\Menu\Item[] $entities Menu item entities
      */
-    protected function addItems(ItemInterface $root, array $entities)
+    protected function addItems(ItemInterface $root, array $entities): void
     {
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = $parentSlugs = $separatorCounts = [];
@@ -228,10 +231,10 @@ class Builder implements MenuBuilderInterface
 
     /**
      * @param \Knp\Menu\ItemInterface                    $parent            Parent item
-     * @param int                                        $separators        Count of separators in the parent item's slug
+     * @param int                                        $separatorCount    Count of separators in the parent item's slug
      * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
      */
-    protected function addChildren(ItemInterface $parent, $separators, array $childSlugMapItems)
+    protected function addChildren(ItemInterface $parent, int $separatorCount, array $childSlugMapItems): void
     {
         $childSlugMapItems = $this->prepareChildSlugMapItems($childSlugMapItems);
 
@@ -249,7 +252,7 @@ class Builder implements MenuBuilderInterface
             $parentId = $slugMapItem['parent_id'];
 
             if (empty($parentId)) {
-                if (1 === $slugMapItem['separators'] - $separators) {
+                if (1 === $slugMapItem['separator_count'] - $separatorCount) {
                     $parent->addChild($item);
                 }
 
@@ -264,7 +267,7 @@ class Builder implements MenuBuilderInterface
     /**
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    protected function getMenuItemEntities()
+    protected function getMenuItemEntities(): array
     {
         $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale())
             ->getQuery()
@@ -299,7 +302,7 @@ class Builder implements MenuBuilderInterface
      *
      * @return array
      */
-    protected function prepareChildSlugMapItems(array $childSlugMapItems)
+    protected function prepareChildSlugMapItems(array $childSlugMapItems): array
     {
         $children = [];
 
@@ -323,15 +326,15 @@ class Builder implements MenuBuilderInterface
             }
 
             $children[$slugMapItem->getId()] = [
-                'object'     => $slugMapItem,
-                'slug'       => $slugMapItem->getSlug(),
-                'separators' => substr_count($slugMapItem->getSlug(), $separator) + 1,
-                'parent_id'  => null,
+                'object'          => $slugMapItem,
+                'slug'            => $slugMapItem->getSlug(),
+                'separator_count' => substr_count($slugMapItem->getSlug(), $separator) + 1,
+                'parent_id'       => null,
             ];
         }
         foreach ($children as $childId => $child) {
             foreach ($children as $otherChildId => $otherChild) {
-                if (1 === $child['separators'] - $otherChild['separators'] && 0 === strpos($child['slug'], $otherChild['slug'].$separator)) {
+                if (1 === $child['separator_count'] - $otherChild['separator_count'] && 0 === strpos($child['slug'], $otherChild['slug'].$separator)) {
                     $children[$childId]['parent_id'] = $otherChildId;
                 }
             }
@@ -342,8 +345,8 @@ class Builder implements MenuBuilderInterface
         $sortableListener = $this->sortableListener;
 
         uasort($children, function (array $a, array $b) use ($em, $propertyAccessor, $sortableListener) {
-            if ($a['separators'] !== $b['separators']) {
-                return $a['separators'] > $b['separators'] ? 1 : -1;
+            if ($a['separator_count'] !== $b['separator_count']) {
+                return $a['separator_count'] > $b['separator_count'] ? 1 : -1;
             }
 
             /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItemA */
@@ -376,7 +379,7 @@ class Builder implements MenuBuilderInterface
      *
      * @return bool|string
      */
-    protected function getSlugPartsSeparator($class, $property)
+    protected function getSlugPartsSeparator(string $class, string $property)
     {
         if (!isset($this->slugPartSeparators[$class][$property])) {
             if (!isset($this->slugPartSeparators[$class])) {
@@ -395,7 +398,7 @@ class Builder implements MenuBuilderInterface
      *
      * @return bool
      */
-    protected function isSlugMapItemActive(SlugMapItem $slugMapItem)
+    protected function isSlugMapItemActive(SlugMapItem $slugMapItem): bool
     {
         $customObject = $slugMapItem->getObject();
 
@@ -415,7 +418,7 @@ class Builder implements MenuBuilderInterface
     /**
      * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
      */
-    protected function getEntityRepository()
+    protected function getEntityRepository(): ItemRepository
     {
         return $this->em->getRepository(Item::class);
     }
@@ -423,7 +426,7 @@ class Builder implements MenuBuilderInterface
     /**
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    protected function getSlugMapItemRepository()
+    protected function getSlugMapItemRepository(): SlugMapItemRepository
     {
         return $this->em->getRepository(SlugMapItem::class);
     }

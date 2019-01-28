@@ -134,13 +134,13 @@ class BreadcrumbsMenuBuilder
             }
 
             $parentSlugMapItems[] = [
-                'object'     => $parentSlugMapItem,
-                'separators' => substr_count($parentSlugMapItem->getSlug(), $separator),
+                'object'          => $parentSlugMapItem,
+                'separator_count' => substr_count($parentSlugMapItem->getSlug(), $separator),
             ];
         }
 
         usort($parentSlugMapItems, function (array $a, array $b) {
-            return $a['separators'] === $b['separators'] ? 0 : ($a['separators'] > $b['separators'] ? 1 : -1);
+            return $a['separator_count'] === $b['separator_count'] ? 0 : ($a['separator_count'] > $b['separator_count'] ? 1 : -1);
         });
 
         /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems */

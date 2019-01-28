@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: levsemin
@@ -8,6 +8,8 @@
 
 namespace Darvin\MenuBundle\Builder;
 
+
+use Knp\Menu\ItemInterface;
 
 /**
  * Builder
@@ -19,14 +21,5 @@ interface MenuBuilderInterface
     /**
      * @return \Knp\Menu\ItemInterface
      */
-    public function buildMenu();
-
-    /**
-     * Set menu alias value
-     *
-     * @param $menuAlias
-     * @param array $buildOptions
-     * @return void
-     */
-    public function setMenuAlias($menuAlias, array $buildOptions = []);
+    public function buildMenu(): ItemInterface;
 }
