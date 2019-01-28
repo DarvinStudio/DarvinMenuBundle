@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016-2018, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -23,17 +23,17 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('darvin_menu');
+        $builder = new TreeBuilder('darvin_menu');
 
-        /** @var \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $rootNode */
-        $rootNode = $treeBuilder->getRootNode();
+        /** @var \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $root */
+        $root = $builder->getRootNode();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
-        $rootNode
+        $root
             ->children()
                 ->arrayNode('breadcrumbs')->addDefaultsIfNotSet()
                     ->children()
@@ -66,7 +66,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png')->end()
                             ->arrayNode('build_options')->addDefaultsIfNotSet()
                                 ->children()
-                                    ->booleanNode('build_hidden_slugmap_children')->defaultFalse()->end()
+                                    ->booleanNode('build_hidden_slug_map_children')->defaultFalse()->end()
                                 ->end()
                             ->end()
                         ->end()
@@ -112,6 +112,6 @@ class Configuration implements ConfigurationInterface
                 })
                 ->thenInvalid(null);
 
-        return $treeBuilder;
+        return $builder;
     }
 }
