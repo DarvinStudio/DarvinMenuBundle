@@ -23,7 +23,7 @@ class MenuConfiguration
     /**
      * @param array[] $configs Configs
      *
-     * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
+     * @throws \LogicException
      */
     public function __construct(array $configs)
     {
@@ -31,7 +31,7 @@ class MenuConfiguration
 
         foreach ($configs as $alias => $config) {
             if (isset($this->menus[$alias])) {
-                throw new ConfigurationException(sprintf('Menu with alias "%s" already exists.', $alias));
+                throw new \LogicException(sprintf('Menu with alias "%s" already exists.', $alias));
             }
 
             $this->menus[$alias] = new Menu($alias, $config['breadcrumbs'], $config['icon'], $config['build_options']);
@@ -42,12 +42,12 @@ class MenuConfiguration
      * @param string $alias Menu alias
      *
      * @return \Darvin\MenuBundle\Configuration\Menu
-     * @throws \Darvin\MenuBundle\Configuration\ConfigurationException
+     * @throws \InvalidArgumentException
      */
     public function getMenu($alias)
     {
         if (!isset($this->menus[$alias])) {
-            throw new ConfigurationException(sprintf('Menu with alias "%s" does not exist.', $alias));
+            throw new \InvalidArgumentException(sprintf('Menu with alias "%s" does not exist.', $alias));
         }
 
         return $this->menus[$alias];
