@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Configuration;
 /**
  * Menu configuration
  */
-class MenuConfiguration
+class MenuConfiguration implements MenuConfigurationInterface
 {
     /**
      * @var array
@@ -37,10 +37,7 @@ class MenuConfiguration
     }
 
     /**
-     * @param string $alias Menu alias
-     *
-     * @return \Darvin\MenuBundle\Configuration\Menu
-     * @throws \InvalidArgumentException
+     * {@inheritDoc}
      */
     public function getMenu(string $alias): Menu
     {
@@ -54,9 +51,7 @@ class MenuConfiguration
     }
 
     /**
-     * @return \Darvin\MenuBundle\Configuration\Menu[]
-     *
-     * @throws \LogicException
+     * {@inheritDoc}
      */
     public function getMenus(): array
     {

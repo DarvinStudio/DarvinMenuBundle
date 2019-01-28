@@ -14,7 +14,7 @@ use Darvin\AdminBundle\Menu\ItemFactoryInterface;
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Route\AdminRouterInterface;
 use Darvin\MenuBundle\Configuration\Menu;
-use Darvin\MenuBundle\Configuration\MenuConfiguration;
+use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 
 /**
@@ -28,7 +28,7 @@ class ItemFactory implements ItemFactoryInterface
     private $adminRouter;
 
     /**
-     * @var \Darvin\MenuBundle\Configuration\MenuConfiguration
+     * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
      */
     private $menuConfig;
 
@@ -38,12 +38,15 @@ class ItemFactory implements ItemFactoryInterface
     private $metadataManager;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouterInterface             $adminRouter     Admin router
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration         $menuConfig      Menu configuration
-     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface $metadataManager Metadata manager
+     * @param \Darvin\AdminBundle\Route\AdminRouterInterface              $adminRouter     Admin router
+     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig      Menu configuration
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager Metadata manager
      */
-    public function __construct(AdminRouterInterface $adminRouter, MenuConfiguration $menuConfig, AdminMetadataManagerInterface $metadataManager)
-    {
+    public function __construct(
+        AdminRouterInterface $adminRouter,
+        MenuConfigurationInterface $menuConfig,
+        AdminMetadataManagerInterface $metadataManager
+    ) {
         $this->adminRouter = $adminRouter;
         $this->menuConfig = $menuConfig;
         $this->metadataManager = $metadataManager;

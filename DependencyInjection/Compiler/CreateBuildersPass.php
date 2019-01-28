@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
 use Darvin\MenuBundle\Builder\MenuBuilderInterface;
-use Darvin\MenuBundle\Configuration\MenuConfiguration;
+use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -60,9 +60,9 @@ class CreateBuildersPass implements CompilerPassInterface
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container DI container
      *
-     * @return \Darvin\MenuBundle\Configuration\MenuConfiguration
+     * @return \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
      */
-    private function getMenuConfig(ContainerInterface $container): MenuConfiguration
+    private function getMenuConfig(ContainerInterface $container): MenuConfigurationInterface
     {
         return $container->get('darvin_menu.configuration.menu');
     }

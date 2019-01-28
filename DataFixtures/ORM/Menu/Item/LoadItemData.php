@@ -209,7 +209,7 @@ class LoadItemData implements FixtureInterface, ContainerAwareInterface
     }
 
     /**
-     * @return \Darvin\MenuBundle\Configuration\MenuConfiguration
+     * @return \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
      */
     private function getMenuConfig()
     {

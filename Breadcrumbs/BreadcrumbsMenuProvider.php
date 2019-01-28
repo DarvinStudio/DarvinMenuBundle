@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Breadcrumbs;
 
-use Darvin\MenuBundle\Configuration\MenuConfiguration;
+use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\MatcherInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
@@ -38,7 +38,7 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     private $matcher;
 
     /**
-     * @var \Darvin\MenuBundle\Configuration\MenuConfiguration
+     * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
      */
     private $menuConfig;
 
@@ -58,17 +58,17 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     private $currentMenus;
 
     /**
-     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder     $breadcrumbsMenuBuilder Breadcrumbs menu builder
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container              DI container
-     * @param \Knp\Menu\Matcher\MatcherInterface                        $matcher                Matcher
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration        $menuConfig             Menu configuration
-     * @param string                                                    $menuName               Breadcrumbs menu name
+     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder       $breadcrumbsMenuBuilder Breadcrumbs menu builder
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container              DI container
+     * @param \Knp\Menu\Matcher\MatcherInterface                          $matcher                Matcher
+     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig             Menu configuration
+     * @param string                                                      $menuName               Breadcrumbs menu name
      */
     public function __construct(
         BreadcrumbsMenuBuilder $breadcrumbsMenuBuilder,
         ContainerInterface $container,
         MatcherInterface $matcher,
-        MenuConfiguration $menuConfig,
+        MenuConfigurationInterface $menuConfig,
         string $menuName
     ) {
         $this->breadcrumbsMenuBuilder = $breadcrumbsMenuBuilder;

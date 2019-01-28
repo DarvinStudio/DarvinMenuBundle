@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
-use Darvin\MenuBundle\Configuration\MenuConfiguration;
+use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -27,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MenuType extends AbstractType
 {
     /**
-     * @var \Darvin\MenuBundle\Configuration\MenuConfiguration
+     * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
      */
     private $menuConfig;
 
@@ -42,12 +42,15 @@ class MenuType extends AbstractType
     private $requestStack;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\MenuConfiguration         $menuConfig      Menu configuration
-     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface $metadataManager Metadata manager
-     * @param \Symfony\Component\HttpFoundation\RequestStack             $requestStack    Request stack
+     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig      Menu configuration
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager Metadata manager
+     * @param \Symfony\Component\HttpFoundation\RequestStack              $requestStack    Request stack
      */
-    public function __construct(MenuConfiguration $menuConfig, AdminMetadataManagerInterface $metadataManager, RequestStack $requestStack)
-    {
+    public function __construct(
+        MenuConfigurationInterface $menuConfig,
+        AdminMetadataManagerInterface $metadataManager,
+        RequestStack $requestStack
+    ) {
         $this->menuConfig = $menuConfig;
         $this->metadataManager = $metadataManager;
         $this->requestStack = $requestStack;
