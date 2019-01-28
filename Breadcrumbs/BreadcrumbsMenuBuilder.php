@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -12,11 +12,13 @@ namespace Darvin\MenuBundle\Breadcrumbs;
 
 use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Item\RootItemFactory;
 use Darvin\MenuBundle\Item\SlugMapItemFactory;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -75,7 +77,7 @@ class BreadcrumbsMenuBuilder
         RootItemFactory $rootItemFactory,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
         SlugMapItemFactory $slugMapItemFactory,
-        $slugParameterName
+        string $slugParameterName
     ) {
         $this->em = $em;
         $this->metadataFactory = $metadataFactory;
@@ -91,7 +93,7 @@ class BreadcrumbsMenuBuilder
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function buildMenu($name)
+    public function buildMenu(string $name): ItemInterface
     {
         $root = $this->rootItemFactory->createItem($name);
 
@@ -174,7 +176,7 @@ class BreadcrumbsMenuBuilder
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
      */
-    private function getParentSlugMapItems($slug)
+    private function getParentSlugMapItems(string $slug): array
     {
         return $this->getSlugMapItemRepository()->createQueryBuilder('o')
             ->where(':slug LIKE CONCAT(o.slug, \'%\')')
@@ -187,7 +189,7 @@ class BreadcrumbsMenuBuilder
     /**
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository()
+    private function getSlugMapItemRepository(): SlugMapItemRepository
     {
         return $this->em->getRepository(SlugMapItem::class);
     }

@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -69,7 +69,7 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
         ContainerInterface $container,
         MatcherInterface $matcher,
         MenuConfiguration $menuConfig,
-        $menuName
+        string $menuName
     ) {
         $this->breadcrumbsMenuBuilder = $breadcrumbsMenuBuilder;
         $this->container = $container;
@@ -87,7 +87,7 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get($name, array $options = [])
+    public function get($name, array $options = []): ItemInterface
     {
         $options = $this->optionsResolver->resolve($options);
 
@@ -101,7 +101,7 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function has($name, array $options = [])
+    public function has($name, array $options = []): bool
     {
         return $name === $this->menuName;
     }
@@ -111,7 +111,7 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
      *
      * @return \Knp\Menu\ItemInterface
      */
-    private function getCurrentMenu(array $options)
+    private function getCurrentMenu(array $options): ItemInterface
     {
         $alias = $options['menu_alias'];
 
@@ -148,7 +148,7 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
      *
      * @return bool
      */
-    private function isMenuCurrent(ItemInterface $menu)
+    private function isMenuCurrent(ItemInterface $menu): bool
     {
         foreach ($menu->getChildren() as $child) {
             if ($this->matcher->isAncestor($child) || $this->matcher->isCurrent($child)) {
@@ -162,20 +162,17 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     /**
      * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
      */
-    private function configureOptions(OptionsResolver $resolver)
+    private function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefault('menu_alias', null)
-            ->setAllowedTypes('menu_alias', [
-                'string',
-                'null',
-            ]);
+            ->setAllowedTypes('menu_alias', ['string', 'null']);
     }
 
     /**
      * @return \Knp\Menu\Provider\MenuProviderInterface
      */
-    private function getGenericMenuProvider()
+    private function getGenericMenuProvider(): MenuProviderInterface
     {
         return $this->container->get('knp_menu.menu_provider');
     }

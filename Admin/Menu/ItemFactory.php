@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -54,15 +54,11 @@ class ItemFactory implements ItemFactoryInterface
      */
     public function getItems(): iterable
     {
-        $items = [];
-
         $filterFormTypeName = $this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName();
 
         foreach (array_values($this->menuConfig->getMenus()) as $position => $menu) {
-            $items[] = $this->createItem($menu, $filterFormTypeName, $position);
+            yield $this->createItem($menu, $filterFormTypeName, $position);
         }
-
-        return $items;
     }
 
     /**
@@ -72,7 +68,7 @@ class ItemFactory implements ItemFactoryInterface
      *
      * @return \Darvin\AdminBundle\Menu\Item
      */
-    private function createItem(Menu $menu, $filterFormTypeName, $position)
+    private function createItem(Menu $menu, string $filterFormTypeName, int $position): \Darvin\AdminBundle\Menu\Item
     {
         $routeParams = [
             $filterFormTypeName => [
@@ -80,11 +76,11 @@ class ItemFactory implements ItemFactoryInterface
             ],
         ];
 
-        return (new \Darvin\AdminBundle\Menu\Item('menu_'.$menu->getAlias()))
+        return (new \Darvin\AdminBundle\Menu\Item(sprintf('menu_%s', $menu->getAlias())))
             ->setIndexTitle($menu->getTitle())
             ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_INDEX, $routeParams))
             ->setNewUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_NEW, $routeParams))
-            ->setNewTitle($this->metadataManager->getMetadata(Item::class)->getBaseTranslationPrefix().'action.new.link')
+            ->setNewTitle(sprintf('%saction.new.link', $this->metadataManager->getMetadata(Item::class)->getBaseTranslationPrefix()))
             ->setMainIcon($menu->getIcon())
             ->setPosition($position)
             ->setAssociatedObject(Item::class)
