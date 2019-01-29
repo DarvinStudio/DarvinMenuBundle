@@ -99,13 +99,13 @@ class LoadItemData extends AbstractFixture
             }
         }
         if (1 === $item->getLevel()) {
-            $item->setShowChildren(true);
+            $item->setShowChildren($this->getFaker()->boolean(50));
             $item->setSlugMapItem($this->getRandomEntity(SlugMapItem::class));
         }
         if ($this->getFaker()->boolean(80)) {
             $item->setImage($this->createImage(true));
 
-            if ($this->getFaker()->boolean(80)) {
+            if ($this->getFaker()->boolean(90)) {
                 $item->setHoverImage($this->createImage());
             }
         }
