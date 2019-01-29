@@ -1,18 +1,10 @@
-configuration:
-    darvin_menu:
-        parameter:
-            image_sizes: 'Les tailles d''Image'
-        title: 'Le "Menu" configuration du module'
 entity_name:
     multiple:
-        menu_item: 'Les éléments de Menu'
+        menu_item: 'Les Éléments De Menu'
+        menu_item_translation: 'Les Éléments de Menu (traductions)'
     single:
-        menu_item: 'Élément de Menu'
+        menu_item: 'Élément De Menu'
         menu_item_translation: 'Élément de Menu (traduction)'
-image_size:
-    menu:
-        menu_item_hover_image: 'Élément de Menu hover image'
-        menu_item_image: 'Élément de Menu de l''image'
 menu:
     group:
         menu:
@@ -20,27 +12,27 @@ menu:
 menu_item:
     action:
         delete:
-            confirm: 'Confirmer l''élément de menu de suppression'
-            submit: 'Supprimer l''élément de menu'
-            success: 'Élément de Menu supprimé avec succès'
+            confirm: 'Confirmer L''Élément De Menu De Suppression'
+            submit: 'Supprimer L''Élément De Menu'
+            success: 'Élément De Menu Supprimé Avec Succès'
         edit:
-            link: 'Modifier l''élément de menu'
-            success: 'Élément de Menu mis à jour avec succès'
-            title: 'Modifier l''élément de menu "%entity%"'
+            link: 'Modifier L''Élément De Menu'
+            success: 'Élément De Menu Mis À Jour Avec Succès'
+            title: 'Modifier L''Élément De Menu "%entity%"'
         index:
             link: Menu
-            title: 'Les éléments de Menu'
+            title: 'Les Éléments De Menu'
         new:
-            link: 'Créer l''élément de menu'
-            success: 'Élément de Menu créé avec succès'
-            title: 'Nouvel élément de menu'
+            link: 'Créer L''Élément De Menu'
+            success: 'Élément De Menu Créé Avec Succès'
+            title: 'Nouvel Élément De Menu'
         show:
-            title: 'Élément de Menu "%entity%"'
+            title: 'Élément De Menu "%entity%"'
     entity:
         associated: Objet
         associated_class: Objet
         enabled: Activé
-        hover_image: 'Survolez l''image'
+        hover_image: 'Survolez L''Image'
         image: Image
         menu: Menu
         menu_title: Menu
@@ -48,9 +40,9 @@ menu_item:
         position: Position
         position_from: 'Position (à partir de)'
         position_to: 'Position ()'
-        show_children: 'Montrer aux enfants'
+        show_children: 'Montrer Aux Enfants'
         slug_map_item: Objet
         title: Titre
         url: URL
 menu_switcher:
-    title: Afficher dans le menu
+    title: 'Afficher dans le Menu'

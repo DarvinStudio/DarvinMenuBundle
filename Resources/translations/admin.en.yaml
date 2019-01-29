@@ -1,6 +1,7 @@
 entity_name:
     multiple:
         menu_item: 'Menu Items'
+        menu_item_translation: 'Menu Items (translations)'
     single:
         menu_item: 'Menu Item'
         menu_item_translation: 'Menu Item (translation)'

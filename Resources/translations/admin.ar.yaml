@@ -1,18 +1,10 @@
-configuration:
-    darvin_menu:
-        parameter:
-            image_sizes: 'أحجام الصور'
-        title: '"القائمة" وحدة التكوين'
 entity_name:
     multiple:
         menu_item: 'عناصر القائمة'
+        menu_item_translation: 'عناصر القائمة (ترجمة)'
     single:
         menu_item: 'عنصر القائمة'
         menu_item_translation: 'عنصر القائمة (الترجمة)'
-image_size:
-    menu:
-        menu_item_hover_image: 'عنصر القائمة تحوم صورة'
-        menu_item_image: 'عنصر القائمة صورة'
 menu:
     group:
         menu:
@@ -44,7 +36,7 @@ menu_item:
         image: صورة
         menu: القائمة
         menu_title: القائمة
-        parent: 'الأم'
+        parent: الأم
         position: موقف
         position_from: 'موقف (من)'
         position_to: 'موقف ()'
