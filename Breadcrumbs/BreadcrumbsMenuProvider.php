@@ -174,6 +174,6 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
      */
     private function getGenericMenuProvider(): MenuProviderInterface
     {
-        return $this->container->get('knp_menu.menu_provider');
+        return $this->container->get('darvin_menu.provider');
     }
 }
