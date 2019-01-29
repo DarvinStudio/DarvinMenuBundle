@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,8 +11,10 @@
 namespace Darvin\MenuBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcher;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -61,7 +63,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * {@inheritdoc}
      */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::onFlush,
@@ -72,7 +74,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * @param \Doctrine\ORM\Event\OnFlushEventArgs $args Event arguments
      */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
         $this->em = $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
@@ -111,7 +113,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * @param \Doctrine\ORM\Event\PreFlushEventArgs $args Event arguments
      */
-    public function preFlush(PreFlushEventArgs $args)
+    public function preFlush(PreFlushEventArgs $args): void
     {
         $this->em = $em = $args->getEntityManager();
 
@@ -139,7 +141,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item
      */
-    private function createMenuItem($menuAlias, SlugMapItem $slugMapItem)
+    private function createMenuItem(string $menuAlias, SlugMapItem $slugMapItem): Item
     {
         $menuItem = (new Item())
             ->setMenu($menuAlias)
@@ -156,7 +158,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    private function getMenuItems($entity, $menuAlias = null)
+    private function getMenuItems($entity, ?string $menuAlias = null): array
     {
         return $this->getMenuItemRepository()->getByEntity(get_class($entity), $this->getEntityId($entity), $menuAlias);
     }
@@ -166,7 +168,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
      */
-    private function getSlugMapItem($entity)
+    private function getSlugMapItem($entity): ?SlugMapItem
     {
         return $this->getSlugMapItemRepository()->createQueryBuilder('o')
             ->andWhere('o.objectClass = :entity_class')
@@ -193,7 +195,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
      */
-    private function getMenuItemRepository()
+    private function getMenuItemRepository(): ItemRepository
     {
         return $this->em->getRepository(Item::class);
     }
@@ -201,7 +203,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository()
+    private function getSlugMapItemRepository(): SlugMapItemRepository
     {
         return $this->em->getRepository(SlugMapItem::class);
     }

@@ -171,7 +171,7 @@ class Item
      */
     public function getMenuTitle()
     {
-        return 'menu.'.$this->menu;
+        return sprintf('menu.%s', $this->menu);
     }
 
     /**
