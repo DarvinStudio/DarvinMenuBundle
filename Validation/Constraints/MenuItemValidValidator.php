@@ -11,7 +11,6 @@
 namespace Darvin\MenuBundle\Validation\Constraints;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\MenuBundle\Exception\DarvinMenuException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -26,7 +25,7 @@ class MenuItemValidValidator extends ConstraintValidator
      * @param \Darvin\MenuBundle\Entity\Menu\Item                                                             $menuItem   Menu item that should be validated
      * @param \Darvin\MenuBundle\Validation\Constraints\MenuItemValid|\Symfony\Component\Validator\Constraint $constraint Menu item valid validation constraint
      *
-     * @throws \Darvin\MenuBundle\Exception\DarvinMenuException
+     * @throws \InvalidArgumentException
      */
     public function validate($menuItem, Constraint $constraint)
     {
@@ -37,7 +36,7 @@ class MenuItemValidValidator extends ConstraintValidator
                 get_class($menuItem)
             );
 
-            throw new DarvinMenuException($message);
+            throw new \InvalidArgumentException($message);
         }
         if (null !== $menuItem->getSlugMapItem()) {
             return;
