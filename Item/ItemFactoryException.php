@@ -10,12 +10,10 @@
 
 namespace Darvin\MenuBundle\Item;
 
-use Darvin\MenuBundle\Exception\DarvinMenuException;
-
 /**
  * Item factory exception
  */
-class ItemFactoryException extends DarvinMenuException
+class ItemFactoryException extends \Exception
 {
 
 }
