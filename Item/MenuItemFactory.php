@@ -122,6 +122,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
         }
 
         return array_merge(parent::getExtras($menuItem), [
+            'menuItem'            => $menuItem,
             'objectName'          => $objectName,
             'objectId'            => $objectId,
             'object'              => $object,

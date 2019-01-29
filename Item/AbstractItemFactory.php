@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
+use Darvin\MenuBundle\Entity\Menu\Item;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -109,9 +110,14 @@ abstract class AbstractItemFactory
     {
         $resolver
             ->setDefaults([
+                'menuItem'   => null,
                 'objectName' => null,
                 'objectId'   => null,
                 'object'     => null,
+            ])
+            ->setAllowedTypes('menuItem', [
+                Item::class,
+                'null',
             ])
             ->setAllowedTypes('objectName', [
                 'string',
