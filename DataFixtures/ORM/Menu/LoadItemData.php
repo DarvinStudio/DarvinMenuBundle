@@ -91,22 +91,23 @@ class LoadItemData extends AbstractFixture
         $item->setLevel(1);
         $item->setMenu($menu);
 
-        if ($this->getFaker()->boolean(80)) {
-            $item->setImage($this->createImage(true));
-
-            if ($this->getFaker()->boolean(80)) {
-                $item->setHoverImage($this->createImage());
-            }
-        }
-        if ($this->getFaker()->boolean(90)) {
+        if ($this->getFaker()->boolean(70)) {
             $item->setParent($this->getParentItem($menu));
 
             if (null !== $item->getParent()) {
                 $item->setLevel($item->getLevel() + $item->getParent()->getLevel());
             }
         }
-        if ($this->getFaker()->boolean(75)) {
+        if (1 === $item->getLevel()) {
+            $item->setShowChildren(true);
             $item->setSlugMapItem($this->getRandomEntity(SlugMapItem::class));
+        }
+        if ($this->getFaker()->boolean(80)) {
+            $item->setImage($this->createImage(true));
+
+            if ($this->getFaker()->boolean(80)) {
+                $item->setHoverImage($this->createImage());
+            }
         }
         foreach ($this->getFakerLocales() as $locale => $fakerLocale) {
             $item->addTranslation($this->createTranslation($item, $locale, $fakerLocale));
@@ -147,7 +148,7 @@ class LoadItemData extends AbstractFixture
         if (null === $item->getSlugMapItem()) {
             $translation->setTitle($faker->sentence(3));
 
-            if ($faker->boolean(90)) {
+            if ($faker->boolean(80)) {
                 $translation->setUrl($faker->url);
             }
         }
