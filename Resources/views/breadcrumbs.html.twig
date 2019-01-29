@@ -1,24 +1,19 @@
-{% extends 'knp_menu.html.twig' %}
+{% import _self as that %}
 
-{% block root %}
-    <div class="breadcrumbs">
-        {{ block('list') }}
-    </div>
-{% endblock %}
+{% macro list(item, matcher) %}
 
-{% block list %}
-    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
-        {{ block('children') }}
-    {% endif %}
-{% endblock %}
+    {% import _self as that %}
 
-{% block item %}
-    {% if item.displayed and (matcher.isAncestor(item) or matcher.isCurrent(item)) %}
-        {% if item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
-            {{ block('linkElement') }}
+    {% for child in item.children %}
+        <span> &rarr; </span>
+
+        {% if child.uri and not matcher.isCurrent(child) %}
+            <a href="{{ child.uri }}">{{ child.label }}</a>
         {% else %}
-            {{ block('spanElement') }}
+            <span>{{ child.label }}</span>
         {% endif %}
-        {{ block('list') }}
-    {% endif %}
-{% endblock %}
+        {{ that.list(child, matcher) }}
+    {% endfor %}
+{% endmacro %}
+
+{{ that.list(item, matcher) }}

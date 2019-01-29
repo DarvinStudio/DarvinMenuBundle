@@ -4,35 +4,35 @@
 
     {% import _self as that %}
 
-    <ul>
-        {% for child in item.children %}
+    {% if item.children is not empty %}
+        <ul>
+            {% for child in item.children %}
 
-            {% set classes = [] %}
+                {% set classes = [] %}
 
-            {% if matcher.isCurrent(child) or matcher.isAncestor(child) %}
+                {% if matcher.isCurrent(child) or matcher.isAncestor(child) %}
 
-                {% set classes = classes|merge(['current']) %}
+                    {% set classes = classes|merge(['current']) %}
 
-            {% endif %}
+                {% endif %}
 
-            <li{% if classes is not empty %} class="{{ classes|join(' ') }}"{% endif %}>
-                {% if image_exists(child.extras.image) %}
-                    <img src="{{ child.extras.image|image_filter('menu_main') }}" alt="{{ child.label }}">
-                    {% if image_exists(child.extras.hoverImage) %}
-                        <img src="{{ child.extras.hoverImage|image_filter('menu_hover') }}" alt="{{ child.label }}">
+                <li{% if classes is not empty %} class="{{ classes|join(' ') }}"{% endif %}>
+                    {% if image_exists(child.extras.image) %}
+                        <img src="{{ child.extras.image|image_filter('menu_main') }}" alt="{{ child.label }}">
+                        {% if image_exists(child.extras.hoverImage) %}
+                            <img src="{{ child.extras.hoverImage|image_filter('menu_hover') }}" alt="{{ child.label }}">
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                {% if child.uri %}
-                    <a href="{{ child.uri }}">{{ child.label }}</a>
-                {% else %}
-                    <span>{{ child.label }}</span>
-                {% endif %}
-                {% if child.children is not empty %}
+                    {% if child.uri %}
+                        <a href="{{ child.uri }}">{{ child.label }}</a>
+                    {% else %}
+                        <span>{{ child.label }}</span>
+                    {% endif %}
                     {{ that.list(child, matcher) }}
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endmacro %}
 
 {% if item.children is not empty %}
