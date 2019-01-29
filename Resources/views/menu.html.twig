@@ -1,71 +1,54 @@
-{% extends 'knp_menu.html.twig' %}
+{% import _self as that %}
 
-{% block list %}
-    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
-        {% set showChildren = item.extras.showSlugMapChildren %}
-        {% if not showChildren %}
-            {% for child in item.children if not child.extras.isSlugMapItem %}
-                {% set showChildren = true %}
-            {% endfor %}
-        {% endif %}
-        {% if showChildren %}
-            {{ block('listBody') }}
-        {% endif %}
-    {% endif %}
-{% endblock %}
+{% macro list(item, matcher) %}
 
-{% block listBody %}
-    {% import 'knp_menu.html.twig' as knp_menu %}
-    <ul{{ knp_menu.attributes(listAttributes) }}>
-        {{ block('children') }}
+    {% import _self as that %}
+
+    <ul>
+        {% for child in item.children %}
+
+            {% set classes = [] %}
+
+            {% if matcher.isCurrent(child) or matcher.isAncestor(child) %}
+
+                {% set classes = classes|merge(['current']) %}
+
+            {% endif %}
+
+            <li{% if classes is not empty %} class="{{ classes|join(' ') }}"{% endif %}>
+                {% if image_exists(child.extras.image) %}
+
+                    {% set attr = {
+                        'src': child.extras.image|image_filter('menu_main'),
+                        'alt': child.label,
+                    } %}
+
+                    {% if image_exists(child.extras.hoverImage) %}
+
+                        {% set attr = attr|merge({
+                            'onmouseover':  'this.src="' ~ child.extras.hoverImage|image_filter('menu_hover') ~ '";',
+                            'onmouseleave': 'this.src="' ~ attr.src ~ '";',
+                        }) %}
+
+                    {% endif %}
+
+                    <img{% for name, value in attr %} {{ name }}="{{ value }}"{% endfor %}>
+                {% endif %}
+                {% if child.uri %}
+                    <a href="{{ child.uri }}">{{ child.label }}</a>
+                {% else %}
+                    <span>{{ child.label }}</span>
+                {% endif %}
+                {% if child.children is not empty %}
+                    {{ that.list(child, matcher) }}
+                {% endif %}
+            </li>
+        {% endfor %}
     </ul>
-{% endblock %}
+{% endmacro %}
 
-{% block children %}
-    {# save current variables #}
-    {% set currentOptions = options %}
-    {% set currentItem = item %}
-    {# update the depth for children #}
-    {% if options.depth is not none %}
-        {% set options = options|merge({'depth': currentOptions.depth - 1}) %}
-    {% endif %}
-    {# update the matchingDepth for children #}
-    {% if options.matchingDepth is not none and options.matchingDepth > 0 %}
-        {% set options = options|merge({'matchingDepth': currentOptions.matchingDepth - 1}) %}
-    {% endif %}
-    {% for item in currentItem.children if not item.extras.isSlugMapItem or currentItem.extras.showSlugMapChildren %}
-        {{ block('item') }}
-    {% endfor %}
-    {# restore current variables #}
-    {% set item = currentItem %}
-    {% set options = currentOptions %}
-{% endblock %}
-
-{% block images %}
-    {% if image_exists(item.extras.image) %}
-        <img src="{{ item.extras.image|image_filter('menu_main') }}" alt="" title="">
-    {% endif %}
-    {% if image_exists(item.extras.hoverImage) %}
-        <img src="{{ item.extras.hoverImage|image_filter('menu_hover') }}" class="hover" alt="" title="">
-    {% endif %}
-{% endblock %}
-
-{% block linkElement %}
-
-    {% import 'knp_menu.html.twig' as knp_menu %}
-
-    {{ block('images') }}
-    <a href="{{ item.uri }}"{{ knp_menu.attributes(item.linkAttributes) }}>
-        {{ block('label') }}
-    </a>
-{% endblock %}
-
-{% block spanElement %}
-
-    {% import 'knp_menu.html.twig' as knp_menu %}
-
-    {{ block('images') }}
-    <span{{ knp_menu.attributes(item.labelAttributes) }}>
-        {{ block('label') }}
-    </span>
-{% endblock %}
+{% if item.children is not empty %}
+    <nav>
+        {{ that.list(item, matcher) }}
+    </nav>
+{% endif %}
