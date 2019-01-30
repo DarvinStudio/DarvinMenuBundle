@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -59,10 +59,10 @@ class MenuType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $metadataManager = $this->metadataManager;
-        $requestStack = $this->requestStack;
+        $requestStack    = $this->requestStack;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($metadataManager, $requestStack) {
             $data = $event->getData();
@@ -88,25 +88,31 @@ class MenuType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'choices' => $this->buildChoices(),
-        ]);
+        $resolver->setDefault('choices', $this->buildChoices());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getBlockPrefix(): string
+    {
+        return 'darvin_menu_admin_menu';
+    }
+
+    /**
      * @return array
      */
-    private function buildChoices()
+    private function buildChoices(): array
     {
         $choices = [];
 

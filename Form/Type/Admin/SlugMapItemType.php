@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017-2018, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -115,7 +115,7 @@ class SlugMapItemType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $propertiesByClasses = $this->getPropertiesByClasses();
 
@@ -174,7 +174,7 @@ MESSAGE
     /**
      * {@inheritdoc}
      */
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         $slugMapItems = [];
 
@@ -249,9 +249,17 @@ MESSAGE
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('label', false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBlockPrefix(): string
+    {
+        return 'darvin_menu_admin_slug_map_item';
     }
 
     /**
@@ -260,7 +268,7 @@ MESSAGE
      *
      * @return object[]
      */
-    private function sortEntities(array $entities, $class)
+    private function sortEntities(array $entities, string $class): array
     {
         if (empty($entities) || !$this->metadataManager->hasMetadata($class)) {
             return $entities;
@@ -308,7 +316,7 @@ MESSAGE
      *
      * @return array
      */
-    private function buildClassPropertyChoices(array $propertiesByClasses)
+    private function buildClassPropertyChoices(array $propertiesByClasses): array
     {
         $choices = [];
 
@@ -325,7 +333,7 @@ MESSAGE
     /**
      * @return array
      */
-    private function getPropertiesByClasses()
+    private function getPropertiesByClasses(): array
     {
         $classBlacklist = [];
 
@@ -365,7 +373,7 @@ MESSAGE
     /**
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    private function getSlugMapItemRepository()
+    private function getSlugMapItemRepository(): SlugMapItemRepository
     {
         return $this->em->getRepository(SlugMapItem::class);
     }
