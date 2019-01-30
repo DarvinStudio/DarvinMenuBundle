@@ -62,13 +62,13 @@ class BreadcrumbsMenuBuilder
     private $slugParameterName;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em Entity manager
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface $metadataFactory Extended metadata factory
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack
-     * @param \Darvin\MenuBundle\Item\RootItemFactory $rootItemFactory Root item factory
+     * @param \Doctrine\ORM\EntityManager                              $em                            Entity manager
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface           $metadataFactory               Extended metadata factory
+     * @param \Symfony\Component\HttpFoundation\RequestStack           $requestStack                  Request stack
+     * @param \Darvin\MenuBundle\Item\RootItemFactory                  $rootItemFactory               Root item factory
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory $slugMapItemFactory Item from slug map item entity factory
-     * @param string $slugParameterName
+     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory               $slugMapItemFactory            Item from slug map item entity factory
+     * @param string                                                   $slugParameterName             Slug route parameter name
      */
     public function __construct(
         EntityManager $em,
