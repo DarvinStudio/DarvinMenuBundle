@@ -45,7 +45,7 @@ class SlugMapItemToArrayTransformer implements DataTransformerInterface
             throw new TransformationFailedException(sprintf('value must be instance of "%s".', SlugMapItem::class));
         }
 
-        $classProperty = $this->entityNamer->name($value->getObjectClass()).'_'.$value->getProperty();
+        $classProperty = implode('_', [$this->entityNamer->name($value->getObjectClass()), $value->getProperty()]);
 
         return [
             'class_property' => $classProperty,

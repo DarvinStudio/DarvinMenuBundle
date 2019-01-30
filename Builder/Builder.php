@@ -349,11 +349,12 @@ class Builder implements MenuBuilderInterface
             }
         }
 
-        $em = $this->em;
+        $em               = $this->em;
+        $entityResolver   = $this->entityResolver;
         $propertyAccessor = $this->propertyAccessor;
         $sortableListener = $this->sortableListener;
 
-        uasort($children, function (array $a, array $b) use ($em, $propertyAccessor, $sortableListener) {
+        uasort($children, function (array $a, array $b) use ($em, $entityResolver, $propertyAccessor, $sortableListener) {
             if ($a['separator_count'] !== $b['separator_count']) {
                 return $a['separator_count'] > $b['separator_count'] ? 1 : -1;
             }
@@ -363,11 +364,14 @@ class Builder implements MenuBuilderInterface
             /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItemB */
             $slugMapItemB = $b['object'];
 
-            if ($slugMapItemA->getObjectClass() !== $slugMapItemB->getObjectClass()) {
-                return $slugMapItemA->getObjectClass() > $slugMapItemB->getObjectClass() ? 1 : -1;
+            $classA = $entityResolver->resolve($slugMapItemA->getObjectClass());
+            $classB = $entityResolver->resolve($slugMapItemB->getObjectClass());
+
+            if ($classA !== $classB) {
+                return $classA > $classB ? 1 : -1;
             }
 
-            $sortableConfig = $sortableListener->getConfiguration($em, $slugMapItemA->getObjectClass());
+            $sortableConfig = $sortableListener->getConfiguration($em, $classA);
 
             if (empty($sortableConfig)) {
                 return 0;
