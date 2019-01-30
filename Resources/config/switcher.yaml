@@ -28,6 +28,7 @@ services:
         class:  '%darvin_menu.switcher.switch_event_subscriber.class%'
         public: false
         arguments:
+            - '@darvin_utils.orm.entity_resolver'
             - '@darvin_menu.switcher'
             - '@darvin_content.translatable.translation_initializer'
             - '%locales%'

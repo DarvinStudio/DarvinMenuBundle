@@ -16,6 +16,7 @@ use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcher;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
@@ -26,6 +27,11 @@ use Doctrine\ORM\Events;
  */
 class SwitchMenuSubscriber implements EventSubscriber
 {
+    /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    private $entityResolver;
+
     /**
      * @var \Darvin\MenuBundle\Switcher\MenuSwitcher
      */
@@ -47,12 +53,18 @@ class SwitchMenuSubscriber implements EventSubscriber
     private $em;
 
     /**
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                          $entityResolver         Entity resolver
      * @param \Darvin\MenuBundle\Switcher\MenuSwitcher                           $menuSwitcher           Menu switcher
      * @param \Darvin\ContentBundle\Translatable\TranslationInitializerInterface $translationInitializer Translation initializer
      * @param string[]                                                           $locales                Locales
      */
-    public function __construct(MenuSwitcher $menuSwitcher, TranslationInitializerInterface $translationInitializer, array $locales)
-    {
+    public function __construct(
+        EntityResolverInterface $entityResolver,
+        MenuSwitcher $menuSwitcher,
+        TranslationInitializerInterface $translationInitializer,
+        array $locales
+    ) {
+        $this->entityResolver = $entityResolver;
         $this->menuSwitcher = $menuSwitcher;
         $this->translationInitializer = $translationInitializer;
         $this->locales = $locales;
@@ -170,14 +182,12 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getSlugMapItem($entity): ?SlugMapItem
     {
-        return $this->getSlugMapItemRepository()->createQueryBuilder('o')
-            ->andWhere('o.objectClass = :entity_class')
-            ->setParameter('entity_class', get_class($entity))
-            ->andWhere('o.objectId = :entity_id')
-            ->setParameter('entity_id', $this->getEntityId($entity))
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $class = get_class($entity);
+
+        return $this->getSlugMapItemRepository()->getOneByClassesAndId(
+            [$class, $this->entityResolver->reverseResolve($class)],
+            $this->getEntityId($entity)
+        );
     }
 
     /**
