@@ -43,17 +43,21 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param string      $entityClass Entity class
-     * @param mixed       $entityId    Entity ID
-     * @param string|null $menu        Menu alias
+     * @param string[]    $entityClasses Entity classes
+     * @param mixed       $entityId      Entity ID
+     * @param string|null $menu          Menu alias
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    public function getByEntity($entityClass, $entityId, $menu = null)
+    public function getByEntity(array $entityClasses, $entityId, $menu = null)
     {
+        if (empty($entityClasses)) {
+            throw new \InvalidArgumentException('Array of entity classes is empty.');
+        }
+
+        $entityClasses = array_values(array_unique($entityClasses));
+
         $qb = $this->createDefaultQueryBuilder()
-            ->andWhere('slug_map_item.objectClass = :entity_class')
-            ->setParameter('entity_class', $entityClass)
             ->andWhere('slug_map_item.objectId = :entity_id')
             ->setParameter('entity_id', $entityId);
         $this->joinSlugMapItem($qb);
@@ -61,6 +65,18 @@ class ItemRepository extends EntityRepository
         if (!empty($menu)) {
             $this->addMenuFilter($qb, $menu);
         }
+
+        $orX = $qb->expr()->orX();
+
+        foreach ($entityClasses as $i => $entityClass) {
+            $param = sprintf('object_class_%d', $i);
+
+            $orX->add(sprintf('slug_map_item.objectClass = :%s', $param));
+
+            $qb->andWhere($param, $entityClass);
+        }
+
+        $qb->andWhere($orX);
 
         return $qb->getQuery()->getResult();
     }
