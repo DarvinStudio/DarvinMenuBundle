@@ -348,9 +348,11 @@ MESSAGE
 
         foreach ($this->entityConfig as $class => $config) {
             if (!$config['admin']) {
-                $classBlacklist[] = $class;
+                $classBlacklist = array_merge($classBlacklist, [$class, $this->entityResolver->resolve($class)]);
             }
         }
+
+        $classBlacklist = array_unique($classBlacklist);
 
         $qb = $this->getSlugMapItemRepository()->createQueryBuilder('o')
             ->select('o.objectClass')
