@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017-2018, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -27,7 +27,7 @@ class MenuItemValidValidator extends ConstraintValidator
      *
      * @throws \InvalidArgumentException
      */
-    public function validate($menuItem, Constraint $constraint)
+    public function validate($menuItem, Constraint $constraint): void
     {
         if (!$menuItem instanceof Item) {
             $message = sprintf(
