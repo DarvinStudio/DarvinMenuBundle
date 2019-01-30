@@ -17,6 +17,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Tree\TreeListener;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -48,6 +49,11 @@ class SlugMapItemType extends AbstractType
      * @var \Darvin\AdminBundle\EntityNamer\EntityNamerInterface
      */
     private $entityNamer;
+
+    /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    private $entityResolver;
 
     /**
      * @var \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface
@@ -83,6 +89,7 @@ class SlugMapItemType extends AbstractType
      * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container                     DI container
      * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
      * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer                   Entity namer
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver                Entity resolver
      * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager               Metadata manager
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
@@ -94,6 +101,7 @@ class SlugMapItemType extends AbstractType
         ContainerInterface $container,
         EntityManager $em,
         EntityNamerInterface $entityNamer,
+        EntityResolverInterface $entityResolver,
         AdminMetadataManagerInterface $metadataManager,
         PropertyAccessorInterface $propertyAccessor,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
@@ -104,6 +112,7 @@ class SlugMapItemType extends AbstractType
         $this->container = $container;
         $this->em = $em;
         $this->entityNamer = $entityNamer;
+        $this->entityResolver = $entityResolver;
         $this->metadataManager = $metadataManager;
         $this->propertyAccessor = $propertyAccessor;
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
@@ -356,7 +365,7 @@ MESSAGE
         $properties = [];
 
         foreach ($qb->getQuery()->getScalarResult() as $row) {
-            $class = $row['objectClass'];
+            $class    = $this->entityResolver->resolve($row['objectClass']);
             $property = $row['property'];
 
             if (!isset($properties[$class])) {

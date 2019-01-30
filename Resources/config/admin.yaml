@@ -48,6 +48,7 @@ services:
             - '@service_container'
             - '@doctrine.orm.entity_manager'
             - '@darvin_admin.entity_namer'
+            - '@darvin_utils.orm.entity_resolver'
             - '@darvin_admin.metadata.manager'
             - '@property_accessor'
             - '@darvin_menu.slug_map.item_custom_object_loader'
