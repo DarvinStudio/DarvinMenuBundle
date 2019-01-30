@@ -120,7 +120,7 @@ class BreadcrumbsMenuBuilder
 
         $parentSlugMapItems = [];
 
-        foreach ($this->getParentSlugMapItems($slug) as $parentSlugMapItem) {
+        foreach ($this->getSlugMapItemRepository()->getParentsBySlug($slug) as $parentSlugMapItem) {
             $meta = $this->metadataFactory->getExtendedMetadata($parentSlugMapItem->getObjectClass());
 
             if (!isset($meta['slugs'][$parentSlugMapItem->getProperty()]['separator'])) {
@@ -169,21 +169,6 @@ class BreadcrumbsMenuBuilder
         }
 
         return $root;
-    }
-
-    /**
-     * @param string $slug Slug
-     *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem[]
-     */
-    private function getParentSlugMapItems(string $slug): array
-    {
-        return $this->getSlugMapItemRepository()->createQueryBuilder('o')
-            ->where(':slug LIKE CONCAT(o.slug, \'%\')')
-            ->andWhere('o.slug != :slug')
-            ->setParameter('slug', $slug)
-            ->getQuery()
-            ->getResult();
     }
 
     /**
