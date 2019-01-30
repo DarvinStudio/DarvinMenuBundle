@@ -126,6 +126,7 @@ class SlugMapItemType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $entityResolver      = $this->entityResolver;
         $propertiesByClasses = $this->getPropertiesByClasses();
 
         $classPropertyChoices = $this->buildClassPropertyChoices($propertiesByClasses);
@@ -159,12 +160,8 @@ MESSAGE
                     'class'         => SlugMapItem::class,
                     'choice_label'  => 'id',
                     'required'      => false,
-                    'query_builder' => function (SlugMapItemRepository $repository) use ($class, $property) {
-                        return $repository->createQueryBuilder('o')
-                            ->where('o.objectClass = :object_class')
-                            ->setParameter('object_class', $class)
-                            ->andWhere('o.property = :property')
-                            ->setParameter('property', $property);
+                    'query_builder' => function (SlugMapItemRepository $repository) use ($class, $entityResolver, $property) {
+                        return $repository->getBuilderByClassesAndProperty([$class, $entityResolver->reverseResolve($class)], $property);
                     },
                     'attr' => [
                         'class'        => 'slave_input',
