@@ -174,7 +174,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     {
         $class = get_class($entity);
 
-        return $this->getMenuItemRepository()->getByEntity(
+        return $this->getMenuItemRepository()->getByObject(
             [$class, $this->entityResolver->reverseResolve($class)],
             $this->getEntityId($entity),
             $menuAlias

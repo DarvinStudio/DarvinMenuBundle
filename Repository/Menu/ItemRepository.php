@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2016, Darvin Studio
+ * @copyright Copyright (c) 2016-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Repository\Menu;
 
-use Darvin\ImageBundle\Entity\Image\AbstractImage;
+use Darvin\ContentBundle\Traits\TranslatableRepositoryTrait;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -19,21 +19,22 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ItemRepository extends EntityRepository
 {
+    use TranslatableRepositoryTrait;
+
     /**
-     * @param string $locale Locale
-     * @param string $menu   Menu alias
+     * @param string|null $menu   Menu alias
+     * @param string|null $locale Locale
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getAdminBuilder($locale, $menu = null)
+    public function getAdminBuilder(?string $menu = null, ?string $locale = null): QueryBuilder
     {
-        $qb = $this->createDefaultQueryBuilder()
+        $qb = $this->createDefaultBuilder()
             ->orderBy('o.menu')
             ->addOrderBy('o.level')
             ->addOrderBy('o.position');
-        $this
-            ->joinSlugMapItem($qb)
-            ->joinTranslations($qb, $locale);
+        $this->joinTranslations($qb, $locale);
+        $this->joinSlugMapItem($qb);
 
         if (!empty($menu)) {
             $this->addMenuFilter($qb, $menu);
@@ -43,23 +44,23 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param string[]    $entityClasses Entity classes
-     * @param mixed       $entityId      Entity ID
-     * @param string|null $menu          Menu alias
+     * @param string[]    $classes Object classes
+     * @param mixed       $id      Object ID
+     * @param string|null $menu    Menu alias
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    public function getByEntity(array $entityClasses, $entityId, $menu = null)
+    public function getByObject(array $classes, $id, ?string $menu = null): array
     {
-        if (empty($entityClasses)) {
-            throw new \InvalidArgumentException('Array of entity classes is empty.');
+        if (empty($classes)) {
+            throw new \InvalidArgumentException('Array of object classes is empty.');
         }
 
-        $entityClasses = array_values(array_unique($entityClasses));
+        $classes = array_values(array_unique($classes));
 
-        $qb = $this->createDefaultQueryBuilder()
+        $qb = $this->createDefaultBuilder()
             ->andWhere('slug_map_item.objectId = :object_id')
-            ->setParameter('object_id', $entityId);
+            ->setParameter('object_id', $id);
         $this->joinSlugMapItem($qb);
 
         if (!empty($menu)) {
@@ -68,12 +69,12 @@ class ItemRepository extends EntityRepository
 
         $orX = $qb->expr()->orX();
 
-        foreach ($entityClasses as $i => $entityClass) {
+        foreach ($classes as $i => $class) {
             $param = sprintf('object_class_%d', $i);
 
             $orX->add(sprintf('slug_map_item.objectClass = :%s', $param));
 
-            $qb->setParameter($param, $entityClass);
+            $qb->setParameter($param, $class);
         }
 
         $qb->andWhere($orX);
@@ -82,11 +83,34 @@ class ItemRepository extends EntityRepository
     }
 
     /**
+     * @param string      $menu   Menu alias
+     * @param string|null $locale Locale
+     *
+     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     */
+    public function getForMenuBuilder(string $menu, ?string $locale = null): array
+    {
+        $qb = $this->createDefaultBuilder()
+            ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL')
+            ->orderBy('o.level')
+            ->addOrderBy('o.position');
+        $this->joinTranslations($qb, $locale);
+        $this
+            ->joinHoverImage($qb)
+            ->joinImage($qb)
+            ->joinSlugMapItem($qb)
+            ->addEnabledFilter($qb)
+            ->addMenuFilter($qb, $menu);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @return array
      */
-    public function getForMenuSwitcher()
+    public function getForMenuSwitcher(): array
     {
-        $qb = $this->createDefaultQueryBuilder()
+        $qb = $this->createDefaultBuilder()
             ->select('o.menu')
             ->addSelect('slug_map_item.objectClass class')
             ->addSelect('slug_map_item.objectId id');
@@ -113,44 +137,15 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param string $menu   Menu alias
-     * @param string $locale Locale
-     *
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getForMenuBuilder($menu, $locale)
-    {
-        $qb = $this->createDefaultQueryBuilder();
-        $this
-            ->joinHoverImage($qb)
-            ->joinImage($qb)
-            ->joinSlugMapItem($qb)
-            ->joinTranslations($qb, $locale)
-            ->addEnabledFilter($qb)
-            ->addMenuFilter($qb, $menu);
-
-        return $qb
-            ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL')
-            ->orderBy('o.level')
-            ->addOrderBy('o.position');
-    }
-
-    /**
      * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      *
      * @return ItemRepository
      */
-    private function joinImage(QueryBuilder $qb)
+    private function joinImage(QueryBuilder $qb): ItemRepository
     {
         $qb
             ->addSelect('image')
             ->leftJoin('o.image', 'image');
-
-        if ($this->_em->getClassMetadata(AbstractImage::class)->hasAssociation('sizes')) {
-            $qb
-                ->addSelect('image_sizes')
-                ->leftJoin('image.sizes', 'image_sizes');
-        }
 
         return $this;
     }
@@ -160,17 +155,11 @@ class ItemRepository extends EntityRepository
      *
      * @return ItemRepository
      */
-    private function joinHoverImage(QueryBuilder $qb)
+    private function joinHoverImage(QueryBuilder $qb): ItemRepository
     {
         $qb
             ->addSelect('hover_image')
             ->leftJoin('o.hoverImage', 'hover_image');
-
-        if ($this->_em->getClassMetadata(AbstractImage::class)->hasAssociation('sizes')) {
-            $qb
-                ->addSelect('hover_image_sizes')
-                ->leftJoin('hover_image.sizes', 'hover_image_sizes');
-        }
 
         return $this;
     }
@@ -182,7 +171,7 @@ class ItemRepository extends EntityRepository
      *
      * @return ItemRepository
      */
-    private function joinSlugMapItem(QueryBuilder $qb, $addSelect = true, $inner = false)
+    private function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): ItemRepository
     {
         $inner
             ? $qb->innerJoin('o.slugMapItem', 'slug_map_item')
@@ -196,30 +185,13 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
-     * @param string                     $locale Locale
-     *
-     * @return ItemRepository
-     */
-    private function joinTranslations(QueryBuilder $qb, $locale)
-    {
-        $qb
-            ->addSelect('translations')
-            ->innerJoin('o.translations', 'translations')
-            ->andWhere('translations.locale = :locale')
-            ->setParameter('locale', $locale);
-
-        return $this;
-    }
-
-    /**
      * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      *
      * @return ItemRepository
      */
     private function addEnabledFilter(QueryBuilder $qb)
     {
-        $qb->andWhere('translations.enabled = :translations_enabled')->setParameter('translations_enabled', true);
+        $qb->andWhere('translations.enabled = :enabled')->setParameter('enabled', true);
 
         return $this;
     }
@@ -230,7 +202,7 @@ class ItemRepository extends EntityRepository
      *
      * @return ItemRepository
      */
-    private function addMenuFilter(QueryBuilder $qb, $menu)
+    private function addMenuFilter(QueryBuilder $qb, string $menu): ItemRepository
     {
         $qb->andWhere('o.menu = :menu')->setParameter('menu', $menu);
 
@@ -240,7 +212,7 @@ class ItemRepository extends EntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createDefaultQueryBuilder()
+    private function createDefaultBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('o');
     }

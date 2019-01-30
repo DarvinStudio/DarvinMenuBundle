@@ -57,7 +57,7 @@ class MenuItemType extends AbstractType
             $parentField = $builder->create('parent', MenuItemParentType::class, [
                 'auto_initialize' => false,
                 'query_builder'   => function (ItemRepository $repository) use ($locale, $menu) {
-                    return $repository->getAdminBuilder($locale, $menu);
+                    return $repository->getAdminBuilder($menu, $locale);
                 },
             ])->getForm();
             $event->getForm()->add($parentField);

@@ -278,9 +278,7 @@ class Builder implements MenuBuilderInterface
      */
     protected function getMenuItemEntities(): array
     {
-        $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale())
-            ->getQuery()
-            ->getResult();
+        $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale());
 
         if (empty($entities)) {
             return $entities;
