@@ -11,6 +11,7 @@ services:
         public:   false
         arguments:
             - '@doctrine.orm.entity_manager'
+            - '@darvin_utils.orm.entity_resolver'
             - '@darvin_utils.locale.provider'
             - '@darvin_menu.item_factory.menu_item_entity'
             - '@darvin_utils.mapping.metadata_factory'

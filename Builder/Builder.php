@@ -22,6 +22,7 @@ use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Sortable\SortableListener;
 use Knp\Menu\ItemInterface;
@@ -37,6 +38,11 @@ class Builder implements MenuBuilderInterface
      * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
+
+    /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    protected $entityResolver;
 
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
@@ -100,6 +106,7 @@ class Builder implements MenuBuilderInterface
 
     /**
      * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver                Entity resolver
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                $localeProvider                Locale provider
      * @param \Darvin\MenuBundle\Item\MenuItemFactory                     $menuItemFactory               Item from menu item entity factory
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory               Extended metadata factory
@@ -112,6 +119,7 @@ class Builder implements MenuBuilderInterface
      */
     public function __construct(
         EntityManager $em,
+        EntityResolverInterface $entityResolver,
         LocaleProviderInterface $localeProvider,
         MenuItemFactory $menuItemFactory,
         MetadataFactoryInterface $metadataFactory,
@@ -123,6 +131,7 @@ class Builder implements MenuBuilderInterface
         array $entityConfig
     ) {
         $this->em = $em;
+        $this->entityResolver = $entityResolver;
         $this->localeProvider = $localeProvider;
         $this->menuItemFactory = $menuItemFactory;
         $this->metadataFactory = $metadataFactory;
@@ -219,9 +228,12 @@ class Builder implements MenuBuilderInterface
 
         foreach ($this->entityConfig as $class => $config) {
             if (!$config['slug_children']) {
-                $classBlacklist[] = $class;
+                $classBlacklist = array_merge($classBlacklist, [$class, $this->entityResolver->resolve($class)]);
             }
         }
+
+        $classBlacklist = array_unique($classBlacklist);
+
         foreach ($this->getSlugMapItemRepository()->getChildrenBySlugs(array_unique($parentSlugs), $classBlacklist) as $parentSlug => $childSlugMapItems) {
             foreach (array_keys($parentSlugs, $parentSlug) as $entityId) {
                 $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childSlugMapItems);
