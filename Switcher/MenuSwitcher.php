@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Switcher;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -22,6 +23,11 @@ class MenuSwitcher
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
+
+    /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    private $entityResolver;
 
     /**
      * @var array
@@ -44,12 +50,14 @@ class MenuSwitcher
     private $menusToDisable;
 
     /**
-     * @param \Doctrine\ORM\EntityManager $em                 Entity manager
-     * @param array                       $defaultMenuAliases Default menu aliases
+     * @param \Doctrine\ORM\EntityManager               $em                 Entity manager
+     * @param \Darvin\Utils\ORM\EntityResolverInterface $entityResolver     Entity resolver
+     * @param array                                     $defaultMenuAliases Default menu aliases
      */
-    public function __construct(EntityManager $em, array $defaultMenuAliases)
+    public function __construct(EntityManager $em, EntityResolverInterface $entityResolver, array $defaultMenuAliases)
     {
         $this->em = $em;
+        $this->entityResolver = $entityResolver;
         $this->defaultMenuAliases = $defaultMenuAliases;
 
         $this->menuItems = null;
@@ -116,7 +124,15 @@ class MenuSwitcher
         $entityClass = get_class($entity);
         $entityIds   = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
 
-        return isset($menuItems[$menuAlias][$entityClass][reset($entityIds)]);
+        $entityId = reset($entityIds);
+
+        foreach ([$entityClass, $this->entityResolver->reverseResolve($entityClass)] as $class) {
+            if (isset($menuItems[$menuAlias][$class][$entityId])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -58,8 +58,8 @@ class ItemRepository extends EntityRepository
         $entityClasses = array_values(array_unique($entityClasses));
 
         $qb = $this->createDefaultQueryBuilder()
-            ->andWhere('slug_map_item.objectId = :entity_id')
-            ->setParameter('entity_id', $entityId);
+            ->andWhere('slug_map_item.objectId = :object_id')
+            ->setParameter('object_id', $entityId);
         $this->joinSlugMapItem($qb);
 
         if (!empty($menu)) {
@@ -73,7 +73,7 @@ class ItemRepository extends EntityRepository
 
             $orX->add(sprintf('slug_map_item.objectClass = :%s', $param));
 
-            $qb->andWhere($param, $entityClass);
+            $qb->setParameter($param, $entityClass);
         }
 
         $qb->andWhere($orX);
