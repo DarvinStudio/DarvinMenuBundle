@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Switcher;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -69,7 +70,7 @@ class MenuSwitcher
      *
      * @return string[]
      */
-    public function getDefaultMenus($entity)
+    public function getDefaultMenus($entity): array
     {
         foreach ($this->defaultMenuAliases as $entityClass => $entityDefaultMenuAliases) {
             if ($entity instanceof $entityClass) {
@@ -83,7 +84,7 @@ class MenuSwitcher
     /**
      * @return array
      */
-    public function getMenusToEnable()
+    public function getMenusToEnable(): array
     {
         return $this->menusToEnable;
     }
@@ -91,7 +92,7 @@ class MenuSwitcher
     /**
      * @return array
      */
-    public function getMenusToDisable()
+    public function getMenusToDisable(): array
     {
         return $this->menusToDisable;
     }
@@ -101,7 +102,7 @@ class MenuSwitcher
      *
      * @return bool
      */
-    public function hasEnabledMenus($entity)
+    public function hasEnabledMenus($entity): bool
     {
         foreach (array_keys($this->getMenuItems()) as $menuAlias) {
             if ($this->isMenuEnabled($entity, $menuAlias)) {
@@ -118,7 +119,7 @@ class MenuSwitcher
      *
      * @return bool
      */
-    public function isMenuEnabled($entity, $menuAlias)
+    public function isMenuEnabled($entity, string $menuAlias): bool
     {
         $menuItems   = $this->getMenuItems();
         $entityClass = get_class($entity);
@@ -140,7 +141,7 @@ class MenuSwitcher
      * @param string $menuAlias Menu alias
      * @param bool   $enable    Whether to enable menu
      */
-    public function toggleMenu($entity, $menuAlias, $enable)
+    public function toggleMenu($entity, string $menuAlias, bool $enable): void
     {
         $enable ? $this->enableMenu($entity, $menuAlias) : $this->disableMenu($entity, $menuAlias);
     }
@@ -149,7 +150,7 @@ class MenuSwitcher
      * @param object $entity    Entity
      * @param string $menuAlias Menu alias
      */
-    private function enableMenu($entity, $menuAlias)
+    private function enableMenu($entity, string $menuAlias): void
     {
         if ($this->isMenuEnabled($entity, $menuAlias)) {
             return;
@@ -165,7 +166,7 @@ class MenuSwitcher
      * @param object $entity    Entity
      * @param string $menuAlias Menu alias
      */
-    private function disableMenu($entity, $menuAlias)
+    private function disableMenu($entity, string $menuAlias): void
     {
         if (!$this->isMenuEnabled($entity, $menuAlias)) {
             return;
@@ -180,7 +181,7 @@ class MenuSwitcher
     /**
      * @return array
      */
-    private function getMenuItems()
+    private function getMenuItems(): array
     {
         if (null === $this->menuItems) {
             $this->menuItems = $this->getMenuItemRepository()->getForMenuSwitcher();
@@ -192,7 +193,7 @@ class MenuSwitcher
     /**
      * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
      */
-    private function getMenuItemRepository()
+    private function getMenuItemRepository(): ItemRepository
     {
         return $this->em->getRepository(Item::class);
     }

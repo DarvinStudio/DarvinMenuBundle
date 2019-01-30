@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -62,7 +62,7 @@ class SlugMapItemCustomObjectLoader
     /**
      * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems Slug map items
      */
-    public function loadCustomObjects(array $slugMapItems)
+    public function loadCustomObjects(array $slugMapItems): void
     {
         if (empty($slugMapItems)) {
             return;
