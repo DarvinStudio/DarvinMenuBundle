@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item;
+namespace Darvin\MenuBundle\Item\Factory;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
 use Darvin\MenuBundle\Entity\Menu\Item;

@@ -15,7 +15,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface;
+use Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Locale\LocaleProviderInterface;
@@ -43,7 +43,7 @@ class Builder implements MenuBuilderInterface
     private $entityResolver;
 
     /**
-     * @var \Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface
+     * @var \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface
      */
     private $itemFactoryPool;
 
@@ -93,15 +93,15 @@ class Builder implements MenuBuilderInterface
     private $slugPartSeparators;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
-     * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver                Entity resolver
-     * @param \Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface       $itemFactoryPool               Item factory pool
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface                $localeProvider                Locale provider
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory               Extended metadata factory
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Gedmo\Sortable\SortableListener                            $sortableListener              Sortable event listener
-     * @param array                                                       $entityConfig                  Entity configuration
+     * @param \Doctrine\ORM\EntityManager                                   $em                            Entity manager
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                     $entityResolver                Entity resolver
+     * @param \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface $itemFactoryPool               Item factory pool
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider                Locale provider
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory               Extended metadata factory
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface   $propertyAccessor              Property accessor
+     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader      $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @param \Gedmo\Sortable\SortableListener                              $sortableListener              Sortable event listener
+     * @param array                                                         $entityConfig                  Entity configuration
      */
     public function __construct(
         EntityManager $em,

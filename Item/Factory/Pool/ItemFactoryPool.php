@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Pool;
+namespace Darvin\MenuBundle\Item\Factory\Pool;
 
-use Darvin\MenuBundle\Item\ItemFactoryInterface;
+use Darvin\MenuBundle\Item\Factory\ItemFactoryInterface;
 use Knp\Menu\ItemInterface;
 
 /**
@@ -19,7 +19,7 @@ use Knp\Menu\ItemInterface;
 class ItemFactoryPool implements ItemFactoryPoolInterface
 {
     /**
-     * @var \Darvin\MenuBundle\Item\ItemFactoryInterface[]
+     * @var \Darvin\MenuBundle\Item\Factory\ItemFactoryInterface[]
      */
     private $factories;
 
@@ -32,7 +32,7 @@ class ItemFactoryPool implements ItemFactoryPoolInterface
     }
 
     /**
-     * @param \Darvin\MenuBundle\Item\ItemFactoryInterface $factory Item factory
+     * @param \Darvin\MenuBundle\Item\Factory\ItemFactoryInterface $factory Item factory
      */
     public function addFactory(ItemFactoryInterface $factory): void
     {

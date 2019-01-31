@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item;
+namespace Darvin\MenuBundle\Item\Factory\Entity;
 
 use Darvin\ImageBundle\Imageable\ImageableInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;

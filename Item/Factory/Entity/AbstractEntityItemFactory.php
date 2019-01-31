@@ -8,9 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item;
+namespace Darvin\MenuBundle\Item\Factory\Entity;
 
 use Darvin\ContentBundle\Slug\SlugMapRouterInterface;
+use Darvin\MenuBundle\Item\Factory\AbstractItemFactory;
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\ORM\EntityManager;
 

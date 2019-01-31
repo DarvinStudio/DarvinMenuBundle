@@ -1,17 +1,15 @@
 parameters:
-    darvin_menu.item_factory.abstract.class: Darvin\MenuBundle\Item\AbstractItemFactory
+    darvin_menu.item_factory.abstract.class: Darvin\MenuBundle\Item\Factory\AbstractItemFactory
 
-    darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\AbstractEntityItemFactory
+    darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\Factory\Entity\AbstractEntityItemFactory
 
-    darvin_menu.item_factory.root.class: Darvin\MenuBundle\Item\RootItemFactory
+    darvin_menu.item_factory.root.class: Darvin\MenuBundle\Item\Factory\RootItemFactory
 
-    darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\MenuItemFactory
+    darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\MenuItemFactory
 
-    darvin_menu.item_factory.slug_map_item_entity.class:              Darvin\MenuBundle\Item\SlugMapItemFactory
-    darvin_menu.item_factory.slug_map_item_entity.generic_uri_route:  darvin_content_show
-    darvin_menu.item_factory.slug_map_item_entity.homepage_uri_route: darvin_page_homepage
+    darvin_menu.item_factory.slug_map_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\SlugMapItemFactory
 
-    darvin_menu.item_factory.pool.class: Darvin\MenuBundle\Item\Pool\ItemFactoryPool
+    darvin_menu.item_factory.pool.class: Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPool
 
 services:
     _defaults:

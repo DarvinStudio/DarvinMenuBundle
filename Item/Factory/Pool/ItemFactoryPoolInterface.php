@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item;
+namespace Darvin\MenuBundle\Item\Factory\Pool;
 
 use Knp\Menu\ItemInterface;
 
 /**
- * Item factory
+ * Item factory pool
  */
-interface ItemFactoryInterface
+interface ItemFactoryPoolInterface
 {
     /**
      * @param mixed $source Source
@@ -24,11 +24,4 @@ interface ItemFactoryInterface
      * @throws \InvalidArgumentException
      */
     public function createItem($source): ItemInterface;
-
-    /**
-     * @param mixed $source Source
-     *
-     * @return bool
-     */
-    public function supports($source): bool;
 }
