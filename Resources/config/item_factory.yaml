@@ -19,8 +19,8 @@ services:
         class:    '%darvin_menu.item_factory.abstract.class%'
         abstract: true
         public:   false
-        arguments:
-            - '@knp_menu.factory'
+        calls:
+            - [ setGenericItemFactory, [ '@knp_menu.factory' ] ]
 
     darvin_menu.item_factory.abstract_entity:
         class:    '%darvin_menu.item_factory.abstract_entity.class%'

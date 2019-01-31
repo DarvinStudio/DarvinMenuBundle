@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017-2019, Darvin Studio
+ * @copyright Copyright (c) 2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -10,16 +10,17 @@
 
 namespace Darvin\MenuBundle\Item;
 
+use Knp\Menu\ItemInterface;
+
 /**
- * Root item factory
+ * Item factory
  */
-class RootItemFactory extends AbstractItemFactory
+interface ItemFactoryInterface
 {
     /**
-     * {@inheritDoc}
+     * @param mixed $source Source
+     *
+     * @return \Knp\Menu\ItemInterface
      */
-    protected function nameItem($source): ?string
-    {
-        return $source;
-    }
+    public function createItem($source): ItemInterface;
 }

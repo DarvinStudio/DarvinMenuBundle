@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017-2018, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -13,12 +13,13 @@ namespace Darvin\MenuBundle\Item;
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Item factory abstract implementation
  */
-abstract class AbstractItemFactory
+abstract class AbstractItemFactory implements ItemFactoryInterface
 {
     /**
      * @var \Knp\Menu\FactoryInterface
@@ -26,46 +27,51 @@ abstract class AbstractItemFactory
     protected $genericItemFactory;
 
     /**
-     * @var \Symfony\Component\OptionsResolver\OptionsResolver
+     * @var \Symfony\Component\OptionsResolver\OptionsResolver|null
      */
-    protected $extrasResolver;
+    protected $extrasResolver = null;
 
     /**
      * @param \Knp\Menu\FactoryInterface $genericItemFactory Generic item factory
      */
-    public function __construct(FactoryInterface $genericItemFactory)
+    public function setGenericItemFactory(FactoryInterface $genericItemFactory): void
     {
         $this->genericItemFactory = $genericItemFactory;
-
-        $extrasResolver = new OptionsResolver();
-        $this->configureExtras($extrasResolver);
-        $this->extrasResolver = $extrasResolver;
     }
 
     /**
-     * @param mixed $source Source
-     *
-     * @return \Knp\Menu\ItemInterface
+     * {@inheritDoc}
      */
-    public function createItem($source)
+    public function createItem($source): ItemInterface
     {
-        return $this->genericItemFactory->createItem($this->getItemName($source), $this->getOptions($source));
+        return $this->genericItemFactory->createItem($this->nameItem($source), $this->getOptions($source));
     }
 
     /**
      * @param mixed $source Source
      *
-     * @return string
+     * @return string|null
      */
-    abstract protected function getItemName($source);
+    protected function nameItem($source): ?string
+    {
+        return null;
+    }
 
     /**
      * @param mixed $source Source
      *
      * @return array
      */
-    protected function getOptions($source)
+    protected function getOptions($source): array
     {
+        if (null === $this->extrasResolver) {
+            $extrasResolver = new OptionsResolver();
+
+            $this->configureExtras($extrasResolver);
+
+            $this->extrasResolver = $extrasResolver;
+        }
+
         return [
             'label'  => $this->getLabel($source),
             'uri'    => $this->getUri($source),
@@ -76,9 +82,9 @@ abstract class AbstractItemFactory
     /**
      * @param mixed $source Source
      *
-     * @return string
+     * @return string|null
      */
-    protected function getLabel($source)
+    protected function getLabel($source): ?string
     {
         return null;
     }
@@ -86,9 +92,9 @@ abstract class AbstractItemFactory
     /**
      * @param mixed $source Source
      *
-     * @return string
+     * @return string|null
      */
-    protected function getUri($source)
+    protected function getUri($source): ?string
     {
         return null;
     }
@@ -98,7 +104,7 @@ abstract class AbstractItemFactory
      *
      * @return array
      */
-    protected function getExtras($source)
+    protected function getExtras($source): array
     {
         return [];
     }
@@ -106,52 +112,28 @@ abstract class AbstractItemFactory
     /**
      * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Extras resolver
      */
-    protected function configureExtras(OptionsResolver $resolver)
+    protected function configureExtras(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
-                'menuItem'   => null,
-                'objectName' => null,
-                'objectId'   => null,
-                'object'     => null,
+                'itemEntity'       => null,
+                'objectName'       => null,
+                'objectId'         => null,
+                'object'           => null,
+                'showSlugChildren' => false,
             ])
-            ->setAllowedTypes('menuItem', [
-                Item::class,
-                'null',
-            ])
-            ->setAllowedTypes('objectName', [
-                'string',
-                'null',
-            ])
-            ->setAllowedTypes('objectId', [
-                'integer',
-                'string',
-                'null',
-            ])
-            ->addAllowedTypes('object', [
-                'object',
-                'null',
-            ]);
+            ->setAllowedTypes('itemEntity', [Item::class, 'null'])
+            ->setAllowedTypes('objectName', ['string', 'null'])
+            ->setAllowedTypes('object', ['object', 'null'])
+            ->setAllowedTypes('showSlugChildren', 'boolean');
 
-        foreach ([
-            'hasSlugMapChildren',
-            'isSlugMapItem',
-            'showSlugMapChildren',
-        ] as $extra) {
-            $resolver
-                ->setDefault($extra, false)
-                ->setAllowedTypes($extra, 'boolean');
-        }
         foreach ([
             'image',
             'hoverImage',
         ] as $extra) {
             $resolver
                 ->setDefault($extra, null)
-                ->setAllowedTypes($extra, [
-                    AbstractImage::class,
-                    'null',
-                ]);
+                ->setAllowedTypes($extra, [AbstractImage::class, 'null']);
         }
     }
 }
