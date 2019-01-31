@@ -23,7 +23,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class BreadcrumbsMenuProvider implements MenuProviderInterface
 {
     /**
-     * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder
+     * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface
      */
     private $breadcrumbsMenuBuilder;
 
@@ -58,14 +58,14 @@ class BreadcrumbsMenuProvider implements MenuProviderInterface
     private $currentMenus;
 
     /**
-     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder       $breadcrumbsMenuBuilder Breadcrumbs menu builder
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container              DI container
-     * @param \Knp\Menu\Matcher\MatcherInterface                          $matcher                Matcher
-     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig             Menu configuration
-     * @param string                                                      $menuName               Breadcrumbs menu name
+     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder Breadcrumbs menu builder
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface      $container              DI container
+     * @param \Knp\Menu\Matcher\MatcherInterface                             $matcher                Matcher
+     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface    $menuConfig             Menu configuration
+     * @param string                                                         $menuName               Breadcrumbs menu name
      */
     public function __construct(
-        BreadcrumbsMenuBuilder $breadcrumbsMenuBuilder,
+        BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder,
         ContainerInterface $container,
         MatcherInterface $matcher,
         MenuConfigurationInterface $menuConfig,

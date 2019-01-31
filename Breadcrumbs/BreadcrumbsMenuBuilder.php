@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Breadcrumbs menu builder
  */
-class BreadcrumbsMenuBuilder
+class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -89,9 +89,7 @@ class BreadcrumbsMenuBuilder
     }
 
     /**
-     * @param string $name Menu name
-     *
-     * @return \Knp\Menu\ItemInterface
+     * {@inheritDoc}
      */
     public function buildMenu(string $name): ItemInterface
     {

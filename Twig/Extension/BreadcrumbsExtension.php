@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Twig\Extension;
 
-use Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder;
+use Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Knp\Menu\Twig\Helper;
 use Twig\Extension\AbstractExtension;
@@ -22,7 +22,7 @@ use Twig\TwigFunction;
 class BreadcrumbsExtension extends AbstractExtension
 {
     /**
-     * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder
+     * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface
      */
     private $breadcrumbsMenuBuilder;
 
@@ -52,15 +52,15 @@ class BreadcrumbsExtension extends AbstractExtension
     private $defaultTemplate;
 
     /**
-     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder $breadcrumbsMenuBuilder  Breadcrumbs menu builder
-     * @param \Knp\Menu\Provider\MenuProviderInterface              $breadcrumbsMenuProvider Breadcrumbs menu provider
-     * @param \Knp\Menu\Twig\Helper                                 $helper                  Helper
-     * @param string                                                $breadcrumbsMenuName     Breadcrumbs menu name
-     * @param array                                                 $defaultOptions          Default options
-     * @param string                                                $defaultTemplate         Default template
+     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder  Breadcrumbs menu builder
+     * @param \Knp\Menu\Provider\MenuProviderInterface                       $breadcrumbsMenuProvider Breadcrumbs menu provider
+     * @param \Knp\Menu\Twig\Helper                                          $helper                  Helper
+     * @param string                                                         $breadcrumbsMenuName     Breadcrumbs menu name
+     * @param array                                                          $defaultOptions          Default options
+     * @param string                                                         $defaultTemplate         Default template
      */
     public function __construct(
-        BreadcrumbsMenuBuilder $breadcrumbsMenuBuilder,
+        BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder,
         MenuProviderInterface $breadcrumbsMenuProvider,
         Helper $helper,
         string $breadcrumbsMenuName,
