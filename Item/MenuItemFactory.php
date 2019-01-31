@@ -24,18 +24,11 @@ class MenuItemFactory extends AbstractEntityItemFactory
     protected $requestStack;
 
     /**
-     * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack
      */
-    protected $slugMapItemFactory;
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack       Request stack
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory     $slugMapItemFactory Item from slug map item factory
-     */
-    public function __construct(RequestStack $requestStack, SlugMapItemFactory $slugMapItemFactory)
+    public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
-        $this->slugMapItemFactory = $slugMapItemFactory;
     }
 
     /**
@@ -69,7 +62,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
         $url = $menuItem->getUrl();
 
         if (empty($url)) {
-            return null !== $menuItem->getSlugMapItem() ? $this->slugMapItemFactory->getUri($menuItem->getSlugMapItem()) : null;
+            return $this->slugMapRouter->generateUrl($menuItem->getSlugMapItem());
         }
         if (0 !== strpos($url, '/') || 0 === strpos($url, '//')) {
             return $url;
