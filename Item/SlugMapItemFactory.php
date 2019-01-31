@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017-2018, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -12,10 +12,7 @@ namespace Darvin\MenuBundle\Item;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\PageBundle\Config\PageConfig;
-use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Darvin\Utils\Routing\RouteManagerInterface;
-use Doctrine\ORM\EntityManager;
-use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -49,27 +46,19 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     protected $homepageUriRoute;
 
     /**
-     * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
-     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
-     * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
-     * @param \Darvin\PageBundle\Config\PageConfig           $pageConfig         Page configuration
-     * @param \Darvin\Utils\Routing\RouteManagerInterface    $routeManager       Route manager
-     * @param \Symfony\Component\Routing\RouterInterface     $router             Router
-     * @param string                                         $genericUriRoute    Generic URI route
-     * @param string                                         $homepageUriRoute   Homepage URI route
+     * @param \Darvin\PageBundle\Config\PageConfig        $pageConfig       Page configuration
+     * @param \Darvin\Utils\Routing\RouteManagerInterface $routeManager     Route manager
+     * @param \Symfony\Component\Routing\RouterInterface  $router           Router
+     * @param string                                      $genericUriRoute  Generic URI route
+     * @param string                                      $homepageUriRoute Homepage URI route
      */
     public function __construct(
-        FactoryInterface $genericItemFactory,
-        EntityManager $em,
-        ObjectNamerInterface $objectNamer,
         PageConfig $pageConfig,
         RouteManagerInterface $routeManager,
         RouterInterface $router,
-        $genericUriRoute,
-        $homepageUriRoute
+        string $genericUriRoute,
+        string $homepageUriRoute
     ) {
-        parent::__construct($genericItemFactory, $em, $objectNamer);
-
         $this->pageConfig = $pageConfig;
         $this->routeManager = $routeManager;
         $this->router = $router;
@@ -78,27 +67,25 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getLabel($slugMapItem)
+    protected function getLabel($source): ?string
     {
-        $this->validateEntity($slugMapItem);
+        /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
+        $slugMapItem = $source;
 
-        return (string) $slugMapItem->getObject();
+        return (string)$slugMapItem->getObject();
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getUri($slugMapItem)
+    protected function getUri($source): ?string
     {
-        $this->validateEntity($slugMapItem);
+        /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
+        $slugMapItem = $source;
 
-        $route = $this->getUriRoute($slugMapItem);
+        $route  = $this->getUriRoute($slugMapItem);
         $params = [];
 
         if ($this->routeManager->hasRequirement($route, 'slug')) {
@@ -109,24 +96,24 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    protected function getExtras($slugMapItem)
+    protected function getExtras($source): array
     {
+        /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
+        $slugMapItem = $source;
+
         return [
-            'objectName'    => $this->objectNamer->name($slugMapItem->getObjectClass()),
-            'objectId'      => $slugMapItem->getObjectId(),
-            'object'        => $slugMapItem->getObject(),
-            'isSlugMapItem' => true,
+            'object'     => $slugMapItem->getObject(),
+            'objectId'   => $slugMapItem->getObjectId(),
+            'objectName' => $this->objectNamer->name($slugMapItem->getObjectClass()),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getSupportedClass()
+    protected function getSupportedClass(): string
     {
         return SlugMapItem::class;
     }
@@ -136,7 +123,7 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
      *
      * @return string
      */
-    private function getUriRoute(SlugMapItem $slugMapItem)
+    private function getUriRoute(SlugMapItem $slugMapItem): string
     {
         $homepage = $this->pageConfig->getHomepage();
 
