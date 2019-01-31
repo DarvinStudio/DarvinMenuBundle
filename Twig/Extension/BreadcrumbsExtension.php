@@ -69,12 +69,13 @@ class BreadcrumbsExtension extends AbstractExtension
     }
 
     /**
+     * @param array       $crumbs   Crumbs
      * @param array       $options  Options
      * @param string|null $renderer Renderer
      *
      * @return string
      */
-    public function renderBreadcrumbs(array $options = [], ?string $renderer = null): string
+    public function renderBreadcrumbs(array $crumbs = [], array $options = [], ?string $renderer = null): string
     {
         $options = array_merge($this->defaultOptions, $options);
 
@@ -82,6 +83,6 @@ class BreadcrumbsExtension extends AbstractExtension
             $options['template'] = $this->defaultTemplate;
         }
 
-        return trim($this->helper->render($this->breadcrumbsBuilder->buildBreadcrumbs(), $options, $renderer));
+        return trim($this->helper->render($this->breadcrumbsBuilder->buildBreadcrumbs($crumbs), $options, $renderer));
     }
 }

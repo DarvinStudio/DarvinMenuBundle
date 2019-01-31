@@ -1,7 +1,7 @@
 parameters:
     darvin_menu.item_factory.abstract.class: Darvin\MenuBundle\Item\Factory\AbstractItemFactory
 
-    darvin_menu.item_factory.root.class: Darvin\MenuBundle\Item\Factory\RootItemFactory
+    darvin_menu.item_factory.string.class: Darvin\MenuBundle\Item\Factory\StringItemFactory
 
     darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\Factory\Entity\AbstractEntityItemFactory
 
@@ -22,8 +22,8 @@ services:
         calls:
             - [ setGenericItemFactory, [ '@knp_menu.factory' ] ]
 
-    darvin_menu.item_factory.root:
-        class:  '%darvin_menu.item_factory.root.class%'
+    darvin_menu.item_factory.string:
+        class:  '%darvin_menu.item_factory.string.class%'
         parent: darvin_menu.item_factory.abstract
         public: false
         tags:

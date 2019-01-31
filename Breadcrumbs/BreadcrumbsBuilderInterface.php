@@ -18,7 +18,9 @@ use Knp\Menu\ItemInterface;
 interface BreadcrumbsBuilderInterface
 {
     /**
+     * @param array $crumbs Crumbs
+     *
      * @return \Knp\Menu\ItemInterface
      */
-    public function buildBreadcrumbs(): ItemInterface;
+    public function buildBreadcrumbs(array $crumbs = []): ItemInterface;
 }

@@ -11,9 +11,9 @@
 namespace Darvin\MenuBundle\Item\Factory;
 
 /**
- * Root item factory
+ * String item factory
  */
-class RootItemFactory extends AbstractItemFactory
+class StringItemFactory extends AbstractItemFactory
 {
     /**
      * {@inheritDoc}

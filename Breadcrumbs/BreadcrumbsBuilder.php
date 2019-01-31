@@ -19,6 +19,7 @@ use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Breadcrumbs builder
@@ -53,6 +54,11 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     private $slugMapObjectLoader;
 
     /**
+     * @var \Symfony\Contracts\Translation\TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var string
      */
     private $slugParameterName;
@@ -63,6 +69,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory     Extended metadata factory
      * @param \Symfony\Component\HttpFoundation\RequestStack                $requestStack        Request stack
      * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface          $slugMapObjectLoader Slug map object loader
+     * @param \Symfony\Contracts\Translation\TranslatorInterface            $translator          Translator
      * @param string                                                        $slugParameterName   Slug route parameter name
      */
     public function __construct(
@@ -71,6 +78,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         MetadataFactoryInterface $metadataFactory,
         RequestStack $requestStack,
         SlugMapObjectLoaderInterface $slugMapObjectLoader,
+        TranslatorInterface $translator,
         string $slugParameterName
     ) {
         $this->em = $em;
@@ -78,15 +86,34 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         $this->metadataFactory = $metadataFactory;
         $this->requestStack = $requestStack;
         $this->slugMapObjectLoader = $slugMapObjectLoader;
+        $this->translator = $translator;
         $this->slugParameterName = $slugParameterName;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function buildBreadcrumbs(): ItemInterface
+    public function buildBreadcrumbs(array $crumbs = []): ItemInterface
     {
         $root = $this->itemFactoryPool->createItem(self::MENU_NAME);
+
+        if (!empty($crumbs)) {
+            $i      = 0;
+            $parent = $root;
+
+            foreach ($crumbs as $label => $uri) {
+                $child = $this->itemFactoryPool->createItem(implode('-', [self::MENU_NAME, $i]));
+                $child->setLabel($this->translator->trans($label));
+                $child->setUri($uri);
+
+                $parent->addChild($child);
+
+                $i++;
+                $parent = $child;
+            }
+
+            return $root;
+        }
 
         $request = $this->requestStack->getMasterRequest();
 

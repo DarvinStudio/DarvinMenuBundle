@@ -17,6 +17,7 @@ services:
             - '@darvin_utils.mapping.metadata_factory'
             - '@request_stack'
             - '@darvin_menu.slug_map.object_loader'
+            - '@translator'
             - '%darvin_menu.breadcrumbs.slug_parameter_name%'
 
     darvin_menu.breadcrumbs.twig_extension:
