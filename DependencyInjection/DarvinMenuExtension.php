@@ -32,7 +32,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
         $bundles = $container->getParameter('kernel.bundles');
 
         if (!isset($bundles['KnpMenuBundle'])) {
-            throw new \RuntimeException('Please register "KnpMenuBundle" in AppKernel.php.');
+            throw new \RuntimeException('Please enable "KnpMenuBundle".');
         }
 
         $config = $this->processConfiguration(new Configuration(), $configs);
