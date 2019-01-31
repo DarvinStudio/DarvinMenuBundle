@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Item;
 
+use Darvin\ImageBundle\Imageable\ImageableInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -102,11 +103,9 @@ class MenuItemFactory extends AbstractEntityItemFactory
             $objectId   = $slugMapItem->getObjectId();
             $objectName = $this->objectNamer->name($slugMapItem->getObjectClass());
 
-            if (empty($image) && interface_exists('Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface')) {
-                if ($object instanceof \Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface) {
-                    $image      = $object->getImage();
-                    $hoverImage = !empty($hoverImage) ? $hoverImage : $object->getImage();
-                }
+            if (empty($image) && $object instanceof ImageableInterface) {
+                $image      = $object->getImage();
+                $hoverImage = !empty($hoverImage) ? $hoverImage : $object->getImage();
             }
         }
 
