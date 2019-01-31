@@ -16,7 +16,7 @@ use Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
-use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
+use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Tree\TreeListener;
@@ -66,9 +66,9 @@ class SlugMapItemType extends AbstractType
     private $propertyAccessor;
 
     /**
-     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
+     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
      */
-    private $slugMapItemCustomObjectLoader;
+    private $slugMapObjectLoader;
 
     /**
      * @var \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface
@@ -86,16 +86,16 @@ class SlugMapItemType extends AbstractType
     private $entityConfig;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container                     DI container
-     * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
-     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer                   Entity namer
-     * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver                Entity resolver
-     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager               Metadata manager
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface  $sortCriteriaDetector          Sort criteria detector
-     * @param \Gedmo\Tree\TreeListener                                    $treeListener                  Tree event listener
-     * @param array                                                       $entityConfig                  Entity configuration
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container            DI container
+     * @param \Doctrine\ORM\EntityManager                                 $em                   Entity manager
+     * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer          Entity namer
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver       Entity resolver
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager      Metadata manager
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor     Property accessor
+     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface        $slugMapObjectLoader  Slug map object loader
+     * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface  $sortCriteriaDetector Sort criteria detector
+     * @param \Gedmo\Tree\TreeListener                                    $treeListener         Tree event listener
+     * @param array                                                       $entityConfig         Entity configuration
      */
     public function __construct(
         ContainerInterface $container,
@@ -104,7 +104,7 @@ class SlugMapItemType extends AbstractType
         EntityResolverInterface $entityResolver,
         AdminMetadataManagerInterface $metadataManager,
         PropertyAccessorInterface $propertyAccessor,
-        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
+        SlugMapObjectLoaderInterface $slugMapObjectLoader,
         SortCriteriaDetectorInterface $sortCriteriaDetector,
         TreeListener $treeListener,
         array $entityConfig
@@ -115,7 +115,7 @@ class SlugMapItemType extends AbstractType
         $this->entityResolver = $entityResolver;
         $this->metadataManager = $metadataManager;
         $this->propertyAccessor = $propertyAccessor;
-        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
+        $this->slugMapObjectLoader = $slugMapObjectLoader;
         $this->sortCriteriaDetector = $sortCriteriaDetector;
         $this->treeListener = $treeListener;
         $this->entityConfig = $entityConfig;
@@ -194,7 +194,7 @@ MESSAGE
             }
         }
 
-        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
+        $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
         foreach ($view->children as $field) {
             if ('entity' !== $field->vars['block_prefixes'][2]) {

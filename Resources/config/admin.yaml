@@ -38,7 +38,7 @@ services:
         arguments:
             - '@darvin_utils.locale.provider'
             - '@darvin_menu.admin.menu_item_sorter'
-            - '@darvin_menu.slug_map.item_custom_object_loader'
+            - '@darvin_menu.slug_map.object_loader'
         tags:
             - { name: form.type }
 
@@ -51,7 +51,7 @@ services:
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_admin.metadata.manager'
             - '@property_accessor'
-            - '@darvin_menu.slug_map.item_custom_object_loader'
+            - '@darvin_menu.slug_map.object_loader'
             - '@darvin_admin.metadata.sort_criteria_detector'
             - '@stof_doctrine_extensions.listener.tree'
             - '%darvin_menu.entities%'
@@ -71,7 +71,7 @@ services:
     darvin_menu.admin.menu_item_sorter:
         class: '%darvin_menu.admin.menu_item_sorter.class%'
         arguments:
-            - '@darvin_menu.slug_map.item_custom_object_loader'
+            - '@darvin_menu.slug_map.object_loader'
             - '@darvin_utils.tree.sorter'
 
     darvin_menu.admin.slug_map_item_link_view_widget:

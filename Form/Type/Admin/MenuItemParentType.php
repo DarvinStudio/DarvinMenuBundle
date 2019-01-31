@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\MenuBundle\Admin\Sorter\MenuItemSorter;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
-use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
+use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -37,23 +37,23 @@ class MenuItemParentType extends AbstractType
     private $menuItemSorter;
 
     /**
-     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
+     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
      */
-    private $slugMapItemCustomObjectLoader;
+    private $slugMapObjectLoader;
 
     /**
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface             $localeProvider                Locale provider
-     * @param \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter           $menuItemSorter                Menu item sorter
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface         $localeProvider      Locale provider
+     * @param \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter       $menuItemSorter      Menu item sorter
+     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
      */
     public function __construct(
         LocaleProviderInterface $localeProvider,
         MenuItemSorter $menuItemSorter,
-        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader
+        SlugMapObjectLoaderInterface $slugMapObjectLoader
     ) {
         $this->localeProvider = $localeProvider;
         $this->menuItemSorter = $menuItemSorter;
-        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
+        $this->slugMapObjectLoader = $slugMapObjectLoader;
     }
 
     /**
@@ -81,7 +81,7 @@ class MenuItemParentType extends AbstractType
             ]);
         }
 
-        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
+        $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
         $choices = [];
 

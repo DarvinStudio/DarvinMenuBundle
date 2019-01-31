@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\SlugMap;
+namespace Darvin\MenuBundle\Slug;
 
 use Darvin\ContentBundle\Translatable\TranslationJoinerInterface;
 use Darvin\ImageBundle\ORM\ImageJoinerInterface;
@@ -17,9 +17,9 @@ use Darvin\Utils\Locale\LocaleProviderInterface;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Slug map item custom object loader
+ * Slug map object loader
  */
-class SlugMapItemCustomObjectLoader
+class SlugMapObjectLoader implements SlugMapObjectLoaderInterface
 {
     /**
      * @var \Darvin\Utils\CustomObject\CustomObjectLoaderInterface
@@ -60,19 +60,19 @@ class SlugMapItemCustomObjectLoader
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems Slug map items
+     * {@inheritDoc}
      */
-    public function loadCustomObjects(array $slugMapItems): void
+    public function loadObjects(array $items): void
     {
-        if (empty($slugMapItems)) {
+        if (empty($items)) {
             return;
         }
 
-        $locale = $this->localeProvider->getCurrentLocale();
-        $imageJoiner = $this->imageJoiner;
+        $imageJoiner       = $this->imageJoiner;
+        $locale            = $this->localeProvider->getCurrentLocale();
         $translationJoiner = $this->translationJoiner;
 
-        $this->genericCustomObjectLoader->loadCustomObjects($slugMapItems, function (QueryBuilder $qb) use ($locale, $imageJoiner, $translationJoiner) {
+        $this->genericCustomObjectLoader->loadCustomObjects($items, function (QueryBuilder $qb) use ($locale, $imageJoiner, $translationJoiner) {
             $imageJoiner->joinImages($qb);
 
             if ($translationJoiner->isTranslatable($qb->getRootEntities()[0])) {

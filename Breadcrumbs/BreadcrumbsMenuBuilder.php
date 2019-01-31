@@ -14,7 +14,7 @@ use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface;
-use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
+use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\ItemInterface;
@@ -46,9 +46,9 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
     private $requestStack;
 
     /**
-     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
+     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
      */
-    private $slugMapItemCustomObjectLoader;
+    private $slugMapObjectLoader;
 
     /**
      * @var string
@@ -56,26 +56,26 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
     private $slugParameterName;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                   $em                            Entity manager
-     * @param \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface $itemFactoryPool               Item factory pool
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory               Extended metadata factory
-     * @param \Symfony\Component\HttpFoundation\RequestStack                $requestStack                  Request stack
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader      $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param string                                                        $slugParameterName             Slug route parameter name
+     * @param \Doctrine\ORM\EntityManager                                   $em                  Entity manager
+     * @param \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface $itemFactoryPool     Item factory pool
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory     Extended metadata factory
+     * @param \Symfony\Component\HttpFoundation\RequestStack                $requestStack        Request stack
+     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface          $slugMapObjectLoader Slug map object loader
+     * @param string                                                        $slugParameterName   Slug route parameter name
      */
     public function __construct(
         EntityManager $em,
         ItemFactoryPoolInterface $itemFactoryPool,
         MetadataFactoryInterface $metadataFactory,
         RequestStack $requestStack,
-        SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
+        SlugMapObjectLoaderInterface $slugMapObjectLoader,
         string $slugParameterName
     ) {
         $this->em = $em;
         $this->itemFactoryPool = $itemFactoryPool;
         $this->metadataFactory = $metadataFactory;
         $this->requestStack = $requestStack;
-        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
+        $this->slugMapObjectLoader = $slugMapObjectLoader;
         $this->slugParameterName = $slugParameterName;
     }
 
@@ -93,6 +93,7 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
         }
 
         $routeParams = $request->attributes->get('_route_params', []);
+
         if (!isset($routeParams[$this->slugParameterName]) || empty($routeParams[$this->slugParameterName])) {
             return $root;
         }
@@ -136,7 +137,7 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
         $slugMapItems   = array_column($parentSlugMapItems, 'object');
         $slugMapItems[] = $currentSlugMapItem;
 
-        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
+        $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
         $parent = $root;
 

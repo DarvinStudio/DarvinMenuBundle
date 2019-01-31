@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Admin\Sorter;
 
-use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
+use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Tree\TreeSorterInterface;
 
 /**
@@ -19,9 +19,9 @@ use Darvin\Utils\Tree\TreeSorterInterface;
 class MenuItemSorter
 {
     /**
-     * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
+     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
      */
-    private $slugMapItemCustomObjectLoader;
+    private $slugMapObjectLoader;
 
     /**
      * @var \Darvin\Utils\Tree\TreeSorterInterface
@@ -29,12 +29,12 @@ class MenuItemSorter
     private $treeSorter;
 
     /**
-     * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\Utils\Tree\TreeSorterInterface                   $treeSorter                    Tree sorter
+     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
+     * @param \Darvin\Utils\Tree\TreeSorterInterface               $treeSorter          Tree sorter
      */
-    public function __construct(SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader, TreeSorterInterface $treeSorter)
+    public function __construct(SlugMapObjectLoaderInterface $slugMapObjectLoader, TreeSorterInterface $treeSorter)
     {
-        $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
+        $this->slugMapObjectLoader = $slugMapObjectLoader;
         $this->treeSorter = $treeSorter;
     }
 
@@ -58,7 +58,7 @@ class MenuItemSorter
             }
         }
 
-        $this->slugMapItemCustomObjectLoader->loadCustomObjects($slugMapItems);
+        $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
         return $this->treeSorter->sortTree($menuItems);
     }
