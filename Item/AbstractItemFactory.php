@@ -44,6 +44,10 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
      */
     public function createItem($source): ItemInterface
     {
+        if (!$this->supports($source)) {
+            throw new \InvalidArgumentException('Menu item source is not supported.');
+        }
+
         return $this->genericItemFactory->createItem($this->nameItem($source), $this->getOptions($source));
     }
 

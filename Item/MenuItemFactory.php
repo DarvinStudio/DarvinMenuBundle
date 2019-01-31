@@ -35,6 +35,14 @@ class MenuItemFactory extends AbstractEntityItemFactory
     /**
      * {@inheritDoc}
      */
+    public function supports($source): bool
+    {
+        return $source instanceof Item;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getLabel($source): ?string
     {
         /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
@@ -118,13 +126,5 @@ class MenuItemFactory extends AbstractEntityItemFactory
             'objectName'       => $objectName,
             'showSlugChildren' => $menuItem->isShowChildren(),
         ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getSupportedClass(): string
-    {
-        return Item::class;
     }
 }

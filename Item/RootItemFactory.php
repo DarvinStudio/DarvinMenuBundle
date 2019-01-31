@@ -18,6 +18,14 @@ class RootItemFactory extends AbstractItemFactory
     /**
      * {@inheritDoc}
      */
+    public function supports($source): bool
+    {
+        return is_string($source);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function nameItem($source): ?string
     {
         return $source;

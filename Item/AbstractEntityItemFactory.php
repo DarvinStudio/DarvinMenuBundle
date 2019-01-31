@@ -13,7 +13,6 @@ namespace Darvin\MenuBundle\Item;
 use Darvin\ContentBundle\Slug\SlugMapRouterInterface;
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\ORM\EntityManager;
-use Knp\Menu\ItemInterface;
 
 /**
  * Entity item factory abstract implementation
@@ -62,16 +61,6 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
     /**
      * {@inheritDoc}
      */
-    public function createItem($source): ItemInterface
-    {
-        $this->validateEntity($source);
-
-        return parent::createItem($source);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function nameItem($source): ?string
     {
         $entity = $source;
@@ -81,30 +70,5 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
         $ids = $this->em->getClassMetadata($class)->getIdentifierValues($entity);
 
         return uniqid(sprintf('%s-%s-', $class, reset($ids)), true);
-    }
-
-    /**
-     * @return string
-     */
-    abstract protected function getSupportedClass(): string;
-
-    /**
-     * @param object $entity Entity
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function validateEntity($entity): void
-    {
-        if (!is_object($entity)) {
-            throw new \InvalidArgumentException(sprintf('Entity must be object, got "%s".', gettype($entity)));
-        }
-
-        $supportedClass = $this->getSupportedClass();
-
-        if (!$entity instanceof $supportedClass) {
-            throw new \InvalidArgumentException(
-                sprintf('Entity must be instance of "%s", got "%s".', $supportedClass, get_class($entity))
-            );
-        }
     }
 }

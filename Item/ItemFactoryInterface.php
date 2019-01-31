@@ -21,6 +21,14 @@ interface ItemFactoryInterface
      * @param mixed $source Source
      *
      * @return \Knp\Menu\ItemInterface
+     * @throws \InvalidArgumentException
      */
     public function createItem($source): ItemInterface;
+
+    /**
+     * @param mixed $source Source
+     *
+     * @return bool
+     */
+    public function supports($source): bool;
 }

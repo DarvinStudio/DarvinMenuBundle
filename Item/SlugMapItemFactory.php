@@ -20,6 +20,14 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
     /**
      * {@inheritDoc}
      */
+    public function supports($source): bool
+    {
+        return $source instanceof SlugMapItem;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function getLabel($source): ?string
     {
         /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
