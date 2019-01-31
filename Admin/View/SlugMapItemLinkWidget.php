@@ -11,7 +11,6 @@
 namespace Darvin\MenuBundle\Admin\View;
 
 use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
-use Darvin\AdminBundle\Route\AdminRouterInterface;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
@@ -23,11 +22,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class SlugMapItemLinkWidget extends AbstractWidget
 {
-    /**
-     * @var \Darvin\AdminBundle\Route\AdminRouterInterface
-     */
-    private $adminRouter;
-
     /**
      * @var \Darvin\AdminBundle\EntityNamer\EntityNamerInterface
      */
@@ -44,18 +38,12 @@ class SlugMapItemLinkWidget extends AbstractWidget
     private $translator;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouterInterface        $adminRouter    Admin router
      * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface  $entityNamer    Entity namer
      * @param \Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget $showLinkWidget Show link admin view widget
      * @param \Symfony\Contracts\Translation\TranslatorInterface    $translator     Translator
      */
-    public function __construct(
-        AdminRouterInterface $adminRouter,
-        EntityNamerInterface $entityNamer,
-        ShowLinkWidget $showLinkWidget,
-        TranslatorInterface $translator
-    ) {
-        $this->adminRouter = $adminRouter;
+    public function __construct(EntityNamerInterface $entityNamer, ShowLinkWidget $showLinkWidget, TranslatorInterface $translator)
+    {
         $this->entityNamer = $entityNamer;
         $this->showLinkWidget = $showLinkWidget;
         $this->translator = $translator;

@@ -79,7 +79,6 @@ services:
         parent: darvin_admin.view.widget.abstract
         public: false
         arguments:
-            - '@darvin_admin.router'
             - '@darvin_admin.entity_namer'
             - '@darvin_admin.view.widget.show_link'
             - '@translator'
