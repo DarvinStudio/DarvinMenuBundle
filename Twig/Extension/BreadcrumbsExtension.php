@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Twig\Extension;
 
-use Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface;
+use Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilderInterface;
 use Knp\Menu\Twig\Helper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -20,12 +20,10 @@ use Twig\TwigFunction;
  */
 class BreadcrumbsExtension extends AbstractExtension
 {
-    private const MENU_NAME = 'breadcrumbs';
-
     /**
-     * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface
+     * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilderInterface
      */
-    private $breadcrumbsMenuBuilder;
+    private $breadcrumbsBuilder;
 
     /**
      * @var \Knp\Menu\Twig\Helper
@@ -43,18 +41,18 @@ class BreadcrumbsExtension extends AbstractExtension
     private $defaultTemplate;
 
     /**
-     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder Breadcrumbs menu builder
-     * @param \Knp\Menu\Twig\Helper                                          $helper                 Helper
-     * @param array                                                          $defaultOptions         Default options
-     * @param string                                                         $defaultTemplate        Default template
+     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilderInterface $breadcrumbsBuilder Breadcrumbs builder
+     * @param \Knp\Menu\Twig\Helper                                      $helper             Helper
+     * @param array                                                      $defaultOptions     Default options
+     * @param string                                                     $defaultTemplate    Default template
      */
     public function __construct(
-        BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder,
+        BreadcrumbsBuilderInterface $breadcrumbsBuilder,
         Helper $helper,
         array $defaultOptions,
         string $defaultTemplate
     ) {
-        $this->breadcrumbsMenuBuilder = $breadcrumbsMenuBuilder;
+        $this->breadcrumbsBuilder = $breadcrumbsBuilder;
         $this->helper = $helper;
         $this->defaultOptions = $defaultOptions;
         $this->defaultTemplate = $defaultTemplate;
@@ -84,6 +82,6 @@ class BreadcrumbsExtension extends AbstractExtension
             $options['template'] = $this->defaultTemplate;
         }
 
-        return $this->helper->render($this->breadcrumbsMenuBuilder->buildMenu(self::MENU_NAME), $options, $renderer);
+        return $this->helper->render($this->breadcrumbsBuilder->buildBreadcrumbs(), $options, $renderer);
     }
 }

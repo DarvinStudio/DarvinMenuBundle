@@ -13,14 +13,12 @@ namespace Darvin\MenuBundle\Breadcrumbs;
 use Knp\Menu\ItemInterface;
 
 /**
- * Breadcrumbs menu builder
+ * Breadcrumbs builder
  */
-interface BreadcrumbsMenuBuilderInterface
+interface BreadcrumbsBuilderInterface
 {
     /**
-     * @param string $name Menu name
-     *
      * @return \Knp\Menu\ItemInterface
      */
-    public function buildMenu(string $name): ItemInterface;
+    public function buildBreadcrumbs(): ItemInterface;
 }

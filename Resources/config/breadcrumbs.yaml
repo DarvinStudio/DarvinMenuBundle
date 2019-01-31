@@ -1,5 +1,5 @@
 parameters:
-    darvin_menu.breadcrumbs.builder.class: Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder
+    darvin_menu.breadcrumbs.builder.class: Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilder
 
     darvin_menu.breadcrumbs.twig_extension.class:           Darvin\MenuBundle\Twig\Extension\BreadcrumbsExtension
     darvin_menu.breadcrumbs.twig_extension.default_options: { currentAsLink: false }

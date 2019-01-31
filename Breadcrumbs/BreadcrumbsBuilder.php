@@ -21,10 +21,12 @@ use Knp\Menu\ItemInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Breadcrumbs menu builder
+ * Breadcrumbs builder
  */
-class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
+class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 {
+    private const MENU_NAME = 'breadcrumbs';
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -82,9 +84,9 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function buildMenu(string $name): ItemInterface
+    public function buildBreadcrumbs(): ItemInterface
     {
-        $root = $this->itemFactoryPool->createItem($name);
+        $root = $this->itemFactoryPool->createItem(self::MENU_NAME);
 
         $request = $this->requestStack->getMasterRequest();
 
