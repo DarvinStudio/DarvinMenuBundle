@@ -11,7 +11,6 @@
 namespace Darvin\MenuBundle\Twig\Extension;
 
 use Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface;
-use Knp\Menu\Provider\MenuProviderInterface;
 use Knp\Menu\Twig\Helper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -21,25 +20,17 @@ use Twig\TwigFunction;
  */
 class BreadcrumbsExtension extends AbstractExtension
 {
+    private const MENU_NAME = 'breadcrumbs';
+
     /**
      * @var \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface
      */
     private $breadcrumbsMenuBuilder;
 
     /**
-     * @var \Knp\Menu\Provider\MenuProviderInterface
-     */
-    private $breadcrumbsMenuProvider;
-
-    /**
      * @var \Knp\Menu\Twig\Helper
      */
     private $helper;
-
-    /**
-     * @var string
-     */
-    private $breadcrumbsMenuName;
 
     /**
      * @var array
@@ -52,25 +43,19 @@ class BreadcrumbsExtension extends AbstractExtension
     private $defaultTemplate;
 
     /**
-     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder  Breadcrumbs menu builder
-     * @param \Knp\Menu\Provider\MenuProviderInterface                       $breadcrumbsMenuProvider Breadcrumbs menu provider
-     * @param \Knp\Menu\Twig\Helper                                          $helper                  Helper
-     * @param string                                                         $breadcrumbsMenuName     Breadcrumbs menu name
-     * @param array                                                          $defaultOptions          Default options
-     * @param string                                                         $defaultTemplate         Default template
+     * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder Breadcrumbs menu builder
+     * @param \Knp\Menu\Twig\Helper                                          $helper                 Helper
+     * @param array                                                          $defaultOptions         Default options
+     * @param string                                                         $defaultTemplate        Default template
      */
     public function __construct(
         BreadcrumbsMenuBuilderInterface $breadcrumbsMenuBuilder,
-        MenuProviderInterface $breadcrumbsMenuProvider,
         Helper $helper,
-        string $breadcrumbsMenuName,
         array $defaultOptions,
         string $defaultTemplate
     ) {
         $this->breadcrumbsMenuBuilder = $breadcrumbsMenuBuilder;
-        $this->breadcrumbsMenuProvider = $breadcrumbsMenuProvider;
         $this->helper = $helper;
-        $this->breadcrumbsMenuName = $breadcrumbsMenuName;
         $this->defaultOptions = $defaultOptions;
         $this->defaultTemplate = $defaultTemplate;
     }
@@ -78,40 +63,11 @@ class BreadcrumbsExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions(): array
+    public function getFunctions(): iterable
     {
-        return [
-            new TwigFunction('darvin_menu_breadcrumbs', [$this, 'renderBreadcrumbs'], [
-                'is_safe' => ['html'],
-            ]),
-            new TwigFunction('darvin_menu_slug_breadcrumbs', [$this, 'renderSlugBreadcrumbs'], [
-                'is_safe' => ['html'],
-            ]),
-        ];
-    }
-
-    /**
-     * @param string|null $menuAlias Menu alias
-     * @param array       $options   Options
-     * @param string|null $renderer  Renderer
-     *
-     * @return string
-     */
-    public function renderBreadcrumbs(?string $menuAlias = null, array $options = [], ?string $renderer = null): string
-    {
-        $options = array_merge($this->defaultOptions, $options);
-
-        if (!isset($options['template'])) {
-            $options['template'] = $this->defaultTemplate;
-        }
-
-        return $this->helper->render(
-            $this->breadcrumbsMenuProvider->get($this->breadcrumbsMenuName, [
-                'menu_alias' => $menuAlias,
-            ]),
-            $options,
-            $renderer
-        );
+        yield new TwigFunction('darvin_menu_breadcrumbs', [$this, 'renderBreadcrumbs'], [
+            'is_safe' => ['html'],
+        ]);
     }
 
     /**
@@ -120,7 +76,7 @@ class BreadcrumbsExtension extends AbstractExtension
      *
      * @return string
      */
-    public function renderSlugBreadcrumbs(array $options = [], ?string $renderer = null): string
+    public function renderBreadcrumbs(array $options = [], ?string $renderer = null): string
     {
         $options = array_merge($this->defaultOptions, $options);
 
@@ -128,6 +84,6 @@ class BreadcrumbsExtension extends AbstractExtension
             $options['template'] = $this->defaultTemplate;
         }
 
-        return $this->helper->render($this->breadcrumbsMenuBuilder->buildMenu('breadcrumbs'), $options, $renderer);
+        return $this->helper->render($this->breadcrumbsMenuBuilder->buildMenu(self::MENU_NAME), $options, $renderer);
     }
 }

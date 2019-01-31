@@ -1,9 +1,6 @@
 parameters:
     darvin_menu.breadcrumbs.builder.class: Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuBuilder
 
-    darvin_menu.breadcrumbs.provider.class:     Darvin\MenuBundle\Breadcrumbs\BreadcrumbsMenuProvider
-    darvin_menu.breadcrumbs.provider.menu_name: darvin_menu_breadcrumbs
-
     darvin_menu.breadcrumbs.twig_extension.class:           Darvin\MenuBundle\Twig\Extension\BreadcrumbsExtension
     darvin_menu.breadcrumbs.twig_extension.default_options: { currentAsLink: false }
 
@@ -22,25 +19,12 @@ services:
             - '@darvin_menu.slug_map.object_loader'
             - '%darvin_menu.breadcrumbs.slug_parameter_name%'
 
-    darvin_menu.breadcrumbs.provider:
-        class: '%darvin_menu.breadcrumbs.provider.class%'
-        arguments:
-            - '@darvin_menu.breadcrumbs.builder'
-            - '@service_container'
-            - '@knp_menu.matcher'
-            - '@darvin_menu.configuration.menu'
-            - '%darvin_menu.breadcrumbs.provider.menu_name%'
-        tags:
-            - { name: knp_menu.provider }
-
     darvin_menu.breadcrumbs.twig_extension:
         class:  '%darvin_menu.breadcrumbs.twig_extension.class%'
         public: false
         arguments:
             - '@darvin_menu.breadcrumbs.builder'
-            - '@darvin_menu.breadcrumbs.provider'
             - '@knp_menu.helper'
-            - '%darvin_menu.breadcrumbs.provider.menu_name%'
             - '%darvin_menu.breadcrumbs.twig_extension.default_options%'
             - '%darvin_menu.breadcrumbs.template%'
         tags:
