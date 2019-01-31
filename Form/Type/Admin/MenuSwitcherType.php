@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
-use Darvin\MenuBundle\Switcher\MenuSwitcher;
+use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,15 +32,15 @@ class MenuSwitcherType extends AbstractType
     private $menuConfig;
 
     /**
-     * @var \Darvin\MenuBundle\Switcher\MenuSwitcher
+     * @var \Darvin\MenuBundle\Switcher\MenuSwitcherInterface
      */
     private $menuSwitcher;
 
     /**
      * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig   Menu configuration
-     * @param \Darvin\MenuBundle\Switcher\MenuSwitcher                    $menuSwitcher Menu switcher
+     * @param \Darvin\MenuBundle\Switcher\MenuSwitcherInterface           $menuSwitcher Menu switcher
      */
-    public function __construct(MenuConfigurationInterface $menuConfig, MenuSwitcher $menuSwitcher)
+    public function __construct(MenuConfigurationInterface $menuConfig, MenuSwitcherInterface $menuSwitcher)
     {
         $this->menuConfig = $menuConfig;
         $this->menuSwitcher = $menuSwitcher;

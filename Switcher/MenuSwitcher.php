@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Menu switcher
  */
-class MenuSwitcher
+class MenuSwitcher implements MenuSwitcherInterface
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -66,9 +66,7 @@ class MenuSwitcher
     }
 
     /**
-     * @param object $entity Entity
-     *
-     * @return string[]
+     * {@inheritDoc}
      */
     public function getDefaultMenus($entity): array
     {
@@ -82,7 +80,7 @@ class MenuSwitcher
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function getMenusToEnable(): array
     {
@@ -90,7 +88,7 @@ class MenuSwitcher
     }
 
     /**
-     * @return array
+     * {@inheritDoc}
      */
     public function getMenusToDisable(): array
     {
@@ -98,9 +96,7 @@ class MenuSwitcher
     }
 
     /**
-     * @param object $entity Entity
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function hasEnabledMenus($entity): bool
     {
@@ -114,10 +110,7 @@ class MenuSwitcher
     }
 
     /**
-     * @param object $entity    Entity
-     * @param string $menuAlias Menu alias
-     *
-     * @return bool
+     * {@inheritDoc}
      */
     public function isMenuEnabled($entity, string $menuAlias): bool
     {
@@ -137,9 +130,7 @@ class MenuSwitcher
     }
 
     /**
-     * @param object $entity    Entity
-     * @param string $menuAlias Menu alias
-     * @param bool   $enable    Whether to enable menu
+     * {@inheritDoc}
      */
     public function toggleMenu($entity, string $menuAlias, bool $enable): void
     {

@@ -15,7 +15,7 @@ use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
-use Darvin\MenuBundle\Switcher\MenuSwitcher;
+use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -33,7 +33,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     private $entityResolver;
 
     /**
-     * @var \Darvin\MenuBundle\Switcher\MenuSwitcher
+     * @var \Darvin\MenuBundle\Switcher\MenuSwitcherInterface
      */
     private $menuSwitcher;
 
@@ -54,13 +54,13 @@ class SwitchMenuSubscriber implements EventSubscriber
 
     /**
      * @param \Darvin\Utils\ORM\EntityResolverInterface                          $entityResolver         Entity resolver
-     * @param \Darvin\MenuBundle\Switcher\MenuSwitcher                           $menuSwitcher           Menu switcher
+     * @param \Darvin\MenuBundle\Switcher\MenuSwitcherInterface                  $menuSwitcher           Menu switcher
      * @param \Darvin\ContentBundle\Translatable\TranslationInitializerInterface $translationInitializer Translation initializer
      * @param string[]                                                           $locales                Locales
      */
     public function __construct(
         EntityResolverInterface $entityResolver,
-        MenuSwitcher $menuSwitcher,
+        MenuSwitcherInterface $menuSwitcher,
         TranslationInitializerInterface $translationInitializer,
         array $locales
     ) {
