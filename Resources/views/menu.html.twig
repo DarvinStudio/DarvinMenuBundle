@@ -1,10 +1,10 @@
 {% import _self as that %}
 
-{% macro list(item, matcher) %}
+{% macro list(item, matcher, options) %}
 
     {% import _self as that %}
 
-    {% if item.children is not empty %}
+    {% if item.children is not empty and (options.depth is same as(null) or item.level < options.depth) %}
         <ul>
             {% for child in item.children %}
 
@@ -28,7 +28,7 @@
                     {% else %}
                         <span>{{ child.label }}</span>
                     {% endif %}
-                    {{ that.list(child, matcher) }}
+                    {{ that.list(child, matcher, options) }}
                 </li>
             {% endfor %}
         </ul>
@@ -37,6 +37,6 @@
 
 {% if item.children is not empty %}
     <nav>
-        {{ that.list(item, matcher) }}
+        {{ that.list(item, matcher, options) }}
     </nav>
 {% endif %}
