@@ -68,8 +68,6 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
 
         $class = get_class($entity);
 
-        $ids = $this->em->getClassMetadata($class)->getIdentifierValues($entity);
-
-        return uniqid(sprintf('%s-%s-', $class, reset($ids)), true);
+        return implode('-', array_merge([$class], $this->em->getClassMetadata($class)->getIdentifierValues($entity)));
     }
 }
