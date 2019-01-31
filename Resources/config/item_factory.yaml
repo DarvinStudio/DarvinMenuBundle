@@ -1,9 +1,9 @@
 parameters:
     darvin_menu.item_factory.abstract.class: Darvin\MenuBundle\Item\Factory\AbstractItemFactory
 
-    darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\Factory\Entity\AbstractEntityItemFactory
-
     darvin_menu.item_factory.root.class: Darvin\MenuBundle\Item\Factory\RootItemFactory
+
+    darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\Factory\Entity\AbstractEntityItemFactory
 
     darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\MenuItemFactory
 
@@ -22,6 +22,13 @@ services:
         calls:
             - [ setGenericItemFactory, [ '@knp_menu.factory' ] ]
 
+    darvin_menu.item_factory.root:
+        class:  '%darvin_menu.item_factory.root.class%'
+        parent: darvin_menu.item_factory.abstract
+        public: false
+        tags:
+            - { name: darvin_menu.item_factory }
+
     darvin_menu.item_factory.abstract_entity:
         class:    '%darvin_menu.item_factory.abstract_entity.class%'
         parent:   darvin_menu.item_factory.abstract
@@ -31,13 +38,6 @@ services:
             - [ setEntityManager, [ '@doctrine.orm.entity_manager' ] ]
             - [ setObjectNamer,   [ '@darvin_utils.object_namer' ] ]
             - [ setSlugMapRouter, [ '@darvin_content.slug.map_router' ] ]
-
-    darvin_menu.item_factory.root:
-        class:  '%darvin_menu.item_factory.root.class%'
-        parent: darvin_menu.item_factory.abstract
-        public: false
-        tags:
-            - { name: darvin_menu.item_factory }
 
     darvin_menu.item_factory.menu_item_entity:
         class:  '%darvin_menu.item_factory.menu_item_entity.class%'
