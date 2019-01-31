@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Item\Pool;
 
 use Darvin\MenuBundle\Item\ItemFactoryInterface;
+use Knp\Menu\ItemInterface;
 
 /**
  * Item factory pool
@@ -41,11 +42,11 @@ class ItemFactoryPool implements ItemFactoryPoolInterface
     /**
      * {@inheritDoc}
      */
-    public function getFactory($source): ItemFactoryInterface
+    public function createItem($source): ItemInterface
     {
         foreach ($this->factories as $factory) {
             if ($factory->supports($source)) {
-                return $factory;
+                return $factory->createItem($source);
             }
         }
 

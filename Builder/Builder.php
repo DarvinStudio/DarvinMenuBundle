@@ -15,9 +15,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\MenuBundle\Item\MenuItemFactory;
-use Darvin\MenuBundle\Item\RootItemFactory;
-use Darvin\MenuBundle\Item\SlugMapItemFactory;
+use Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Locale\LocaleProviderInterface;
@@ -45,14 +43,14 @@ class Builder implements MenuBuilderInterface
     protected $entityResolver;
 
     /**
+     * @var \Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface
+     */
+    protected $itemFactoryPool;
+
+    /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
      */
     protected $localeProvider;
-
-    /**
-     * @var \Darvin\MenuBundle\Item\MenuItemFactory
-     */
-    protected $menuItemFactory;
 
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
@@ -65,19 +63,9 @@ class Builder implements MenuBuilderInterface
     protected $propertyAccessor;
 
     /**
-     * @var \Darvin\MenuBundle\Item\RootItemFactory
-     */
-    protected $rootItemFactory;
-
-    /**
      * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
      */
     protected $slugMapItemCustomObjectLoader;
-
-    /**
-     * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
-     */
-    protected $slugMapItemFactory;
 
     /**
      * @var \Gedmo\Sortable\SortableListener
@@ -107,38 +95,32 @@ class Builder implements MenuBuilderInterface
     /**
      * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
      * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver                Entity resolver
+     * @param \Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface       $itemFactoryPool               Item factory pool
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                $localeProvider                Locale provider
-     * @param \Darvin\MenuBundle\Item\MenuItemFactory                     $menuItemFactory               Item from menu item entity factory
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface              $metadataFactory               Extended metadata factory
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor              Property accessor
-     * @param \Darvin\MenuBundle\Item\RootItemFactory                     $rootItemFactory               Root item factory
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader    $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory                  $slugMapItemFactory            Item from slug map item entity factory
      * @param \Gedmo\Sortable\SortableListener                            $sortableListener              Sortable event listener
      * @param array                                                       $entityConfig                  Entity configuration
      */
     public function __construct(
         EntityManager $em,
         EntityResolverInterface $entityResolver,
+        ItemFactoryPoolInterface $itemFactoryPool,
         LocaleProviderInterface $localeProvider,
-        MenuItemFactory $menuItemFactory,
         MetadataFactoryInterface $metadataFactory,
         PropertyAccessorInterface $propertyAccessor,
-        RootItemFactory $rootItemFactory,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
-        SlugMapItemFactory $slugMapItemFactory,
         SortableListener $sortableListener,
         array $entityConfig
     ) {
         $this->em = $em;
         $this->entityResolver = $entityResolver;
+        $this->itemFactoryPool = $itemFactoryPool;
         $this->localeProvider = $localeProvider;
-        $this->menuItemFactory = $menuItemFactory;
         $this->metadataFactory = $metadataFactory;
         $this->propertyAccessor = $propertyAccessor;
-        $this->rootItemFactory = $rootItemFactory;
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
-        $this->slugMapItemFactory = $slugMapItemFactory;
         $this->sortableListener = $sortableListener;
         $this->entityConfig = $entityConfig;
 
@@ -166,7 +148,7 @@ class Builder implements MenuBuilderInterface
      */
     public function buildMenu(): ItemInterface
     {
-        $root = $this->rootItemFactory->createItem($this->menuAlias);
+        $root = $this->itemFactoryPool->createItem($this->menuAlias);
 
         $entities = $this->getMenuItemEntities();
 
@@ -205,7 +187,7 @@ class Builder implements MenuBuilderInterface
                 }
             }
 
-            $item = $this->menuItemFactory->createItem($entity);
+            $item = $this->itemFactoryPool->createItem($entity);
             $items[$entity->getId()] = $item;
 
             if (null === $entity->getParent()) {
@@ -255,7 +237,7 @@ class Builder implements MenuBuilderInterface
         $items = [];
 
         foreach ($childSlugMapItems as $id => $slugMapItem) {
-            $item = $this->slugMapItemFactory->createItem($slugMapItem['object']);
+            $item = $this->itemFactoryPool->createItem($slugMapItem['object']);
             $items[$id] = $item;
 
             $parentId = $slugMapItem['parent_id'];

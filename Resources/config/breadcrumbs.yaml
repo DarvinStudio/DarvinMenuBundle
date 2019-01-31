@@ -16,11 +16,10 @@ services:
         public: false
         arguments:
             - '@doctrine.orm.entity_manager'
+            - '@darvin_menu.item_factory.pool'
             - '@darvin_utils.mapping.metadata_factory'
             - '@request_stack'
-            - '@darvin_menu.item_factory.root'
             - '@darvin_menu.slug_map.item_custom_object_loader'
-            - '@darvin_menu.item_factory.slug_map_item_entity'
             - '%darvin_menu.breadcrumbs.slug_parameter_name%'
 
     darvin_menu.breadcrumbs.provider:

@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Item\Pool;
 
-use Darvin\MenuBundle\Item\ItemFactoryInterface;
+use Knp\Menu\ItemInterface;
 
 /**
  * Item factory pool
@@ -20,8 +20,8 @@ interface ItemFactoryPoolInterface
     /**
      * @param mixed $source Source
      *
-     * @return \Darvin\MenuBundle\Item\ItemFactoryInterface
+     * @return \Knp\Menu\ItemInterface
      * @throws \InvalidArgumentException
      */
-    public function getFactory($source): ItemFactoryInterface;
+    public function createItem($source): ItemInterface;
 }

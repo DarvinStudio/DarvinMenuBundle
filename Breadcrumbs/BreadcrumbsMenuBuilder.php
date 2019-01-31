@@ -13,8 +13,7 @@ namespace Darvin\MenuBundle\Breadcrumbs;
 use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\MenuBundle\Item\RootItemFactory;
-use Darvin\MenuBundle\Item\SlugMapItemFactory;
+use Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface;
 use Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
@@ -32,6 +31,11 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
     private $em;
 
     /**
+     * @var \Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface
+     */
+    private $itemFactoryPool;
+
+    /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
      */
     private $metadataFactory;
@@ -42,19 +46,9 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
     private $requestStack;
 
     /**
-     * @var \Darvin\MenuBundle\Item\RootItemFactory
-     */
-    private $rootItemFactory;
-
-    /**
      * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
      */
     private $slugMapItemCustomObjectLoader;
-
-    /**
-     * @var \Darvin\MenuBundle\Item\SlugMapItemFactory
-     */
-    private $slugMapItemFactory;
 
     /**
      * @var string
@@ -63,28 +57,25 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
 
     /**
      * @param \Doctrine\ORM\EntityManager                              $em                            Entity manager
+     * @param \Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface    $itemFactoryPool               Item factory pool
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface           $metadataFactory               Extended metadata factory
      * @param \Symfony\Component\HttpFoundation\RequestStack           $requestStack                  Request stack
-     * @param \Darvin\MenuBundle\Item\RootItemFactory                  $rootItemFactory               Root item factory
      * @param \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader Slug map item custom object loader
-     * @param \Darvin\MenuBundle\Item\SlugMapItemFactory               $slugMapItemFactory            Item from slug map item entity factory
      * @param string                                                   $slugParameterName             Slug route parameter name
      */
     public function __construct(
         EntityManager $em,
+        ItemFactoryPoolInterface $itemFactoryPool,
         MetadataFactoryInterface $metadataFactory,
         RequestStack $requestStack,
-        RootItemFactory $rootItemFactory,
         SlugMapItemCustomObjectLoader $slugMapItemCustomObjectLoader,
-        SlugMapItemFactory $slugMapItemFactory,
         string $slugParameterName
     ) {
         $this->em = $em;
+        $this->itemFactoryPool = $itemFactoryPool;
         $this->metadataFactory = $metadataFactory;
         $this->requestStack = $requestStack;
-        $this->rootItemFactory = $rootItemFactory;
         $this->slugMapItemCustomObjectLoader = $slugMapItemCustomObjectLoader;
-        $this->slugMapItemFactory = $slugMapItemFactory;
         $this->slugParameterName = $slugParameterName;
     }
 
@@ -93,7 +84,7 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
      */
     public function buildMenu(string $name): ItemInterface
     {
-        $root = $this->rootItemFactory->createItem($name);
+        $root = $this->itemFactoryPool->createItem($name);
 
         $request = $this->requestStack->getMasterRequest();
 
@@ -154,7 +145,7 @@ class BreadcrumbsMenuBuilder implements BreadcrumbsMenuBuilderInterface
                 continue;
             }
 
-            $item = $this->slugMapItemFactory->createItem($slugMapItem);
+            $item = $this->itemFactoryPool->createItem($slugMapItem);
 
             $object = $slugMapItem->getObject();
 
