@@ -60,7 +60,14 @@ class MenuItemFactory extends AbstractEntityItemFactory
     {
         $title = $menuItem->getTitle();
 
-        return !empty($title) ? $title : $this->slugMapItemFactory->getLabel($menuItem->getSlugMapItem());
+        if (!empty($title)) {
+            return $title;
+        }
+        if (null === $menuItem->getSlugMapItem()) {
+            return $menuItem->getUrl();
+        }
+
+        return (string)$menuItem->getSlugMapItem()->getObject();
     }
 
     /**

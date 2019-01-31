@@ -91,7 +91,7 @@ class ItemRepository extends EntityRepository
     public function getForMenuBuilder(string $menu, ?string $locale = null): array
     {
         $qb = $this->createDefaultBuilder()
-            ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL')
+            ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL')
             ->orderBy('o.level')
             ->addOrderBy('o.position');
         $this->joinTranslations($qb, $locale);

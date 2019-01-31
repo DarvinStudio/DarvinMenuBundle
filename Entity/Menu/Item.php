@@ -153,14 +153,17 @@ class Item
     public function __toString()
     {
         $prefix = str_repeat('.....', $this->level == 0 ? $this->level : $this->level - 1);
-
-        $title = $this->getTitle();
+        $title  = $this->getTitle();
+        $url    = $this->getUrl();
 
         if (!empty($title)) {
             return $prefix.$title;
         }
         if (!empty($this->slugMapItem) && null !== $this->slugMapItem->getObject()) {
             return $prefix.$this->slugMapItem->getObject();
+        }
+        if (!empty($url)) {
+            return $url;
         }
 
         return $prefix.$this->id;

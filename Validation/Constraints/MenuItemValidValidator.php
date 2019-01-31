@@ -43,8 +43,9 @@ class MenuItemValidValidator extends ConstraintValidator
         }
         foreach ($menuItem->getTranslations() as $translation) {
             $title = $translation->getTitle();
+            $url   = $translation->getUrl();
 
-            if (empty($title)) {
+            if (empty($title) && empty($url)) {
                 $this->context->buildViolation($constraint->message)->addViolation();
 
                 return;
