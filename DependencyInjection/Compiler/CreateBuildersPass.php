@@ -46,10 +46,7 @@ class CreateBuildersPass implements CompilerPassInterface
             }
 
             $definition = new ChildDefinition('darvin_menu.builder.abstract');
-            $definition->addMethodCall('setMenuAlias', [
-                $menu->getAlias(),
-                $menu->getBuilderOptions(),
-            ]);
+            $definition->addMethodCall('setMenuAlias', [$menu->getAlias()]);
 
             $definitions[$id] = $definition;
         }

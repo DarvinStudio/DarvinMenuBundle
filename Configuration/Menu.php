@@ -31,11 +31,6 @@ class Menu
     private $icon;
 
     /**
-     * @var array
-     */
-    private $builderOptions = [];
-
-    /**
      * @var string
      */
     private $title;
@@ -74,14 +69,12 @@ class Menu
      * @param string $alias              Alias
      * @param bool   $breadcrumbsEnabled Is breadcrumbs functionality enabled
      * @param string $icon               Icon
-     * @param array  $builderOptions     Builder options
      */
-    public function __construct(string $alias, bool $breadcrumbsEnabled, string $icon, array $builderOptions = [])
+    public function __construct(string $alias, bool $breadcrumbsEnabled, string $icon)
     {
         $this->alias              = $alias;
         $this->breadcrumbsEnabled = $breadcrumbsEnabled;
         $this->icon               = $icon;
-        $this->builderOptions     = $builderOptions;
 
         $this->title                   = sprintf('menu.%s', $alias);
         $this->builderId               = sprintf('darvin_menu.builder.%s', $alias);
@@ -114,14 +107,6 @@ class Menu
     public function getIcon(): string
     {
         return $this->icon;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBuilderOptions(): array
-    {
-        return $this->builderOptions;
     }
 
     /**
