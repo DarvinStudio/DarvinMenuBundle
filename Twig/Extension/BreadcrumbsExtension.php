@@ -82,6 +82,6 @@ class BreadcrumbsExtension extends AbstractExtension
             $options['template'] = $this->defaultTemplate;
         }
 
-        return $this->helper->render($this->breadcrumbsBuilder->buildBreadcrumbs(), $options, $renderer);
+        return trim($this->helper->render($this->breadcrumbsBuilder->buildBreadcrumbs(), $options, $renderer));
     }
 }
