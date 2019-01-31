@@ -22,7 +22,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
      */
-    protected $requestStack;
+    private $requestStack;
 
     /**
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack

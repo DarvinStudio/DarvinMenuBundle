@@ -35,62 +35,62 @@ class Builder implements MenuBuilderInterface
     /**
      * @var \Doctrine\ORM\EntityManager
      */
-    protected $em;
+    private $em;
 
     /**
      * @var \Darvin\Utils\ORM\EntityResolverInterface
      */
-    protected $entityResolver;
+    private $entityResolver;
 
     /**
      * @var \Darvin\MenuBundle\Item\Pool\ItemFactoryPoolInterface
      */
-    protected $itemFactoryPool;
+    private $itemFactoryPool;
 
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
      */
-    protected $localeProvider;
+    private $localeProvider;
 
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
      */
-    protected $metadataFactory;
+    private $metadataFactory;
 
     /**
      * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
      */
-    protected $propertyAccessor;
+    private $propertyAccessor;
 
     /**
      * @var \Darvin\MenuBundle\SlugMap\SlugMapItemCustomObjectLoader
      */
-    protected $slugMapItemCustomObjectLoader;
+    private $slugMapItemCustomObjectLoader;
 
     /**
      * @var \Gedmo\Sortable\SortableListener
      */
-    protected $sortableListener;
+    private $sortableListener;
 
     /**
      * @var array
      */
-    protected $entityConfig;
+    private $entityConfig;
 
     /**
      * @var string
      */
-    protected $menuAlias;
+    private $menuAlias;
 
     /**
      * @var array
      */
-    protected $buildOptions = [];
+    private $buildOptions = [];
 
     /**
      * @var array
      */
-    protected $slugPartSeparators;
+    private $slugPartSeparators;
 
     /**
      * @param \Doctrine\ORM\EntityManager                                 $em                            Entity manager
@@ -161,7 +161,7 @@ class Builder implements MenuBuilderInterface
      * @param \Knp\Menu\ItemInterface               $root     Root item
      * @param \Darvin\MenuBundle\Entity\Menu\Item[] $entities Menu item entities
      */
-    protected function addItems(ItemInterface $root, array $entities): void
+    private function addItems(ItemInterface $root, array $entities): void
     {
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = $parentSlugs = $separatorCounts = [];
@@ -225,7 +225,7 @@ class Builder implements MenuBuilderInterface
      * @param int                                        $separatorCount    Count of separators in the parent item's slug
      * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
      */
-    protected function addChildren(ItemInterface $parent, int $separatorCount, array $childSlugMapItems): void
+    private function addChildren(ItemInterface $parent, int $separatorCount, array $childSlugMapItems): void
     {
         $childSlugMapItems = $this->prepareChildSlugMapItems($childSlugMapItems);
 
@@ -258,7 +258,7 @@ class Builder implements MenuBuilderInterface
     /**
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    protected function getMenuItemEntities(): array
+    private function getMenuItemEntities(): array
     {
         $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $this->localeProvider->getCurrentLocale());
 
@@ -291,7 +291,7 @@ class Builder implements MenuBuilderInterface
      *
      * @return array
      */
-    protected function prepareChildSlugMapItems(array $childSlugMapItems): array
+    private function prepareChildSlugMapItems(array $childSlugMapItems): array
     {
         $children = [];
 
@@ -372,7 +372,7 @@ class Builder implements MenuBuilderInterface
      *
      * @return bool|string
      */
-    protected function getSlugPartsSeparator(string $class, string $property)
+    private function getSlugPartsSeparator(string $class, string $property)
     {
         if (!isset($this->slugPartSeparators[$class][$property])) {
             if (!isset($this->slugPartSeparators[$class])) {
@@ -391,7 +391,7 @@ class Builder implements MenuBuilderInterface
      *
      * @return bool
      */
-    protected function isSlugMapItemActive(SlugMapItem $slugMapItem): bool
+    private function isSlugMapItemActive(SlugMapItem $slugMapItem): bool
     {
         $customObject = $slugMapItem->getObject();
 
@@ -411,7 +411,7 @@ class Builder implements MenuBuilderInterface
     /**
      * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
      */
-    protected function getEntityRepository(): ItemRepository
+    private function getEntityRepository(): ItemRepository
     {
         return $this->em->getRepository(Item::class);
     }
@@ -419,7 +419,7 @@ class Builder implements MenuBuilderInterface
     /**
      * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
      */
-    protected function getSlugMapItemRepository(): SlugMapItemRepository
+    private function getSlugMapItemRepository(): SlugMapItemRepository
     {
         return $this->em->getRepository(SlugMapItem::class);
     }
