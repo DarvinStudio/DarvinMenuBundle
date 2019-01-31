@@ -75,18 +75,18 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
     /**
      * @param object $entity Entity
      *
-     * @throws \Darvin\MenuBundle\Item\ItemFactoryException
+     * @throws \InvalidArgumentException
      */
     protected function validateEntity($entity)
     {
         if (!is_object($entity)) {
-            throw new ItemFactoryException(sprintf('Entity must be object, got "%s".', gettype($entity)));
+            throw new \InvalidArgumentException(sprintf('Entity must be object, got "%s".', gettype($entity)));
         }
 
         $supportedClass = $this->getSupportedClass();
 
         if (!$entity instanceof $supportedClass) {
-            throw new ItemFactoryException(
+            throw new \InvalidArgumentException(
                 sprintf('Entity must be instance of "%s", got "%s".', $supportedClass, get_class($entity))
             );
         }
