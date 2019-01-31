@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle;
 
+use Darvin\MenuBundle\DependencyInjection\Compiler\AddItemFactoriesPass;
 use Darvin\MenuBundle\DependencyInjection\Compiler\CreateBuildersPass;
 use Darvin\MenuBundle\DependencyInjection\Compiler\CreateMenuServicesPass;
 use Darvin\MenuBundle\DependencyInjection\Compiler\OverrideMatcherPass;
@@ -30,6 +31,7 @@ class DarvinMenuBundle extends Bundle
     public function build(ContainerBuilder $container): void
     {
         $container
+            ->addCompilerPass(new AddItemFactoriesPass())
             ->addCompilerPass(new CreateBuildersPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 20)
             ->addCompilerPass(new CreateMenuServicesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 10)
             ->addCompilerPass(new OverrideMatcherPass());

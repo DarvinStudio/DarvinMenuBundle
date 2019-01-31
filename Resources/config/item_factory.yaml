@@ -11,6 +11,8 @@ parameters:
     darvin_menu.item_factory.slug_map_item_entity.generic_uri_route:  darvin_content_show
     darvin_menu.item_factory.slug_map_item_entity.homepage_uri_route: darvin_page_homepage
 
+    darvin_menu.item_factory.pool.class: Darvin\MenuBundle\Item\Pool\ItemFactoryPool
+
 services:
     _defaults:
         public: true
@@ -36,6 +38,8 @@ services:
         class:  '%darvin_menu.item_factory.root.class%'
         parent: darvin_menu.item_factory.abstract
         public: false
+        tags:
+            - { name: darvin_menu.item_factory }
 
     darvin_menu.item_factory.menu_item_entity:
         class:  '%darvin_menu.item_factory.menu_item_entity.class%'
@@ -43,8 +47,16 @@ services:
         public: false
         arguments:
             - '@request_stack'
+        tags:
+            - { name: darvin_menu.item_factory }
 
     darvin_menu.item_factory.slug_map_item_entity:
         class:  '%darvin_menu.item_factory.slug_map_item_entity.class%'
         parent: darvin_menu.item_factory.abstract_entity
+        public: false
+        tags:
+            - { name: darvin_menu.item_factory }
+
+    darvin_menu.item_factory.pool:
+        class:  '%darvin_menu.item_factory.pool.class%'
         public: false

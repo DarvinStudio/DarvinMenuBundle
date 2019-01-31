@@ -58,12 +58,4 @@ class SlugMapItemFactory extends AbstractEntityItemFactory
             'objectName' => $this->objectNamer->name($slugMapItem->getObjectClass()),
         ];
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getSupportedClass(): string
-    {
-        return SlugMapItem::class;
-    }
 }
