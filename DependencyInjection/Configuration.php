@@ -62,7 +62,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('menus')->useAttributeAsKey('alias')
                     ->prototype('array')
                         ->children()
-                            ->booleanNode('breadcrumbs')->defaultTrue()->end()
                             ->scalarNode('icon')->defaultValue('bundles/darvinmenu/images/admin/menu_main.png')->cannotBeEmpty()->end()
                         ->end()
                     ->end()

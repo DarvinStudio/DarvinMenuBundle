@@ -21,11 +21,6 @@ class Menu
     private $alias;
 
     /**
-     * @var bool
-     */
-    private $breadcrumbsEnabled;
-
-    /**
      * @var string
      */
     private $icon;
@@ -46,43 +41,17 @@ class Menu
     private $builderAlias;
 
     /**
-     * @var string
+     * @param string $alias Alias
+     * @param string $icon  Icon
      */
-    private $breadcrumbsBuilderId;
-
-    /**
-     * @var string
-     */
-    private $breadcrumbsBuilderAlias;
-
-    /**
-     * @var string
-     */
-    private $menuServiceId;
-
-    /**
-     * @var string
-     */
-    private $menuServiceAlias;
-
-    /**
-     * @param string $alias              Alias
-     * @param bool   $breadcrumbsEnabled Is breadcrumbs functionality enabled
-     * @param string $icon               Icon
-     */
-    public function __construct(string $alias, bool $breadcrumbsEnabled, string $icon)
+    public function __construct(string $alias, string $icon)
     {
-        $this->alias              = $alias;
-        $this->breadcrumbsEnabled = $breadcrumbsEnabled;
-        $this->icon               = $icon;
+        $this->alias = $alias;
+        $this->icon  = $icon;
 
-        $this->title                   = sprintf('menu.%s', $alias);
-        $this->builderId               = sprintf('darvin_menu.builder.%s', $alias);
-        $this->builderAlias            = sprintf('darvin_menu_%s', $alias);
-        $this->breadcrumbsBuilderId    = sprintf('darvin_menu.breadcrumbs_builder.%s', $alias);
-        $this->breadcrumbsBuilderAlias = sprintf('darvin_breadcrumbs_%s', $alias);
-        $this->menuServiceId           = sprintf('darvin_menu.menu.%s', $alias);
-        $this->menuServiceAlias        = sprintf('darvin_menu_%s', $alias);
+        $this->title        = sprintf('menu.%s', $alias);
+        $this->builderId    = sprintf('darvin_menu.builder.%s', $alias);
+        $this->builderAlias = sprintf('darvin_menu_%s', $alias);
     }
 
     /**
@@ -91,14 +60,6 @@ class Menu
     public function getAlias(): string
     {
         return $this->alias;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isBreadcrumbsEnabled(): bool
-    {
-        return $this->breadcrumbsEnabled;
     }
 
     /**
@@ -131,37 +92,5 @@ class Menu
     public function getBuilderAlias(): string
     {
         return $this->builderAlias;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsBuilderId(): string
-    {
-        return $this->breadcrumbsBuilderId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBreadcrumbsBuilderAlias(): string
-    {
-        return $this->breadcrumbsBuilderAlias;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMenuServiceId(): string
-    {
-        return $this->menuServiceId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMenuServiceAlias(): string
-    {
-        return $this->menuServiceAlias;
     }
 }

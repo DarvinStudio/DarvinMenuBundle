@@ -63,7 +63,7 @@ class MenuConfiguration implements MenuConfigurationInterface
                     throw new \LogicException(sprintf('Menu with alias "%s" already exists.', $alias));
                 }
 
-                $menus[$alias] = new Menu($alias, $config['breadcrumbs'], $config['icon']);
+                $menus[$alias] = new Menu($alias, $config['icon']);
             }
 
             $this->menus = $menus;
