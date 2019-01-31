@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -12,7 +12,7 @@ namespace Darvin\MenuBundle\Item;
 
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\ORM\EntityManager;
-use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 
 /**
  * Entity item factory abstract implementation
@@ -30,54 +30,56 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
     protected $objectNamer;
 
     /**
-     * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
-     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
-     * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
+     * @param \Doctrine\ORM\EntityManager $em Entity manager
      */
-    public function __construct(FactoryInterface $genericItemFactory, EntityManager $em, ObjectNamerInterface $objectNamer)
+    public function setEntityManager(EntityManager $em): void
     {
-        parent::__construct($genericItemFactory);
-
         $this->em = $em;
+    }
+
+    /**
+     * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer Object namer
+     */
+    public function setObjectNamer(ObjectNamerInterface $objectNamer): void
+    {
         $this->objectNamer = $objectNamer;
     }
 
     /**
-     * @param object $entity Entity
-     *
-     * @return \Knp\Menu\ItemInterface
+     * {@inheritDoc}
      */
-    public function createItem($entity)
+    public function createItem($source): ItemInterface
     {
-        $this->validateEntity($entity);
+        $this->validateEntity($source);
 
-        return parent::createItem($entity);
+        return parent::createItem($source);
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
-    abstract protected function getSupportedClass();
-
-    /**
-     * @param object $entity Entity
-     *
-     * @return string
-     */
-    protected function getItemName($entity)
+    protected function nameItem($source): ?string
     {
+        $entity = $source;
+
         $class = get_class($entity);
+
         $ids = $this->em->getClassMetadata($class)->getIdentifierValues($entity);
 
         return uniqid(sprintf('%s-%s-', $class, reset($ids)), true);
     }
 
     /**
+     * @return string
+     */
+    abstract protected function getSupportedClass(): string;
+
+    /**
      * @param object $entity Entity
      *
      * @throws \InvalidArgumentException
      */
-    protected function validateEntity($entity)
+    protected function validateEntity($entity): void
     {
         if (!is_object($entity)) {
             throw new \InvalidArgumentException(sprintf('Entity must be object, got "%s".', gettype($entity)));

@@ -1,7 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2017-2018, Darvin Studio
+ * @copyright Copyright (c) 2017-2019, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
@@ -11,9 +11,6 @@
 namespace Darvin\MenuBundle\Item;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
-use Doctrine\ORM\EntityManager;
-use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -32,32 +29,23 @@ class MenuItemFactory extends AbstractEntityItemFactory
     protected $slugMapItemFactory;
 
     /**
-     * @param \Knp\Menu\FactoryInterface                     $genericItemFactory Generic item factory
-     * @param \Doctrine\ORM\EntityManager                    $em                 Entity manager
-     * @param \Darvin\Utils\ObjectNamer\ObjectNamerInterface $objectNamer        Object namer
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack       Request stack
      * @param \Darvin\MenuBundle\Item\SlugMapItemFactory     $slugMapItemFactory Item from slug map item factory
      */
-    public function __construct(
-        FactoryInterface $genericItemFactory,
-        EntityManager $em,
-        ObjectNamerInterface $objectNamer,
-        RequestStack $requestStack,
-        SlugMapItemFactory $slugMapItemFactory
-    ) {
-        parent::__construct($genericItemFactory, $em, $objectNamer);
-
+    public function __construct(RequestStack $requestStack, SlugMapItemFactory $slugMapItemFactory)
+    {
         $this->requestStack = $requestStack;
         $this->slugMapItemFactory = $slugMapItemFactory;
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function getLabel($menuItem)
+    protected function getLabel($source): ?string
     {
+        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+        $menuItem = $source;
+
         $title = $menuItem->getTitle();
 
         if (!empty($title)) {
@@ -71,12 +59,13 @@ class MenuItemFactory extends AbstractEntityItemFactory
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    protected function getUri($menuItem)
+    protected function getUri($source): ?string
     {
+        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+        $menuItem = $source;
+
         $url = $menuItem->getUrl();
 
         if (empty($url)) {
@@ -102,47 +91,47 @@ class MenuItemFactory extends AbstractEntityItemFactory
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    protected function getExtras($menuItem)
+    protected function getExtras($source): array
     {
-        $objectName = $objectId = $object = null;
-        $image = $menuItem->getImage();
+        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+        $menuItem = $source;
+
+        $image      = $menuItem->getImage();
         $hoverImage = $menuItem->getHoverImage();
+        $object = $objectId = $objectName = null;
 
         if (null !== $menuItem->getSlugMapItem() && null !== $menuItem->getSlugMapItem()->getObject()) {
             $slugMapItem = $menuItem->getSlugMapItem();
 
+            $object     = $slugMapItem->getObject();
+            $objectId   = $slugMapItem->getObjectId();
             $objectName = $this->objectNamer->name($slugMapItem->getObjectClass());
-            $objectId = $slugMapItem->getObjectId();
-
-            $object = $slugMapItem->getObject();
 
             if (empty($image) && interface_exists('Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface')) {
                 if ($object instanceof \Darvin\ImageBundle\ImageableEntity\ImageableEntityInterface) {
-                    $image = $object->getImage();
+                    $image      = $object->getImage();
                     $hoverImage = !empty($hoverImage) ? $hoverImage : $object->getImage();
                 }
             }
         }
 
         return array_merge(parent::getExtras($menuItem), [
-            'menuItem'            => $menuItem,
-            'objectName'          => $objectName,
-            'objectId'            => $objectId,
-            'object'              => $object,
-            'image'               => $image,
-            'hoverImage'          => $hoverImage,
-            'showSlugMapChildren' => $menuItem->isShowChildren(),
+            'image'            => $image,
+            'hoverImage'       => $hoverImage,
+            'itemEntity'       => $menuItem,
+            'object'           => $object,
+            'objectId'         => $objectId,
+            'objectName'       => $objectName,
+            'showSlugChildren' => $menuItem->isShowChildren(),
         ]);
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    protected function getSupportedClass()
+    protected function getSupportedClass(): string
     {
         return Item::class;
     }
