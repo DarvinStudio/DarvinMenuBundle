@@ -209,7 +209,7 @@ class Builder implements MenuBuilderInterface
         }
         foreach ($this->getSlugMapItemRepository()->getChildrenBySlugs(array_unique($parentSlugs), $classBlacklist) as $parentSlug => $childSlugMapItems) {
             foreach (array_keys($parentSlugs, $parentSlug) as $entityId) {
-                $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childSlugMapItems);
+                $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childSlugMapItems, $options);
             }
         }
     }
@@ -218,10 +218,14 @@ class Builder implements MenuBuilderInterface
      * @param \Knp\Menu\ItemInterface                    $parent            Parent item
      * @param int                                        $separatorCount    Count of separators in the parent item's slug
      * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
+     * @param array                                      $options           Options
      */
-    private function addChildren(ItemInterface $parent, int $separatorCount, array $childSlugMapItems): void
+    private function addChildren(ItemInterface $parent, int $separatorCount, array $childSlugMapItems, array $options): void
     {
-        $childSlugMapItems = $this->prepareChildSlugMapItems($childSlugMapItems);
+        $childSlugMapItems = $this->prepareChildSlugMapItems(
+            $childSlugMapItems,
+            null !== $options['depth'] ? $separatorCount + $options['depth'] - $parent->getLevel() : null
+        );
 
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = [];
@@ -280,10 +284,11 @@ class Builder implements MenuBuilderInterface
 
     /**
      * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
+     * @param int|null                                   $maxSeparatorCount Maximum separator count
      *
      * @return array
      */
-    private function prepareChildSlugMapItems(array $childSlugMapItems): array
+    private function prepareChildSlugMapItems(array $childSlugMapItems, ?int $maxSeparatorCount): array
     {
         $children = [];
 
@@ -295,6 +300,20 @@ class Builder implements MenuBuilderInterface
 
         if (false === $separator) {
             return $children;
+        }
+
+        $separatorCounts = [];
+
+        foreach ($childSlugMapItems as $key => $slugMapItem) {
+            $separatorCount = substr_count($slugMapItem->getSlug(), $separator) + 1;
+
+            if (null !== $maxSeparatorCount && $separatorCount > $maxSeparatorCount) {
+                unset($childSlugMapItems[$key]);
+
+                continue;
+            }
+
+            $separatorCounts[$slugMapItem->getId()] = $separatorCount;
         }
 
         $this->slugMapObjectLoader->loadObjects($childSlugMapItems);
@@ -309,7 +328,7 @@ class Builder implements MenuBuilderInterface
             $children[$slugMapItem->getId()] = [
                 'object'          => $slugMapItem,
                 'slug'            => $slugMapItem->getSlug(),
-                'separator_count' => substr_count($slugMapItem->getSlug(), $separator) + 1,
+                'separator_count' => $separatorCounts[$slugMapItem->getId()],
                 'parent_id'       => null,
             ];
         }
