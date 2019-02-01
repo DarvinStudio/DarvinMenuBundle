@@ -223,10 +223,6 @@ class Builder implements MenuBuilderInterface
     {
         $childSlugMapItems = $this->prepareChildSlugMapItems($childSlugMapItems);
 
-        $parent->setExtras(array_merge($parent->getExtras(), [
-            'hasSlugMapChildren' => !empty($childSlugMapItems),
-        ]));
-
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = [];
 
