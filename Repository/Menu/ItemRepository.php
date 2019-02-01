@@ -84,11 +84,12 @@ class ItemRepository extends EntityRepository
 
     /**
      * @param string      $menu   Menu alias
+     * @param int|null    $depth  Depth
      * @param string|null $locale Locale
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    public function getForMenuBuilder(string $menu, ?string $locale = null): array
+    public function getForMenuBuilder(string $menu, ?int $depth = null, ?string $locale = null): array
     {
         $qb = $this->createDefaultBuilder()
             ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL')
@@ -101,6 +102,12 @@ class ItemRepository extends EntityRepository
             ->joinSlugMapItem($qb)
             ->addEnabledFilter($qb)
             ->addMenuFilter($qb, $menu);
+
+        if (null !== $depth) {
+            $qb
+                ->andWhere('o.level <= :depth')
+                ->setParameter('depth', $depth);
+        }
 
         return $qb->getQuery()->getResult();
     }
