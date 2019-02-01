@@ -19,7 +19,9 @@ interface MenuBuilderInterface
     public const BUILD_METHOD = 'buildMenu';
     
     /**
+     * @param array $options Options
+     *
      * @return \Knp\Menu\ItemInterface
      */
-    public function buildMenu(): ItemInterface;
+    public function buildMenu(array $options = []): ItemInterface;
 }

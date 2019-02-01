@@ -24,6 +24,7 @@ use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Sortable\SortableListener;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -82,6 +83,11 @@ class Builder implements MenuBuilderInterface
     private $menuAlias;
 
     /**
+     * @var \Symfony\Component\OptionsResolver\OptionsResolver|null
+     */
+    private $optionsResolver;
+
+    /**
      * @var array
      */
     private $slugPartSeparators;
@@ -118,6 +124,7 @@ class Builder implements MenuBuilderInterface
         $this->sortableListener = $sortableListener;
         $this->entityConfig = $entityConfig;
 
+        $this->optionsResolver    = null;
         $this->slugPartSeparators = [];
     }
 
@@ -132,8 +139,10 @@ class Builder implements MenuBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function buildMenu(): ItemInterface
+    public function buildMenu(array $options = []): ItemInterface
     {
+        $options = $this->getOptionsResolver()->resolve($options);
+
         $root = $this->itemFactoryPool->createItem($this->menuAlias);
 
         $entities = $this->getMenuItemEntities();
@@ -390,6 +399,32 @@ class Builder implements MenuBuilderInterface
         }
 
         return true;
+    }
+
+    /**
+     * @return \Symfony\Component\OptionsResolver\OptionsResolver
+     */
+    private function getOptionsResolver(): OptionsResolver
+    {
+        if (null === $this->optionsResolver) {
+            $resolver = new OptionsResolver();
+
+            $this->configureOptions($resolver);
+
+            $this->optionsResolver = $resolver;
+        }
+
+        return $this->optionsResolver;
+    }
+
+    /**
+     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver Options resolver
+     */
+    private function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefault('depth', null)
+            ->setAllowedTypes('depth', ['integer', 'null']);
     }
 
     /**
