@@ -147,7 +147,7 @@ class Builder implements MenuBuilderInterface
 
         $entities = $this->getMenuItemEntities($options);
 
-        $this->addItems($root, $entities);
+        $this->addItems($root, $entities, $options);
 
         return $root;
     }
@@ -155,8 +155,9 @@ class Builder implements MenuBuilderInterface
     /**
      * @param \Knp\Menu\ItemInterface               $root     Root item
      * @param \Darvin\MenuBundle\Entity\Menu\Item[] $entities Menu item entities
+     * @param array                                 $options  Options
      */
-    private function addItems(ItemInterface $root, array $entities): void
+    private function addItems(ItemInterface $root, array $entities, array $options): void
     {
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = $parentSlugs = $separatorCounts = [];
@@ -172,7 +173,7 @@ class Builder implements MenuBuilderInterface
 
                     continue;
                 }
-                if ($entity->isShowChildren()) {
+                if ($entity->isShowChildren() && (null === $options['depth'] || $entity->getLevel() < $options['depth'])) {
                     $parentSlug = $slugMapItem->getSlug().$separator;
                     $parentSlugs[$entity->getId()] = $parentSlug;
 
