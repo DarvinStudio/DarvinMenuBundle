@@ -118,24 +118,19 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
      */
     protected function configureExtras(OptionsResolver $resolver): void
     {
-        $resolver
-            ->setDefaults([
-                'itemEntity' => null,
-                'object'     => null,
-                'objectId'   => null,
-                'objectName' => null,
-            ])
-            ->setAllowedTypes('itemEntity', [Item::class, 'null'])
-            ->setAllowedTypes('object', ['object', 'null'])
-            ->setAllowedTypes('objectName', ['string', 'null']);
-
         foreach ([
-            'image',
-            'hoverImage',
-        ] as $extra) {
-            $resolver
-                ->setDefault($extra, null)
-                ->setAllowedTypes($extra, [AbstractImage::class, 'null']);
+            'hoverImage' => AbstractImage::class,
+            'image'      => AbstractImage::class,
+            'itemEntity' => Item::class,
+            'object'     => 'object',
+            'objectId'   => null,
+            'objectName' => 'string',
+        ] as $name => $type) {
+            $resolver->setDefault($name, null);
+
+            if (!empty($type)) {
+                $resolver->setAllowedTypes($name, [$type, 'null']);
+            }
         }
     }
 }

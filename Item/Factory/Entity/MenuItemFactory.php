@@ -118,8 +118,8 @@ class MenuItemFactory extends AbstractEntityItemFactory
         }
 
         return array_merge(parent::getExtras($menuItem), [
-            'image'            => $image,
             'hoverImage'       => $hoverImage,
+            'image'            => $image,
             'itemEntity'       => $menuItem,
             'object'           => $object,
             'objectId'         => $objectId,
