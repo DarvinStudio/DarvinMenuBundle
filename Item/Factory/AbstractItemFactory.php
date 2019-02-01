@@ -120,16 +120,14 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
     {
         $resolver
             ->setDefaults([
-                'itemEntity'       => null,
-                'object'           => null,
-                'objectId'         => null,
-                'objectName'       => null,
-                'showSlugChildren' => false,
+                'itemEntity' => null,
+                'object'     => null,
+                'objectId'   => null,
+                'objectName' => null,
             ])
             ->setAllowedTypes('itemEntity', [Item::class, 'null'])
             ->setAllowedTypes('object', ['object', 'null'])
-            ->setAllowedTypes('objectName', ['string', 'null'])
-            ->setAllowedTypes('showSlugChildren', 'boolean');
+            ->setAllowedTypes('objectName', ['string', 'null']);
 
         foreach ([
             'image',
