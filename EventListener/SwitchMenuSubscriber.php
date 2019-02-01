@@ -18,6 +18,7 @@ use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
@@ -99,7 +100,7 @@ class SwitchMenuSubscriber implements EventSubscriber
             }
             foreach ($this->menuSwitcher->getMenusToEnable() as $menuAlias => $entities) {
                 foreach ($entities as $entity) {
-                    if ($slugMapItem->getObjectClass() === get_class($entity)
+                    if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
                         && $slugMapItem->getObjectId() === $this->getEntityId($entity)
                     ) {
                         $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
@@ -172,7 +173,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getMenuItems($entity, ?string $menuAlias = null): array
     {
-        $class = get_class($entity);
+        $class = ClassUtils::getClass($entity);
 
         return $this->getMenuItemRepository()->getByObject(
             [$class, $this->entityResolver->reverseResolve($class)],
@@ -188,7 +189,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getSlugMapItem($entity): ?SlugMapItem
     {
-        $class = get_class($entity);
+        $class = ClassUtils::getClass($entity);
 
         return $this->getSlugMapItemRepository()->getOneByClassesAndId(
             [$class, $this->entityResolver->reverseResolve($class)],
@@ -203,7 +204,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getEntityId($entity)
     {
-        $ids = $this->em->getClassMetadata(get_class($entity))->getIdentifierValues($entity);
+        $ids = $this->em->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
 
         return reset($ids);
     }

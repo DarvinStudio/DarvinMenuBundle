@@ -13,6 +13,7 @@ namespace Darvin\MenuBundle\Item\Factory\Entity;
 use Darvin\ContentBundle\Slug\SlugMapRouterInterface;
 use Darvin\MenuBundle\Item\Factory\AbstractItemFactory;
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -66,7 +67,7 @@ abstract class AbstractEntityItemFactory extends AbstractItemFactory
     {
         $entity = $source;
 
-        $class = get_class($entity);
+        $class = ClassUtils::getClass($entity);
 
         return implode('-', array_merge([$class], $this->em->getClassMetadata($class)->getIdentifierValues($entity)));
     }

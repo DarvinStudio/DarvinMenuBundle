@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Validation\Constraints;
 
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -33,7 +34,7 @@ class MenuItemValidValidator extends ConstraintValidator
             $message = sprintf(
                 'Validated menu item must be instance of "%s", got instance of "%s".',
                 Item::class,
-                get_class($menuItem)
+                ClassUtils::getClass($menuItem)
             );
 
             throw new \InvalidArgumentException($message);

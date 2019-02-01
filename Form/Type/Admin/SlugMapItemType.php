@@ -18,6 +18,7 @@ use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
 use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Tree\TreeListener;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -220,7 +221,7 @@ MESSAGE
                 continue;
             }
 
-            $class = get_class(reset($entities));
+            $class = ClassUtils::getClass(reset($entities));
 
             $entities = $this->sortEntities($entities, $class);
 
