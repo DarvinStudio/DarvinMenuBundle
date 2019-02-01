@@ -10,8 +10,8 @@
 
 namespace Darvin\MenuBundle\Entity\Menu;
 
+use Darvin\ContentBundle\Traits\TranslationTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model\Translatable\Translation;
 
 /**
  * Menu item translation
@@ -22,7 +22,7 @@ use Knp\DoctrineBehaviors\Model\Translatable\Translation;
  */
 class ItemTranslation
 {
-    use Translation;
+    use TranslationTrait;
 
     /**
      * @var bool
