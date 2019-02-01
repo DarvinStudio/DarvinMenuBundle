@@ -118,13 +118,12 @@ class MenuItemFactory extends AbstractEntityItemFactory
         }
 
         return array_merge(parent::getExtras($menuItem), [
-            'hoverImage'       => $hoverImage,
-            'image'            => $image,
-            'itemEntity'       => $menuItem,
-            'object'           => $object,
-            'objectId'         => $objectId,
-            'objectName'       => $objectName,
-            'showSlugChildren' => $menuItem->isShowChildren(),
+            'hoverImage' => $hoverImage,
+            'image'      => $image,
+            'itemEntity' => $menuItem,
+            'object'     => $object,
+            'objectId'   => $objectId,
+            'objectName' => $objectName,
         ]);
     }
 }
