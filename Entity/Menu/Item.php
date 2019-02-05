@@ -97,7 +97,7 @@ class Item
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column
      *
      * @Assert\NotBlank
      *
@@ -124,7 +124,7 @@ class Item
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=2550, nullable=true)
+     * @ORM\Column(length=2550, nullable=true)
      *
      * @Gedmo\TreePath(separator="/", appendId="false")
      */

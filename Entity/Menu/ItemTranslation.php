@@ -34,14 +34,14 @@ class ItemTranslation
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(nullable=true)
      */
     protected $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(nullable=true)
      */
     protected $url;
 
