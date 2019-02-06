@@ -162,7 +162,7 @@ MESSAGE
                     'choice_label'  => 'id',
                     'required'      => false,
                     'query_builder' => function (SlugMapItemRepository $repository) use ($class, $entityResolver, $property) {
-                        return $repository->getBuilderByClassesAndProperty([$class, $entityResolver->reverseResolve($class)], $property);
+                        return $repository->createBuilderByClassesAndProperty([$class, $entityResolver->reverseResolve($class)], $property);
                     },
                     'attr' => [
                         'class'        => 'slave_input',
