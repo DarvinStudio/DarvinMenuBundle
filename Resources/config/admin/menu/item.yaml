@@ -78,12 +78,12 @@ form:
                         title:   ~
                         url:     ~
             image:
-                type: Darvin\ImageBundle\Form\Type\Image\ImageType
+                type: Darvin\ImageBundle\Form\Type\ImageType
                 options:
                     data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
                     filters:    [ menu_main ]
             hoverImage:
-                type: Darvin\ImageBundle\Form\Type\Image\ImageType
+                type: Darvin\ImageBundle\Form\Type\ImageType
                 options:
                     data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
                     filters:    [ menu_hover ]
