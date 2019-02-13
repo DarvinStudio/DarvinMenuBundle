@@ -27,6 +27,7 @@ class OverrideMatcherPass implements CompilerPassInterface
     {
         $container->getDefinition('knp_menu.matcher')
             ->setClass(Matcher::class)
+            ->addMethodCall('setHomepageRouter', [new Reference('darvin_utils.homepage.router')])
             ->addMethodCall('setRequestStack', [new Reference('request_stack')]);
     }
 }

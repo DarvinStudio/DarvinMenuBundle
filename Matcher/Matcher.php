@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Matcher;
 
+use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Matcher\Matcher as BaseMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -20,14 +21,32 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class Matcher extends BaseMatcher
 {
     /**
+     * @var \Darvin\Utils\Homepage\HomepageRouterInterface
+     */
+    private $homepageRouter;
+
+    /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
      */
     private $requestStack;
 
     /**
+     * @var string|null
+     */
+    private $homepageUrl = null;
+
+    /**
+     * @param \Darvin\Utils\Homepage\HomepageRouterInterface $homepageRouter Homepage router
+     */
+    public function setHomepageRouter(HomepageRouterInterface $homepageRouter): void
+    {
+        $this->homepageRouter = $homepageRouter;
+    }
+
+    /**
      * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack Request stack
      */
-    public function setRequestStack(RequestStack $requestStack)
+    public function setRequestStack(RequestStack $requestStack): void
     {
         $this->requestStack = $requestStack;
     }
@@ -41,22 +60,30 @@ class Matcher extends BaseMatcher
             return true;
         }
 
+        $url = $item->getUri();
+
+        if (null === $url || $url === $this->getHomepageUrl()) {
+            return false;
+        }
+
         $request = $this->requestStack->getCurrentRequest();
 
         if (empty($request)) {
             return false;
         }
 
-        $path = $request->getBaseUrl().$request->getPathInfo();
+        return 0 === strpos($request->getBaseUrl().$request->getPathInfo(), rtrim($url, '/').'/');
+    }
 
-        $itemUri = $item->getUri();
-
-        if (empty($itemUri)) {
-            return false;
+    /**
+     * @return string|null
+     */
+    private function getHomepageUrl(): ?string
+    {
+        if (null === $this->homepageUrl) {
+            $this->homepageUrl = $this->homepageRouter->generate();
         }
 
-        $itemUri = rtrim($itemUri, '/').'/';
-
-        return 0 === strpos($path, $itemUri);
+        return $this->homepageUrl;
     }
 }
