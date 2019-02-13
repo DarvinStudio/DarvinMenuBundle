@@ -17,8 +17,12 @@
                 {% endif %}
 
                 <li{% if classes is not empty %} class="{{ classes|join(' ') }}"{% endif %}>
-                    <img src="{{ child.extras.image|image_filter('menu_main') }}" alt="{{ child.label }}">
-                    <img src="{{ child.extras.hoverImage|image_filter('menu_hover') }}" alt="{{ child.label }}">
+                    <img src="{{ child.extras.image|image_filter('menu_main') }}"
+                         alt="{{ child.extras.image|image_alt(child.label) }}"
+                         title="{{ child.extras.image|image_title(child.label) }}">
+                    <img src="{{ child.extras.hoverImage|image_filter('menu_hover') }}"
+                         alt="{{ child.extras.hoverImage|image_alt(child.label) }}"
+                         title="{{ child.extras.hoverImage|image_title(child.label) }}">
                     {% if child.uri %}
                         <a href="{{ child.uri }}">{{ child.label }}</a>
                     {% else %}

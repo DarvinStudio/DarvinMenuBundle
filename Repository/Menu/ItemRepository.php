@@ -97,8 +97,8 @@ class ItemRepository extends EntityRepository
             ->addOrderBy('o.position');
         $this->joinTranslations($qb, $locale);
         $this
-            ->joinHoverImage($qb)
-            ->joinImage($qb)
+            ->joinHoverImage($qb, $locale)
+            ->joinImage($qb, $locale)
             ->joinSlugMapItem($qb)
             ->addEnabledFilter($qb)
             ->addMenuFilter($qb, $menu);
@@ -144,29 +144,53 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
+     * @param string|null                $locale Locale
      *
      * @return ItemRepository
      */
-    private function joinImage(QueryBuilder $qb): ItemRepository
+    private function joinImage(QueryBuilder $qb, ?string $locale = null): ItemRepository
     {
         $qb
             ->addSelect('image')
-            ->leftJoin('o.image', 'image');
+            ->addSelect('image_translations')
+            ->leftJoin('o.image', 'image')
+            ->leftJoin('image.translations', 'image_translations');
+
+        if (null !== $locale) {
+            $qb
+                ->andWhere($qb->expr()->orX(
+                    'image_translations.locale IS NULL',
+                    'image_translations.locale = :locale'
+                ))
+                ->setParameter('locale', $locale);
+        }
 
         return $this;
     }
 
     /**
-     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
+     * @param string|null                $locale Locale
      *
      * @return ItemRepository
      */
-    private function joinHoverImage(QueryBuilder $qb): ItemRepository
+    private function joinHoverImage(QueryBuilder $qb, ?string $locale = null): ItemRepository
     {
         $qb
             ->addSelect('hover_image')
-            ->leftJoin('o.hoverImage', 'hover_image');
+            ->addSelect('hover_image_translations')
+            ->leftJoin('o.hoverImage', 'hover_image')
+            ->leftJoin('hover_image.translations', 'hover_image_translations');
+
+        if (null !== $locale) {
+            $qb
+                ->andWhere($qb->expr()->orX(
+                    'hover_image_translations.locale IS NULL',
+                    'hover_image_translations.locale = :locale'
+                ))
+                ->setParameter('locale', $locale);
+        }
 
         return $this;
     }

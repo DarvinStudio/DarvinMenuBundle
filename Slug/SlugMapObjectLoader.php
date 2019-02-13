@@ -73,7 +73,7 @@ class SlugMapObjectLoader implements SlugMapObjectLoaderInterface
         $translationJoiner = $this->translationJoiner;
 
         $this->genericCustomObjectLoader->loadCustomObjects($items, function (QueryBuilder $qb) use ($locale, $imageJoiner, $translationJoiner) {
-            $imageJoiner->joinImages($qb);
+            $imageJoiner->joinImages($qb, $locale);
 
             if ($translationJoiner->isTranslatable($qb->getRootEntities()[0])) {
                 $translationJoiner->joinTranslation($qb, true, $locale, null, true);
