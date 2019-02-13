@@ -5,8 +5,6 @@
     {% import _self as that %}
 
     {% for child in item.children %}
-        <span> &rarr; </span>
-
         {% if child.uri and not matcher.isCurrent(child) %}
             <a href="{{ child.uri }}">{{ child.label }}</a>
         {% else %}
