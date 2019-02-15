@@ -371,7 +371,7 @@ class Builder implements MenuBuilderInterface
             $positionA = $propertyAccessor->getValue($slugMapItemA->getObject(), $sortableConfig['position']);
             $positionB = $propertyAccessor->getValue($slugMapItemB->getObject(), $sortableConfig['position']);
 
-            return $positionA === $positionB ? 0 : ($positionA > $positionB ? 1 : -1);
+            return $positionA <=> $positionB;
         });
 
         return $children;

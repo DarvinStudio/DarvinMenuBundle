@@ -159,7 +159,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         }
 
         usort($parentSlugMapItems, function (array $a, array $b) {
-            return $a['separator_count'] === $b['separator_count'] ? 0 : ($a['separator_count'] > $b['separator_count'] ? 1 : -1);
+            return $a['separator_count'] <=> $b['separator_count'];
         });
 
         /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems */
