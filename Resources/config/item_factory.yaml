@@ -37,7 +37,7 @@ services:
         calls:
             - [ setEntityManager, [ '@doctrine.orm.entity_manager' ] ]
             - [ setObjectNamer,   [ '@darvin_utils.object_namer' ] ]
-            - [ setSlugMapRouter, [ '@darvin_content.slug_map.router' ] ]
+            - [ setSlugMapRouter, [ '@darvin_content.router.slug_map' ] ]
 
     darvin_menu.item_factory.menu_item_entity:
         class:  '%darvin_menu.item_factory.menu_item_entity.class%'
