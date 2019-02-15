@@ -48,7 +48,7 @@ class LoadItemData extends AbstractFixture
      * @param int $maxCount Maximum count
      * @param int $maxLevel Maximum level
      */
-    public function __construct(int $minCount = 10, int $maxCount = 20, int $maxLevel = 3)
+    public function __construct(int $minCount, int $maxCount, int $maxLevel)
     {
         $this->minCount = $minCount;
         $this->maxCount = $maxCount;
