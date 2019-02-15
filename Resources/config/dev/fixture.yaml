@@ -5,8 +5,12 @@ parameters:
     darvin_menu.fixture.menu_item.max_level: 3
 
 services:
+    _defaults:
+        public: true
+
     darvin_menu.fixture.menu_item:
-        class: '%darvin_menu.fixture.menu_item.class%'
+        class:  '%darvin_menu.fixture.menu_item.class%'
+        public: false
         arguments:
             - '%darvin_menu.fixture.menu_item.min_count%'
             - '%darvin_menu.fixture.menu_item.max_count%'
