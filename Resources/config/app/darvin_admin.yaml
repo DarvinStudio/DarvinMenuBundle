@@ -10,5 +10,4 @@ darvin_admin:
                     main:    bundles/darvinmenu/images/admin/menus_main.png
                     sidebar: bundles/darvinmenu/images/admin/menus_sidebar.png
     sections:
-        Darvin\MenuBundle\Entity\Menu\Item:
-            config: '@DarvinMenuBundle/Resources/config/admin/menu/item.yaml'
+        Darvin\MenuBundle\Entity\Menu\Item: '@DarvinMenuBundle/Resources/config/admin/menu/item.yaml'
