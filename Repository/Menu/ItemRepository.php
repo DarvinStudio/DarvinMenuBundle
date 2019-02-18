@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Repository\Menu;
 
 use Darvin\ContentBundle\Traits\TranslatableRepositoryTrait;
+use Darvin\ImageBundle\Traits\ImageableRepositoryTrait;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -19,6 +20,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ItemRepository extends EntityRepository
 {
+    use ImageableRepositoryTrait;
     use TranslatableRepositoryTrait;
 
     /**
@@ -95,11 +97,11 @@ class ItemRepository extends EntityRepository
             ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL')
             ->orderBy('o.level')
             ->addOrderBy('o.position');
-        $this->joinTranslations($qb, $locale);
         $this
-            ->joinHoverImage($qb, $locale)
             ->joinImage($qb, $locale)
+            ->joinImage($qb, $locale, true, 'o.hoverImage', 'hover_image')
             ->joinSlugMapItem($qb)
+            ->joinTranslations($qb, $locale)
             ->addEnabledFilter($qb)
             ->addMenuFilter($qb, $menu);
 
@@ -141,58 +143,6 @@ class ItemRepository extends EntityRepository
         }
 
         return $items;
-    }
-
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
-     * @param string|null                $locale Locale
-     *
-     * @return ItemRepository
-     */
-    private function joinImage(QueryBuilder $qb, ?string $locale = null): ItemRepository
-    {
-        $qb
-            ->addSelect('image')
-            ->addSelect('image_translations')
-            ->leftJoin('o.image', 'image')
-            ->leftJoin('image.translations', 'image_translations');
-
-        if (null !== $locale) {
-            $qb
-                ->andWhere($qb->expr()->orX(
-                    'image_translations.locale IS NULL',
-                    'image_translations.locale = :locale'
-                ))
-                ->setParameter('locale', $locale);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb     Query builder
-     * @param string|null                $locale Locale
-     *
-     * @return ItemRepository
-     */
-    private function joinHoverImage(QueryBuilder $qb, ?string $locale = null): ItemRepository
-    {
-        $qb
-            ->addSelect('hover_image')
-            ->addSelect('hover_image_translations')
-            ->leftJoin('o.hoverImage', 'hover_image')
-            ->leftJoin('hover_image.translations', 'hover_image_translations');
-
-        if (null !== $locale) {
-            $qb
-                ->andWhere($qb->expr()->orX(
-                    'hover_image_translations.locale IS NULL',
-                    'hover_image_translations.locale = :locale'
-                ))
-                ->setParameter('locale', $locale);
-        }
-
-        return $this;
     }
 
     /**
