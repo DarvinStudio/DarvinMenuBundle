@@ -42,7 +42,7 @@ class Item
      * @var int
      *
      * @ORM\Column(type="integer", unique=true)
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
      * @ORM\Id
      *
      * @Gedmo\TreePathSource
