@@ -21,8 +21,8 @@ use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Tree\TreeListener;
+use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,7 +37,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 class SlugMapItemType extends AbstractType
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var \Psr\Container\ContainerInterface
      */
     private $container;
 
@@ -87,7 +87,7 @@ class SlugMapItemType extends AbstractType
     private $entityConfig;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface   $container            DI container
+     * @param \Psr\Container\ContainerInterface                           $container            DI container
      * @param \Doctrine\ORM\EntityManager                                 $em                   Entity manager
      * @param \Darvin\AdminBundle\EntityNamer\EntityNamerInterface        $entityNamer          Entity namer
      * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver       Entity resolver

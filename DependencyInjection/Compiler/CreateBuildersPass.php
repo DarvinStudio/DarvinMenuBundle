@@ -12,10 +12,10 @@ namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
 use Darvin\MenuBundle\Builder\MenuBuilderInterface;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Create builders compiler pass
@@ -59,7 +59,7 @@ class CreateBuildersPass implements CompilerPassInterface
     }
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container DI container
+     * @param \Psr\Container\ContainerInterface $container DI container
      *
      * @return \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
      */
