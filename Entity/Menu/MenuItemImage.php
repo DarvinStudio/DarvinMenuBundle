@@ -23,7 +23,7 @@ class MenuItemImage extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public static function getUploadDir()
+    public static function getUploadDir(): string
     {
         return 'menu';
     }
