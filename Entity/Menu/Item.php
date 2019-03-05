@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2016-2019, Darvin Studio
@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @method string getTitle()
  * @method string getUrl()
  *
- * @method \Darvin\MenuBundle\Entity\Menu\ItemTranslation[]|\Doctrine\Common\Collections\Collection getTranslations()
+ * @method ItemTranslation[]|Collection getTranslations()
  */
 class Item
 {
@@ -50,7 +50,7 @@ class Item
     protected $id;
 
     /**
-     * @var Item
+     * @var Item|null
      *
      * @ORM\ManyToOne(targetEntity="Item", inversedBy="children")
      *
@@ -67,7 +67,7 @@ class Item
     protected $children;
 
     /**
-     * @var \Darvin\ContentBundle\Entity\SlugMapItem
+     * @var \Darvin\ContentBundle\Entity\SlugMapItem|null
      *
      * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\SlugMapItem")
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -75,7 +75,7 @@ class Item
     protected $slugMapItem;
 
     /**
-     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
      *
      * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -85,7 +85,7 @@ class Item
     protected $image;
 
     /**
-     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
      *
      * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -150,7 +150,7 @@ class Item
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $prefix = str_repeat('.....', $this->level == 0 ? $this->level : $this->level - 1);
         $title  = $this->getTitle();
@@ -172,7 +172,7 @@ class Item
     /**
      * @return string
      */
-    public function getMenuTitle()
+    public function getMenuTitle(): string
     {
         return sprintf('menu.%s', $this->menu);
     }
@@ -180,17 +180,25 @@ class Item
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item $parent parent
+     * @return \Darvin\MenuBundle\Entity\Menu\Item|null
+     */
+    public function getParent(): ?Item
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param \Darvin\MenuBundle\Entity\Menu\Item|null $parent parent
      *
      * @return Item
      */
-    public function setParent(Item $parent = null)
+    public function setParent(?Item $parent): Item
     {
         $this->parent = $parent;
 
@@ -198,11 +206,11 @@ class Item
     }
 
     /**
-     * @return \Darvin\MenuBundle\Entity\Menu\Item
+     * @return Item[]|\Doctrine\Common\Collections\Collection
      */
-    public function getParent()
+    public function getChildren(): Collection
     {
-        return $this->parent;
+        return $this->children;
     }
 
     /**
@@ -210,7 +218,7 @@ class Item
      *
      * @return Item
      */
-    public function setChildren(Collection $children)
+    public function setChildren(Collection $children): Item
     {
         $this->children = $children;
 
@@ -218,19 +226,19 @@ class Item
     }
 
     /**
-     * @return Item[]|\Doctrine\Common\Collections\Collection
+     * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
      */
-    public function getChildren()
+    public function getSlugMapItem(): ?SlugMapItem
     {
-        return $this->children;
+        return $this->slugMapItem;
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem slugMapItem
+     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slugMapItem slugMapItem
      *
      * @return Item
      */
-    public function setSlugMapItem(SlugMapItem $slugMapItem = null)
+    public function setSlugMapItem(?SlugMapItem $slugMapItem): Item
     {
         $this->slugMapItem = $slugMapItem;
 
@@ -238,19 +246,19 @@ class Item
     }
 
     /**
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem
+     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
      */
-    public function getSlugMapItem()
+    public function getImage(): ?MenuItemImage
     {
-        return $this->slugMapItem;
+        return $this->image;
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage $image image
+     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null $image image
      *
      * @return Item
      */
-    public function setImage(MenuItemImage $image = null)
+    public function setImage(?MenuItemImage $image): Item
     {
         $this->image = $image;
 
@@ -258,19 +266,19 @@ class Item
     }
 
     /**
-     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
      */
-    public function getImage()
+    public function getHoverImage(): ?MenuItemImage
     {
-        return $this->image;
+        return $this->hoverImage;
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage $hoverImage hoverImage
+     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null $hoverImage hoverImage
      *
      * @return Item
      */
-    public function setHoverImage(MenuItemImage $hoverImage = null)
+    public function setHoverImage(?MenuItemImage $hoverImage): Item
     {
         $this->hoverImage = $hoverImage;
 
@@ -278,11 +286,11 @@ class Item
     }
 
     /**
-     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     * @return string
      */
-    public function getHoverImage()
+    public function getMenu(): ?string
     {
-        return $this->hoverImage;
+        return $this->menu;
     }
 
     /**
@@ -290,7 +298,7 @@ class Item
      *
      * @return Item
      */
-    public function setMenu($menu)
+    public function setMenu(?string $menu): Item
     {
         $this->menu = $menu;
 
@@ -298,19 +306,19 @@ class Item
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getMenu()
+    public function isShowChildren(): ?bool
     {
-        return $this->menu;
+        return $this->showChildren;
     }
 
     /**
-     * @param boolean $showChildren showChildren
+     * @param bool $showChildren showChildren
      *
      * @return Item
      */
-    public function setShowChildren($showChildren)
+    public function setShowChildren(?bool $showChildren): Item
     {
         $this->showChildren = $showChildren;
 
@@ -318,11 +326,11 @@ class Item
     }
 
     /**
-     * @return boolean
+     * @return int
      */
-    public function isShowChildren()
+    public function getPosition(): ?int
     {
-        return $this->showChildren;
+        return $this->position;
     }
 
     /**
@@ -330,7 +338,7 @@ class Item
      *
      * @return Item
      */
-    public function setPosition($position)
+    public function setPosition(?int $position): Item
     {
         $this->position = $position;
 
@@ -338,11 +346,11 @@ class Item
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPosition()
+    public function getTreePath(): ?string
     {
-        return $this->position;
+        return $this->treePath;
     }
 
     /**
@@ -350,7 +358,7 @@ class Item
      *
      * @return Item
      */
-    public function setTreePath($treePath)
+    public function setTreePath(?string $treePath): Item
     {
         $this->treePath = $treePath;
 
@@ -358,11 +366,11 @@ class Item
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getTreePath()
+    public function getLevel(): ?int
     {
-        return $this->treePath;
+        return $this->level;
     }
 
     /**
@@ -370,18 +378,10 @@ class Item
      *
      * @return Item
      */
-    public function setLevel($level)
+    public function setLevel(?int $level): Item
     {
         $this->level = $level;
 
         return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLevel()
-    {
-        return $this->level;
     }
 }
