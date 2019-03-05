@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
  * @copyright Copyright (c) 2016-2019, Darvin Studio
@@ -56,7 +56,7 @@ class ItemTranslation
     /**
      * {@inheritdoc}
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         foreach (get_object_vars($this) as $var => $value) {
             if (in_array($var, ['translatable', 'locale'])) {
@@ -71,11 +71,19 @@ class ItemTranslation
     }
 
     /**
-     * @param boolean $enabled enabled
+     * @return bool
+     */
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled enabled
      *
      * @return ItemTranslation
      */
-    public function setEnabled($enabled)
+    public function setEnabled(?bool $enabled): ItemTranslation
     {
         $this->enabled = $enabled;
 
@@ -83,11 +91,11 @@ class ItemTranslation
     }
 
     /**
-     * @return boolean
+     * @return string
      */
-    public function isEnabled()
+    public function getTitle(): ?string
     {
-        return $this->enabled;
+        return $this->title;
     }
 
     /**
@@ -95,7 +103,7 @@ class ItemTranslation
      *
      * @return ItemTranslation
      */
-    public function setTitle($title)
+    public function setTitle(?string $title): ItemTranslation
     {
         $this->title = $title;
 
@@ -105,9 +113,9 @@ class ItemTranslation
     /**
      * @return string
      */
-    public function getTitle()
+    public function getUrl(): ?string
     {
-        return $this->title;
+        return $this->url;
     }
 
     /**
@@ -115,18 +123,10 @@ class ItemTranslation
      *
      * @return ItemTranslation
      */
-    public function setUrl($url)
+    public function setUrl(?string $url): ItemTranslation
     {
         $this->url = $url;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 }
