@@ -22,7 +22,7 @@ class MenuItemValid extends Constraint
     /**
      * @var string
      */
-    public $message = 'menu_item.invalid';
+    public $message = 'menu_item.valid';
 
     /**
      * {@inheritdoc}

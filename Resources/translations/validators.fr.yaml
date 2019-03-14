@@ -1,2 +1,2 @@
 menu_item:
-    invalid: 'Veuillez choisir un objet ou de fournir le titre ou l''URL.'
+    valid: 'Veuillez choisir un objet ou de fournir le titre ou l''URL.'
