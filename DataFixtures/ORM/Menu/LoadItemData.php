@@ -125,7 +125,7 @@ class LoadItemData extends AbstractFixture
     {
         /** @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage $image */
         $image = $this->instantiateEntity(MenuItemImage::class);
-        $image->setFile($this->generateImageFile(320, 240, null, $grayscale ? 'fff' : null, $grayscale ? 'ccc' : null));
+        $image->setFile($this->generateImageFile(null, null, null, $grayscale ? 'fff' : null, $grayscale ? 'ccc' : null));
 
         return $image;
     }
