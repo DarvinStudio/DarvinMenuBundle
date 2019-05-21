@@ -61,11 +61,13 @@ class BreadcrumbsExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
-        yield new TwigFunction('darvin_menu_breadcrumbs', [$this, 'renderBreadcrumbs'], [
-            'is_safe' => ['html'],
-        ]);
+        return [
+            new TwigFunction('darvin_menu_breadcrumbs', [$this, 'renderBreadcrumbs'], [
+                'is_safe' => ['html'],
+            ]),
+        ];
     }
 
     /**
