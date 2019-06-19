@@ -74,7 +74,6 @@ class MenuItemParentType extends AbstractType
             }
 
             $choice->attr = array_merge($choice->attr, [
-                'class'        => 'slave_input',
                 'data-master'  => '.menu',
                 'data-show-on' => $menuItem->getMenu(),
                 'disabled'     => $menuItem === $form->getParent()->getData(),

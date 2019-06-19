@@ -165,7 +165,6 @@ MESSAGE
                         return $repository->createBuilderByClassesAndProperty([$class, $entityResolver->reverseResolve($class)], $property);
                     },
                     'attr' => [
-                        'class'        => 'slave_input',
                         'data-master'  => '.class_property',
                         'data-show-on' => $classPropertyChoiceValues[$i],
                     ],
