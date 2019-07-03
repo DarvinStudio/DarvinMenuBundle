@@ -241,7 +241,7 @@ MESSAGE
                     $choice->label = '';
 
                     if (!empty($levelProperty)) {
-                        $choice->label .= str_repeat('.....', $this->propertyAccessor->getValue($entity, $levelProperty) - 1);
+                        $choice->label .= str_repeat('— ', $this->propertyAccessor->getValue($entity, $levelProperty) - 1);
                     }
 
                     $choice->label .= (string)$entity;

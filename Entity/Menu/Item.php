@@ -152,7 +152,7 @@ class Item
      */
     public function __toString(): string
     {
-        $prefix = str_repeat('.....', $this->level == 0 ? $this->level : $this->level - 1);
+        $prefix = str_repeat('— ', $this->level == 0 ? $this->level : $this->level - 1);
         $title  = $this->getTitle();
         $url    = $this->getUrl();
 
