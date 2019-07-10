@@ -1,17 +1,10 @@
 {%- block darvin_menu_switcher_row -%}
-    {%- set compound  = false -%}
-    {%- set data_type = 'checkbox' -%}
-    {%- set show_help = false -%}
-    {{- block('form_row') -}}
+    {%- set expanded = true -%}
+    {{- block('choice_row') -}}
 {%- endblock darvin_menu_switcher_row -%}
 
 {%- block darvin_menu_switcher_widget -%}
-    <div class="form-item__сheckbox">
-        {%- for child in form -%}
-            {{- form_widget(child, {'checkbox_show_label': true}) -}}
-            {{- form_errors(child) -}}
-        {%- endfor -%}
-    </div>
+    {{- block('choice_widget_expanded') -}}
     <script>
         $(function () {
             var $checkboxes = $('#{{ id }} input[type="checkbox"][data-default]');
