@@ -1,5 +1,17 @@
-{% block darvin_menu_switcher_widget %}
-    {{ form_widget(form) }}
+{%- block darvin_menu_switcher_row -%}
+    {%- set compound  = false -%}
+    {%- set data_type = 'checkbox' -%}
+    {%- set show_help = false -%}
+    {{- block('form_row') -}}
+{%- endblock darvin_menu_switcher_row -%}
+
+{%- block darvin_menu_switcher_widget -%}
+    <div class="form-item__сheckbox">
+        {%- for child in form -%}
+            {{- form_widget(child, {'checkbox_show_label': true}) -}}
+            {{- form_errors(child) -}}
+        {%- endfor -%}
+    </div>
     <script>
         $(function () {
             var $checkboxes = $('#{{ id }} input[type="checkbox"][data-default]');
@@ -31,4 +43,4 @@
             $parent.change(toggleCheckboxes);
         });
     </script>
-{% endblock %}
+{%- endblock -%}
