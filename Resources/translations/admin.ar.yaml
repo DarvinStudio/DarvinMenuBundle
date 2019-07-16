@@ -39,7 +39,7 @@ menu_item:
         parent: الأم
         position: موقف
         position_from: 'موقف (من)'
-        position_to: 'موقف ()'
+        position_to: 'موقف (إلى)'
         show_children: 'تظهر الأطفال'
         slug_map_item: وجوه
         title: العنوان

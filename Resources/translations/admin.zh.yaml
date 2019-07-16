@@ -38,7 +38,7 @@ menu_item:
         menu_title: 菜单
         parent: 父
         position: 位置
-        position_from: 位置()
+        position_from: 位置(自)
         position_to: 位置()
         show_children: 孩子们展示
         slug_map_item: 对象

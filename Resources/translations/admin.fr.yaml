@@ -39,7 +39,7 @@ menu_item:
         parent: Parent
         position: Position
         position_from: 'Position (à partir de)'
-        position_to: 'Position ()'
+        position_to: 'Position (de)'
         show_children: 'Montrer Aux Enfants'
         slug_map_item: Objet
         title: Titre
