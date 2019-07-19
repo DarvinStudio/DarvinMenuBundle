@@ -63,6 +63,7 @@ services:
         public: false
         arguments:
             - '@darvin_admin.router'
+            - '@security.authorization_checker'
             - '@darvin_menu.configuration.menu'
             - '@darvin_admin.metadata.manager'
         tags:

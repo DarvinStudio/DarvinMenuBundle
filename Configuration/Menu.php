@@ -23,11 +23,6 @@ class Menu
     /**
      * @var string
      */
-    private $icon;
-
-    /**
-     * @var string
-     */
     private $title;
 
     /**
@@ -42,12 +37,10 @@ class Menu
 
     /**
      * @param string $alias Alias
-     * @param string $icon  Icon
      */
-    public function __construct(string $alias, string $icon)
+    public function __construct(string $alias)
     {
         $this->alias = $alias;
-        $this->icon  = $icon;
 
         $this->title        = sprintf('menu.%s', $alias);
         $this->builderId    = sprintf('darvin_menu.builder.%s', $alias);
@@ -60,14 +53,6 @@ class Menu
     public function getAlias(): string
     {
         return $this->alias;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return $this->icon;
     }
 
     /**

@@ -13,9 +13,11 @@ namespace Darvin\MenuBundle\Admin\Menu;
 use Darvin\AdminBundle\Menu\ItemFactoryInterface;
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Route\AdminRouterInterface;
+use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\MenuBundle\Configuration\Menu;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Admin menu item factory
@@ -28,6 +30,11 @@ class ItemFactory implements ItemFactoryInterface
     private $adminRouter;
 
     /**
+     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
      * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
      */
     private $menuConfig;
@@ -38,25 +45,32 @@ class ItemFactory implements ItemFactoryInterface
     private $metadataManager;
 
     /**
-     * @param \Darvin\AdminBundle\Route\AdminRouterInterface              $adminRouter     Admin router
-     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig      Menu configuration
-     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager Metadata manager
+     * @param \Darvin\AdminBundle\Route\AdminRouterInterface                               $adminRouter          Admin router
+     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Authorization checker
+     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface                  $menuConfig           Menu configuration
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface                   $metadataManager      Metadata manager
      */
     public function __construct(
         AdminRouterInterface $adminRouter,
+        AuthorizationCheckerInterface $authorizationChecker,
         MenuConfigurationInterface $menuConfig,
         AdminMetadataManagerInterface $metadataManager
     ) {
         $this->adminRouter = $adminRouter;
+        $this->authorizationChecker = $authorizationChecker;
         $this->menuConfig = $menuConfig;
         $this->metadataManager = $metadataManager;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getItems(): iterable
     {
+        if (!$this->authorizationChecker->isGranted(Permission::VIEW, Item::class)) {
+            return;
+        }
+
         $filterFormTypeName = $this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName();
 
         foreach (array_values($this->menuConfig->getMenus()) as $position => $menu) {
@@ -80,13 +94,10 @@ class ItemFactory implements ItemFactoryInterface
         ];
 
         return (new \Darvin\AdminBundle\Menu\Item(sprintf('menu_%s', $menu->getAlias())))
+            ->setAssociatedObject(Item::class)
             ->setIndexTitle($menu->getTitle())
             ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_INDEX, $routeParams))
-            ->setNewUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_NEW, $routeParams))
-            ->setNewTitle(sprintf('%saction.new.link', $this->metadataManager->getMetadata(Item::class)->getBaseTranslationPrefix()))
-            ->setMainIcon($menu->getIcon())
-            ->setPosition($position)
-            ->setAssociatedObject(Item::class)
-            ->setParentName('menu');
+            ->setParentName('menu')
+            ->setPosition($position);
     }
 }
