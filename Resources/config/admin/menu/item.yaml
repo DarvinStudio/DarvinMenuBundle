@@ -1,47 +1,53 @@
-index_view_row_attr:
-    - level
 menu:
     skip: true
+
 pagination:
     enabled: false
+
 searchable_fields:
     - title
     - url
+
 sorter:
     id:     darvin_menu.admin.menu_item_sorter
     method: sort
+
 joins:
     hover_image:   hoverImage
     image:         image
     slug_map_item: slugMapItem
+
 order_by:
     menu:     asc
     level:    asc
     position: asc
+
 view:
     index:
         fields:
-            menuTitle:    ~
-            position:     ~
-            enabled:      ~
-            showChildren: ~
+            menuTitle: ~
+            position:
+                type: position
+            enabled:
+                type: checkbox
+            showChildren:
+                type: checkbox
             slugMapItem:
                 widget: slug_map_item_link
             title: ~
             url:
+                type:   link
                 widget: simple_link
     extend~index~show:
         fields:
             remove~position:    ~
             remove~slugMapItem: ~
+
 form:
     index:
         fields:
             position:
-                options:
-                    attr:
-                        class:            position
-                        data-reload-page: 1
+                type: Darvin\AdminBundle\Form\Type\PositionType
             enabled:      ~
             showChildren: ~
     filter:
