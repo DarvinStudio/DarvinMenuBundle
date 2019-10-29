@@ -38,8 +38,8 @@ menu_item:
         menu_title: Menu
         parent: Parent
         position: Position
-        position_from: 'Position (from)'
-        position_to: 'Position (to)'
+        position_from: 'Position (From)'
+        position_to: 'Position (To)'
         show_children: 'Show Children'
         slug_map_item: Object
         title: Title
