@@ -38,8 +38,8 @@ menu_item:
         menu_title: Menu
         parent: Parent
         position: Position
-        position_from: 'Position (à partir de)'
-        position_to: 'Position (de)'
+        position_from: 'Position (À Partir De)'
+        position_to: 'Position (De)'
         show_children: 'Montrer Aux Enfants'
         slug_map_item: Objet
         title: Titre
