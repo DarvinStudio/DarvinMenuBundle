@@ -137,9 +137,15 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function createMenuItem(string $menuAlias, SlugMapItem $slugMapItem): Item
     {
-        return (new Item())
+        $class = $this->entityResolver->resolve(Item::class);
+
+        /** @var \Darvin\MenuBundle\Entity\Menu\Item $item */
+        $item = new $class();
+        $item
             ->setMenu($menuAlias)
             ->setSlugMapItem($slugMapItem);
+
+        return $item;
     }
 
     /**

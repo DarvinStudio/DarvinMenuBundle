@@ -52,3 +52,5 @@ darvin_menu:
 6.8.11: Pass menu item to extras.
 
 7.0.0: Remove menu switcher from form if no menus configured.
+
+7.0.4: Resolve menu item entity class before instantiating it in switch menu event subscriber.
