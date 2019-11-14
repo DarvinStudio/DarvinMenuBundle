@@ -61,6 +61,7 @@ form:
             enabled:      ~
             showChildren: ~
     filter:
+        heading_field: menu
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType

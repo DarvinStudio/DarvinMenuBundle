@@ -54,3 +54,5 @@ darvin_menu:
 7.0.0: Remove menu switcher from form if no menus configured.
 
 7.0.4: Resolve menu item entity class before instantiating it in switch menu event subscriber.
+
+7.0.5: Admin section: specify filter form's heading field.
