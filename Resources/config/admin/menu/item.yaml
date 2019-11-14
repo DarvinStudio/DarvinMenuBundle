@@ -25,7 +25,8 @@ order_by:
 view:
     index:
         fields:
-            menuTitle: ~
+            menuTitle:
+                size: sm
             position:
                 type: position
             enabled:
@@ -33,9 +34,18 @@ view:
             showChildren:
                 type: checkbox
             slugMapItem:
+                size: xxxl
                 widget: slug_map_item_link
-            title: ~
+            image:
+                size:   xxs
+                widget: image_link
+            hoverImage:
+                size:   xxs
+                widget: image_link
+            title:
+                size: xxl
             url:
+                size:   free
                 type:   link
                 widget: simple_link
     extend~index~show:
