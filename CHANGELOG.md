@@ -56,3 +56,5 @@ darvin_menu:
 7.0.4: Resolve menu item entity class before instantiating it in switch menu event subscriber.
 
 7.0.5: Admin section: specify filter form's heading field.
+
+7.0.7: Change positions of admin menu items.
