@@ -240,7 +240,7 @@ MESSAGE
 
                     $choice->label = '';
 
-                    if (!empty($levelProperty)) {
+                    if (null !== $levelProperty) {
                         $choice->label .= str_repeat('— ', $this->propertyAccessor->getValue($entity, $levelProperty) - 1);
                     }
 

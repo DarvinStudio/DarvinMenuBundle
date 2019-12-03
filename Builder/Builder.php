@@ -165,7 +165,7 @@ class Builder implements MenuBuilderInterface
         foreach ($entities as $key => $entity) {
             $slugMapItem = $entity->getSlugMapItem();
 
-            if (!empty($slugMapItem)) {
+            if (null !== $slugMapItem) {
                 $separator = $this->getSlugPartsSeparator($slugMapItem->getObjectClass(), $slugMapItem->getProperty());
 
                 if (false === $separator) {
@@ -236,7 +236,7 @@ class Builder implements MenuBuilderInterface
 
             $parentId = $slugMapItem['parent_id'];
 
-            if (empty($parentId)) {
+            if (null === $parentId) {
                 if (1 === $slugMapItem['separator_count'] - $separatorCount) {
                     $parent->addChild($item);
                 }
@@ -406,7 +406,7 @@ class Builder implements MenuBuilderInterface
     {
         $customObject = $slugMapItem->getObject();
 
-        if (empty($customObject)) {
+        if (null === $customObject) {
             return false;
         }
         if ($customObject instanceof DisableableInterface && !$customObject->isEnabled()) {

@@ -50,7 +50,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
 
         $title = $menuItem->getTitle();
 
-        if (!empty($title)) {
+        if (null !== $title) {
             return $title;
         }
         if (null === $menuItem->getSlugMapItem()) {
@@ -70,7 +70,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
 
         $url = $menuItem->getUrl();
 
-        if (empty($url)) {
+        if (null === $url) {
             return $this->slugMapRouter->generateUrl($menuItem->getSlugMapItem());
         }
         if (0 !== strpos($url, '/') || 0 === strpos($url, '//')) {
@@ -79,13 +79,13 @@ class MenuItemFactory extends AbstractEntityItemFactory
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (empty($request)) {
+        if (null === $request) {
             return $url;
         }
 
         $baseUrl = $request->getBaseUrl();
 
-        if (!empty($baseUrl) && 0 !== strpos($url, $baseUrl)) {
+        if ('' !== $baseUrl && 0 !== strpos($url, $baseUrl)) {
             $url = $baseUrl.$url;
         }
 
@@ -111,9 +111,9 @@ class MenuItemFactory extends AbstractEntityItemFactory
             $objectId   = $slugMapItem->getObjectId();
             $objectName = $this->objectNamer->name($slugMapItem->getObjectClass());
 
-            if (empty($image) && $object instanceof ImageableInterface) {
+            if (null === $image && $object instanceof ImageableInterface) {
                 $image      = $object->getImage();
-                $hoverImage = !empty($hoverImage) ? $hoverImage : $object->getImage();
+                $hoverImage = null !== $hoverImage ? $hoverImage : $object->getImage();
             }
         }
 

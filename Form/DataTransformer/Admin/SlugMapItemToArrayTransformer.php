@@ -60,6 +60,6 @@ class SlugMapItemToArrayTransformer implements DataTransformerInterface
     {
         $classProperty = $value['class_property'];
 
-        return !empty($classProperty) ? $value[$classProperty] : null;
+        return null !== $classProperty ? $value[$classProperty] : null;
     }
 }

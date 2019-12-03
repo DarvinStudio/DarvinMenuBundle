@@ -73,7 +73,7 @@ class MenuType extends AbstractType
 
             $request = $requestStack->getCurrentRequest();
 
-            if (empty($request)) {
+            if (null === $request) {
                 return;
             }
 

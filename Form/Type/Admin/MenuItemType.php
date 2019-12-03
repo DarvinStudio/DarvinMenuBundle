@@ -48,7 +48,7 @@ class MenuItemType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($builder, $locale) {
             $data = $event->getData();
 
-            if (empty($data['menu'])) {
+            if (null === $data['menu']) {
                 return;
             }
 

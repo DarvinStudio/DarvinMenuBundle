@@ -38,7 +38,7 @@ class ItemRepository extends EntityRepository
         $this->joinTranslations($qb, $locale);
         $this->joinSlugMapItem($qb);
 
-        if (!empty($menu)) {
+        if (null !== $menu) {
             $this->addMenuFilter($qb, $menu);
         }
 
@@ -65,7 +65,7 @@ class ItemRepository extends EntityRepository
             ->setParameter('object_id', $id);
         $this->joinSlugMapItem($qb);
 
-        if (!empty($menu)) {
+        if (null !== $menu) {
             $this->addMenuFilter($qb, $menu);
         }
 

@@ -63,7 +63,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
 
         $entity = $menuItem->getSlugMapItem()->getObject();
 
-        if (empty($entity)) {
+        if (null === $entity) {
             return null;
         }
 
@@ -73,11 +73,11 @@ class SlugMapItemLinkWidget extends AbstractWidget
             'admin'
         );
 
-        $showLink = $this->showLinkWidget->getContent($entity, [
+        $showLink = (string)$this->showLinkWidget->getContent($entity, [
             'text' => true,
         ]);
 
-        return $content.(!empty($showLink) ? $showLink : $entity);
+        return $content.('' !== $showLink ? $showLink : $entity);
     }
 
     /**

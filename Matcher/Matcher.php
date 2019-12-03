@@ -68,7 +68,7 @@ class Matcher extends BaseMatcher
 
         $request = $this->requestStack->getCurrentRequest();
 
-        if (empty($request)) {
+        if (null === $request) {
             return false;
         }
 

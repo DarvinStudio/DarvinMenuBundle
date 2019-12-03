@@ -39,7 +39,7 @@ class UriVoter implements VoterInterface
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (empty($request)) {
+        if (null === $request) {
             return false;
         }
 

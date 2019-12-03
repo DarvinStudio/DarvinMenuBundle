@@ -128,7 +128,7 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
         ] as $name => $type) {
             $resolver->setDefault($name, null);
 
-            if (!empty($type)) {
+            if (null !== $type) {
                 $resolver->setAllowedTypes($name, [$type, 'null']);
             }
         }

@@ -156,13 +156,13 @@ class Item
         $title  = $this->getTitle();
         $url    = $this->getUrl();
 
-        if (!empty($title)) {
+        if (null !== $title) {
             return $prefix.$title;
         }
-        if (!empty($this->slugMapItem) && null !== $this->slugMapItem->getObject()) {
+        if (null !== $this->slugMapItem && null !== $this->slugMapItem->getObject()) {
             return $prefix.$this->slugMapItem->getObject();
         }
-        if (!empty($url)) {
+        if (null !== $url) {
             return $url;
         }
 

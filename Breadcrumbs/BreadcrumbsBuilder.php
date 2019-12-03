@@ -117,23 +117,23 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 
         $request = $this->requestStack->getMasterRequest();
 
-        if (empty($request)) {
+        if (null === $request) {
             return $root;
         }
 
         $routeParams = $request->attributes->get('_route_params', []);
 
-        if (!isset($routeParams[$this->slugParameterName]) || empty($routeParams[$this->slugParameterName])) {
+        if (!isset($routeParams[$this->slugParameterName]) || null === $routeParams[$this->slugParameterName]) {
             return $root;
         }
 
-        $slug = $routeParams['slug'];
+        $slug = $routeParams[$this->slugParameterName];
 
         $currentSlugMapItem = $this->getSlugMapItemRepository()->findOneBy([
             'slug' => $slug,
         ]);
 
-        if (empty($currentSlugMapItem)) {
+        if (null === $currentSlugMapItem) {
             return $root;
         }
 
