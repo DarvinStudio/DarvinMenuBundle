@@ -44,7 +44,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             $config['breadcrumbs']['slug_parameter_name']
         );
 
-        (new ConfigLoader($container, __DIR__.'/../Resources/config'))->load([
+        (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'admin',
             'breadcrumbs',
             'builder',
