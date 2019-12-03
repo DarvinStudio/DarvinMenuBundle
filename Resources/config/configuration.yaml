@@ -2,10 +2,8 @@ parameters:
     darvin_menu.configuration.menu.class: Darvin\MenuBundle\Configuration\MenuConfiguration
 
 services:
-    _defaults:
-        public: true
-
     darvin_menu.configuration.menu:
-        class: '%darvin_menu.configuration.menu.class%'
+        class:  '%darvin_menu.configuration.menu.class%'
+        public: true
         arguments:
             - '%darvin_menu.menus%'

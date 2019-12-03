@@ -2,13 +2,9 @@ parameters:
     darvin_menu.builder.abstract.class: Darvin\MenuBundle\Builder\Builder
 
 services:
-    _defaults:
-        public: true
-
     darvin_menu.builder.abstract:
         class:    '%darvin_menu.builder.abstract.class%'
         abstract: true
-        public:   false
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.orm.entity_resolver'

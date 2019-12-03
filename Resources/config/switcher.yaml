@@ -6,9 +6,6 @@ parameters:
     darvin_menu.switcher.switch_event_subscriber.class: Darvin\MenuBundle\EventListener\SwitchMenuSubscriber
 
 services:
-    _defaults:
-        public: true
-
     darvin_menu.switcher.admin.form_type:
         class: '%darvin_menu.switcher.admin.form_type.class%'
         arguments:
@@ -18,16 +15,14 @@ services:
             - { name: form.type }
 
     darvin_menu.switcher:
-        class:  '%darvin_menu.switcher.class%'
-        public: false
+        class: '%darvin_menu.switcher.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.orm.entity_resolver'
             - '%darvin_menu.switcher.default_menus%'
 
     darvin_menu.switcher.switch_event_subscriber:
-        class:  '%darvin_menu.switcher.switch_event_subscriber.class%'
-        public: false
+        class: '%darvin_menu.switcher.switch_event_subscriber.class%'
         arguments:
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_menu.switcher'

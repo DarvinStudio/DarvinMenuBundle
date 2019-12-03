@@ -5,12 +5,8 @@ parameters:
     darvin_menu.breadcrumbs.twig_extension.default_options: { currentAsLink: false }
 
 services:
-    _defaults:
-        public: true
-
     darvin_menu.breadcrumbs.builder:
-        class:  '%darvin_menu.breadcrumbs.builder.class%'
-        public: false
+        class: '%darvin_menu.breadcrumbs.builder.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_menu.item_factory.pool'
@@ -21,8 +17,7 @@ services:
             - '%darvin_menu.breadcrumbs.slug_parameter_name%'
 
     darvin_menu.breadcrumbs.twig_extension:
-        class:  '%darvin_menu.breadcrumbs.twig_extension.class%'
-        public: false
+        class: '%darvin_menu.breadcrumbs.twig_extension.class%'
         arguments:
             - '@darvin_menu.breadcrumbs.builder'
             - '@knp_menu.helper'

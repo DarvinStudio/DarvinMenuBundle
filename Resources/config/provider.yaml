@@ -1,6 +1,3 @@
 services:
-    _defaults:
-        public: true
-
     darvin_menu.provider:
         alias: knp_menu.menu_provider

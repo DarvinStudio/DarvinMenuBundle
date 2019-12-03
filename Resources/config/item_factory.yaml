@@ -12,27 +12,21 @@ parameters:
     darvin_menu.item_factory.pool.class: Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPool
 
 services:
-    _defaults:
-        public: true
-
     darvin_menu.item_factory.abstract:
         class:    '%darvin_menu.item_factory.abstract.class%'
         abstract: true
-        public:   false
         calls:
             - [ setGenericItemFactory, [ '@knp_menu.factory' ] ]
 
     darvin_menu.item_factory.string:
         class:  '%darvin_menu.item_factory.string.class%'
         parent: darvin_menu.item_factory.abstract
-        public: false
         tags:
             - { name: darvin_menu.item_factory }
 
     darvin_menu.item_factory.abstract_entity:
         class:    '%darvin_menu.item_factory.abstract_entity.class%'
         parent:   darvin_menu.item_factory.abstract
-        public:   false
         abstract: true
         calls:
             - [ setEntityManager, [ '@doctrine.orm.entity_manager' ] ]
@@ -42,7 +36,6 @@ services:
     darvin_menu.item_factory.menu_item_entity:
         class:  '%darvin_menu.item_factory.menu_item_entity.class%'
         parent: darvin_menu.item_factory.abstract_entity
-        public: false
         arguments:
             - '@request_stack'
         tags:
@@ -51,10 +44,8 @@ services:
     darvin_menu.item_factory.slug_map_item_entity:
         class:  '%darvin_menu.item_factory.slug_map_item_entity.class%'
         parent: darvin_menu.item_factory.abstract_entity
-        public: false
         tags:
             - { name: darvin_menu.item_factory }
 
     darvin_menu.item_factory.pool:
-        class:  '%darvin_menu.item_factory.pool.class%'
-        public: false
+        class: '%darvin_menu.item_factory.pool.class%'
