@@ -54,7 +54,7 @@ class Matcher extends BaseMatcher
     /**
      * {@inheritdoc}
      */
-    public function isAncestor(ItemInterface $item, $depth = null): bool
+    public function isAncestor(ItemInterface $item, ?int $depth = null): bool
     {
         if (parent::isAncestor($item, $depth)) {
             return true;
