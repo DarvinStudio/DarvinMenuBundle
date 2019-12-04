@@ -64,3 +64,5 @@ darvin_menu:
 - Move service configs to "services" dir.
 
 - Replace "empty()" calls with null comparisons.
+
+7.0.10: Upgrade vendors.
