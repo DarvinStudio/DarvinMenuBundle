@@ -58,7 +58,7 @@ class LoadItemData extends AbstractFixture
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager): void
     {

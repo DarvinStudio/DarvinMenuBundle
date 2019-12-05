@@ -57,7 +57,7 @@ class MenuItemParentType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
@@ -94,7 +94,7 @@ class MenuItemParentType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
@@ -110,7 +110,7 @@ class MenuItemParentType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getParent(): string
     {

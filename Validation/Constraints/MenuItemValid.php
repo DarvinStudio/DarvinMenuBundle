@@ -25,7 +25,7 @@ class MenuItemValid extends Constraint
     public $message = 'menu_item.valid';
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getTargets(): string
     {

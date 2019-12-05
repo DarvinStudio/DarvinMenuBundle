@@ -37,7 +37,7 @@ class MenuItemType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -65,7 +65,7 @@ class MenuItemType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getParent(): string
     {

@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 class MenuItemImage extends AbstractImage
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public static function getUploadDir(): string
     {

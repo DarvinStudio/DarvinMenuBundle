@@ -34,7 +34,7 @@ class SlugMapItemToArrayTransformer implements DataTransformerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function transform($value): ?array
     {
@@ -54,7 +54,7 @@ class SlugMapItemToArrayTransformer implements DataTransformerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function reverseTransform($value): ?SlugMapItem
     {

@@ -55,7 +55,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getSubscribedEvents(): array
     {

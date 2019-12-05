@@ -81,7 +81,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getAllowedEntityClasses(): iterable
     {
@@ -89,7 +89,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getRequiredPermissions(): iterable
     {

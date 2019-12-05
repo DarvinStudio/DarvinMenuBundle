@@ -33,7 +33,7 @@ class UriVoter implements VoterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function matchItem(ItemInterface $item): bool
     {
