@@ -142,7 +142,7 @@ class MenuSwitcher implements MenuSwitcherInterface
      * @param object $entity    Entity
      * @param string $menuAlias Menu alias
      */
-    private function enableMenu($entity, string $menuAlias): void
+    private function enableMenu(object $entity, string $menuAlias): void
     {
         if ($this->isMenuEnabled($entity, $menuAlias)) {
             return;
@@ -158,7 +158,7 @@ class MenuSwitcher implements MenuSwitcherInterface
      * @param object $entity    Entity
      * @param string $menuAlias Menu alias
      */
-    private function disableMenu($entity, string $menuAlias): void
+    private function disableMenu(object $entity, string $menuAlias): void
     {
         if (!$this->isMenuEnabled($entity, $menuAlias)) {
             return;

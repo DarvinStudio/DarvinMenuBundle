@@ -66,3 +66,5 @@ darvin_menu:
 - Replace "empty()" calls with null comparisons.
 
 7.0.10: Upgrade vendors.
+
+7.0.12: Use "object" type hint.

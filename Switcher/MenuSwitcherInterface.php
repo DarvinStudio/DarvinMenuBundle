@@ -20,7 +20,7 @@ interface MenuSwitcherInterface
      *
      * @return string[]
      */
-    public function getDefaultMenus($entity): array;
+    public function getDefaultMenus(object $entity): array;
 
     /**
      * @return array
@@ -37,7 +37,7 @@ interface MenuSwitcherInterface
      *
      * @return bool
      */
-    public function hasEnabledMenus($entity): bool;
+    public function hasEnabledMenus(object $entity): bool;
 
     /**
      * @param object $entity    Entity
@@ -45,12 +45,12 @@ interface MenuSwitcherInterface
      *
      * @return bool
      */
-    public function isMenuEnabled($entity, string $menuAlias): bool;
+    public function isMenuEnabled(object $entity, string $menuAlias): bool;
 
     /**
      * @param object $entity    Entity
      * @param string $menuAlias Menu alias
      * @param bool   $enable    Whether to enable menu
      */
-    public function toggleMenu($entity, string $menuAlias, bool $enable): void;
+    public function toggleMenu(object $entity, string $menuAlias, bool $enable): void;
 }

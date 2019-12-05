@@ -154,7 +154,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    private function getMenuItems($entity, ?string $menuAlias = null): array
+    private function getMenuItems(object $entity, ?string $menuAlias = null): array
     {
         $class = ClassUtils::getClass($entity);
 
@@ -170,7 +170,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      *
      * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
      */
-    private function getSlugMapItem($entity): ?SlugMapItem
+    private function getSlugMapItem(object $entity): ?SlugMapItem
     {
         $class = ClassUtils::getClass($entity);
 
@@ -185,7 +185,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      *
      * @return mixed
      */
-    private function getEntityId($entity)
+    private function getEntityId(object $entity)
     {
         $ids = $this->em->getClassMetadata(ClassUtils::getClass($entity))->getIdentifierValues($entity);
 
