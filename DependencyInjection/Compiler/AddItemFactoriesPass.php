@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\DependencyInjection\Compiler;
 
+use Darvin\MenuBundle\DependencyInjection\DarvinMenuExtension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -26,7 +27,7 @@ class AddItemFactoriesPass implements CompilerPassInterface
     {
         $pool = $container->getDefinition('darvin_menu.item_factory.pool');
 
-        foreach (array_keys($container->findTaggedServiceIds('darvin_menu.item_factory')) as $id) {
+        foreach (array_keys($container->findTaggedServiceIds(DarvinMenuExtension::TAG_ITEM_FACTORY)) as $id) {
             $pool->addMethodCall('addFactory', [new Reference($id)]);
         }
     }

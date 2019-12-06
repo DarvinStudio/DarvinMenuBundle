@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\DependencyInjection;
 
+use Darvin\MenuBundle\Item\Factory\ItemFactoryInterface;
 use Darvin\Utils\DependencyInjection\ConfigInjector;
 use Darvin\Utils\DependencyInjection\ConfigLoader;
 use Darvin\Utils\DependencyInjection\ExtensionConfigurator;
@@ -24,11 +25,15 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class DarvinMenuExtension extends Extension implements PrependExtensionInterface
 {
+    public const TAG_ITEM_FACTORY = 'darvin_menu.item_factory';
+
     /**
      * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $container->registerForAutoconfiguration(ItemFactoryInterface::class)->addTag(self::TAG_ITEM_FACTORY);
+
         $bundles = $container->getParameter('kernel.bundles');
 
         if (!isset($bundles['KnpMenuBundle'])) {

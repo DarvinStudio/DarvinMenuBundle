@@ -68,3 +68,5 @@ darvin_menu:
 7.0.10: Upgrade vendors.
 
 7.0.12: Use "object" type hint.
+
+7.0.13: Register interfaces for autoconfiguration.
