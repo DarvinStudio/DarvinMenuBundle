@@ -70,3 +70,5 @@ darvin_menu:
 7.0.12: Use "object" type hint.
 
 7.0.13: Register interfaces for autoconfiguration.
+
+7.0.14: Configure override functionality.

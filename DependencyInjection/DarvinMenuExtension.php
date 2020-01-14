@@ -72,6 +72,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
         (new ExtensionConfigurator($container, __DIR__.'/../Resources/config/app'))->configure([
             'darvin_admin',
             'darvin_image',
+            'darvin_utils',
             'knp_menu',
             'twig',
         ]);

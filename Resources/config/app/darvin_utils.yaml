@@ -1,0 +1,6 @@
+darvin_utils:
+    override:
+        DarvinMenuBundle:
+            menu_item:
+                entities:
+                    - Menu\Item
