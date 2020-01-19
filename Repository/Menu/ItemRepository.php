@@ -111,7 +111,7 @@ class ItemRepository extends EntityRepository
                 ->setParameter('depth', $depth);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->useResultCache(true)->getResult();
     }
 
     /**
