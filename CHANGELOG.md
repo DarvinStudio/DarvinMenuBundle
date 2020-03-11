@@ -72,3 +72,11 @@ darvin_menu:
 7.0.13: Register interfaces for autoconfiguration.
 
 7.0.14: Configure override functionality.
+
+7.0.16: Add "darvin_menu_json()" Twig function:
+
+```twig
+{% set header_menu = knp_menu_get('darvin_menu_header', [], {'depth': 2}) %}
+
+{{ darvin_menu_json(header_menu) }}
+```
