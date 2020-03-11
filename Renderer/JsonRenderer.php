@@ -22,6 +22,44 @@ class JsonRenderer implements JsonRendererInterface
      */
     public function renderJson(ItemInterface $item): string
     {
-        return json_encode([]);
+        return json_encode($this->buildArray($item), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface $item Menu item
+     *
+     * @return array
+     */
+    protected function buildArray(ItemInterface $item): array
+    {
+        $array = [];
+
+        foreach ($item->getChildren() as $child) {
+            $array[] = array_filter($this->toArray($child), function ($value): bool {
+                return null !== $value;
+            });
+
+            if ($child->hasChildren()) {
+                $array = array_merge($array, $this->buildArray($child));
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface $item Menu item
+     *
+     * @return array
+     */
+    protected function toArray(ItemInterface $item): array
+    {
+        return [
+            'id'       => $item->getName(),
+            'name'     => $item->getLabel(),
+            'href'     => $item->getUri(),
+            'hasChild' => $item->hasChildren(),
+            'parentId' => null !== $item->getParent() && $item->getParent()->getLevel() > 0 ? $item->getParent()->getName() : null,
+        ];
     }
 }
