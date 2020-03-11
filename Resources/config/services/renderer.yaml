@@ -1,0 +1,15 @@
+parameters:
+    darvin_menu.renderer.json.class: Darvin\MenuBundle\Renderer\JsonRenderer
+
+    darvin_menu.renderer.json.twig_extension.class: Darvin\MenuBundle\Twig\Extension\Renderer\JsonRendererExtension
+
+services:
+    darvin_menu.renderer.json:
+        class: '%darvin_menu.renderer.json.class%'
+
+    darvin_menu.renderer.json.twig_extension:
+        class: '%darvin_menu.renderer.json.twig_extension.class%'
+        arguments:
+            - '@darvin_menu.renderer.json'
+        tags:
+            - { name: twig.extension }
