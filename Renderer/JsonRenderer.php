@@ -30,7 +30,7 @@ class JsonRenderer implements JsonRendererInterface
      *
      * @return array
      */
-    protected function buildArray(ItemInterface $item): array
+    private function buildArray(ItemInterface $item): array
     {
         $array = [];
 
@@ -56,7 +56,7 @@ class JsonRenderer implements JsonRendererInterface
      *
      * @return array
      */
-    protected function toArray(ItemInterface $item): array
+    private function toArray(ItemInterface $item): array
     {
         return [
             'id'       => $item->getName(),
