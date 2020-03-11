@@ -38,7 +38,9 @@ class JsonRendererExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('darvin_menu_json', [$this->renderer, 'renderJson']),
+            new TwigFunction('darvin_menu_json', [$this->renderer, 'renderJson'], [
+                'is_safe' => ['html'],
+            ]),
         ];
     }
 }
