@@ -35,6 +35,10 @@ class JsonRenderer implements JsonRendererInterface
         $array = [];
 
         foreach ($item->getChildren() as $child) {
+            if (!$child->isDisplayed()) {
+                continue;
+            }
+
             $array[] = array_filter($this->toArray($child), function ($value): bool {
                 return null !== $value;
             });
