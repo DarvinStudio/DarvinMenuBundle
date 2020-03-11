@@ -22,7 +22,7 @@ class JsonRenderer implements JsonRendererInterface
      */
     public function renderJson(ItemInterface $item): string
     {
-        return json_encode($this->buildArray($item), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return json_encode($this->buildArray($item));
     }
 
     /**
