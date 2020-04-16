@@ -6,6 +6,8 @@ parameters:
 services:
     darvin_menu.renderer.json:
         class: '%darvin_menu.renderer.json.class%'
+        arguments:
+            - '@darvin_utils.json.encoder'
 
     darvin_menu.renderer.json.twig_extension:
         class: '%darvin_menu.renderer.json.twig_extension.class%'

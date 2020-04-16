@@ -10,6 +10,7 @@
 
 namespace Darvin\MenuBundle\Renderer;
 
+use Darvin\Utils\Json\JsonEncoderInterface;
 use Knp\Menu\ItemInterface;
 
 /**
@@ -18,11 +19,24 @@ use Knp\Menu\ItemInterface;
 class JsonRenderer implements JsonRendererInterface
 {
     /**
+     * @var \Darvin\Utils\Json\JsonEncoderInterface
+     */
+    private $encoder;
+
+    /**
+     * @param \Darvin\Utils\Json\JsonEncoderInterface $encoder JSON encoder
+     */
+    public function __construct(JsonEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function renderJson(ItemInterface $item): string
     {
-        return json_encode($this->buildArray($item));
+        return $this->encoder->encode($this->buildArray($item));
     }
 
     /**
