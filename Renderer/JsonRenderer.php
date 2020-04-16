@@ -36,15 +36,46 @@ class JsonRenderer implements JsonRendererInterface
      */
     public function renderJson(ItemInterface $item): string
     {
-        return $this->encoder->encode($this->buildArray($item));
+        $ids = $this->generateIds($item);
+
+        return $this->encoder->encode($this->buildArray($item, $ids));
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface $item   Menu item
+     * @param string                  $prefix ID prefix
+     *
+     * @return array
+     */
+    private function generateIds(ItemInterface $item, string $prefix = ''): array
+    {
+        $ids = [];
+        $i   = 0;
+
+        foreach ($item->getChildren() as $child) {
+            $id = (string)++$i;
+
+            if ('' !== $prefix) {
+                $id = implode('.', [$prefix, $id]);
+            }
+
+            $ids[$child->getName()] = $id;
+
+            if ($child->hasChildren()) {
+                $ids = array_merge($ids, $this->generateIds($child, $id));
+            }
+        }
+
+        return $ids;
     }
 
     /**
      * @param \Knp\Menu\ItemInterface $item Menu item
+     * @param array                   $ids  IDs
      *
      * @return array
      */
-    private function buildArray(ItemInterface $item): array
+    private function buildArray(ItemInterface $item, array $ids): array
     {
         $array = [];
 
@@ -53,12 +84,12 @@ class JsonRenderer implements JsonRendererInterface
                 continue;
             }
 
-            $array[] = array_filter($this->toArray($child), function ($value): bool {
+            $array[] = array_filter($this->toArray($child, $ids), function ($value): bool {
                 return null !== $value;
             });
 
             if ($child->hasChildren()) {
-                $array = array_merge($array, $this->buildArray($child));
+                $array = array_merge($array, $this->buildArray($child, $ids));
             }
         }
 
@@ -67,17 +98,18 @@ class JsonRenderer implements JsonRendererInterface
 
     /**
      * @param \Knp\Menu\ItemInterface $item Menu item
+     * @param array                   $ids  IDs
      *
      * @return array
      */
-    private function toArray(ItemInterface $item): array
+    private function toArray(ItemInterface $item, array $ids): array
     {
         return [
-            'id'       => $item->getName(),
+            'id'       => $ids[$item->getName()],
             'name'     => $item->getLabel(),
             'href'     => $item->getUri(),
             'hasChild' => $item->hasChildren(),
-            'parentId' => null !== $item->getParent() && $item->getParent()->getLevel() > 0 ? $item->getParent()->getName() : null,
+            'parentId' => null !== $item->getParent() && !$item->getParent()->isRoot() ? $ids[$item->getParent()->getName()] : null,
         ];
     }
 }
