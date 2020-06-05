@@ -56,7 +56,7 @@ class Configuration implements ConfigurationInterface
                                 }
                             }
                         })
-                        ->thenInvalid(null)
+                        ->thenInvalid('')
                     ->end()
                 ->end()
                 ->arrayNode('menus')->useAttributeAsKey('alias')->prototype('array')->end()->end()
@@ -80,7 +80,7 @@ class Configuration implements ConfigurationInterface
 
                                     return false;
                                 })
-                                ->thenInvalid(null)
+                                ->thenInvalid('')
                             ->end()
                         ->end()
                     ->end()
@@ -98,7 +98,7 @@ class Configuration implements ConfigurationInterface
 
                     return false;
                 })
-                ->thenInvalid(null);
+                ->thenInvalid('');
 
         return $builder;
     }
