@@ -16,7 +16,7 @@ use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Entity\Menu\ItemTranslation;
 use Darvin\MenuBundle\Entity\Menu\MenuItemImage;
 use Darvin\Utils\DataFixtures\ORM\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Menu item data fixture
