@@ -18,9 +18,12 @@ use Knp\Menu\ItemInterface;
 interface BreadcrumbsBuilderInterface
 {
     /**
-     * @param array $crumbs Crumbs
+     * @param string|null $fallback    Fallback
+     * @param array|null  $firstCrumbs First breadcrumbs
+     * @param array|null  $mainCrumbs  Main breadcrumbs
+     * @param array|null  $lastCrumbs  Last breadcrumbs
      *
      * @return \Knp\Menu\ItemInterface
      */
-    public function buildBreadcrumbs(array $crumbs = []): ItemInterface;
+    public function buildBreadcrumbs(?string $fallback = null, ?array $firstCrumbs = null, ?array $mainCrumbs = null, ?array $lastCrumbs = null): ItemInterface;
 }

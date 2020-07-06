@@ -93,38 +93,47 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function buildBreadcrumbs(array $crumbs = []): ItemInterface
+    public function buildBreadcrumbs(?string $fallback = null, ?array $firstCrumbs = null, ?array $mainCrumbs = null, ?array $lastCrumbs = null): ItemInterface
     {
         $root = $this->itemFactoryPool->createItem(self::MENU_NAME);
 
-        if (!empty($crumbs)) {
-            $i      = 0;
-            $parent = $root;
+        $parent = $root;
 
-            foreach ($crumbs as $label => $uri) {
-                $child = $this->itemFactoryPool->createItem(implode('-', [self::MENU_NAME, $i]));
-                $child->setLabel($this->translator->trans($label));
-                $child->setUri($uri);
-
-                $parent->addChild($child);
-
-                $i++;
-                $parent = $child;
-            }
-
-            return $root;
+        if (null !== $firstCrumbs) {
+            $parent = $this->addScalars($root, $firstCrumbs, 'first');
         }
 
+        $parent = null !== $mainCrumbs
+            ? $this->addScalars($parent, $mainCrumbs, 'main')
+            : $this->addCurrent($parent);
+
+        if (null !== $lastCrumbs) {
+            $parent = $this->addScalars($parent, $lastCrumbs, 'last');
+        }
+        if ($parent->getName() === $root->getName()) {
+            $this->addScalars($parent, [$fallback => null], 'fallback');
+        }
+
+        return $root;
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface $parent Parent item
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addCurrent(ItemInterface $parent): ItemInterface
+    {
         $request = $this->requestStack->getMasterRequest();
 
         if (null === $request) {
-            return $root;
+            return $parent;
         }
 
         $routeParams = $request->attributes->get('_route_params', []);
 
         if (!isset($routeParams[$this->slugParameterName]) || null === $routeParams[$this->slugParameterName]) {
-            return $root;
+            return $parent;
         }
 
         $slug = $routeParams[$this->slugParameterName];
@@ -134,7 +143,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         ]);
 
         if (null === $currentSlugMapItem) {
-            return $root;
+            return $parent;
         }
 
         $parentSlugMapItems = [];
@@ -168,26 +177,49 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 
         $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
-        $parent = $root;
-
         foreach ($slugMapItems as $slugMapItem) {
             if (null === $slugMapItem->getObject()) {
                 continue;
             }
 
-            $item = $this->itemFactoryPool->createItem($slugMapItem);
+            $child = $this->itemFactoryPool->createItem($slugMapItem);
 
             $object = $slugMapItem->getObject();
 
             if ($object instanceof DisableableInterface && !$object->isEnabled()) {
-                $item->setUri(null);
+                $child->setUri(null);
             }
 
-            $parent->addChild($item);
-            $parent = $item;
+            $parent->addChild($child);
+            $parent = $child;
         }
 
-        return $root;
+        return $parent;
+    }
+
+    /**
+     * @param \Knp\Menu\ItemInterface $parent     Parent item
+     * @param iterable                $crumbs     Scalar breadcrumbs
+     * @param string                  $nameSuffix Child item name suffix
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addScalars(ItemInterface $parent, iterable $crumbs, string $nameSuffix): ItemInterface
+    {
+        $i = 0;
+
+        foreach ($crumbs as $label => $uri) {
+            $child = $this->itemFactoryPool->createItem(implode('-', [self::MENU_NAME, $nameSuffix, $i]));
+            $child->setLabel($this->translator->trans($label));
+            $child->setUri($uri);
+
+            $parent->addChild($child);
+
+            $i++;
+            $parent = $child;
+        }
+
+        return $parent;
     }
 
     /**
