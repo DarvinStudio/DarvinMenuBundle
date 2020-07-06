@@ -1,17 +1,39 @@
-{% import _self as that %}
+{% macro item(item, matcher) %}
+
+    {% set uri = item.uri %}
+
+    {% if uri is not same as(null) and matcher.isCurrent(item) %}
+
+        {% set uri = null %}
+
+    {% endif %}
+
+    {% set element = uri is not same as(null) ? 'a' : 'span' %}
+
+    <{{ element }} itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"{% if uri is not same as(null) %} href="{{ uri }}"{% endif %}>
+        {{ item.label }}
+        <meta itemprop="position" content="1">
+        <meta itemprop="name" content="{{ item.label }}">
+        {% if uri is not same as(null) %}
+            <meta itemprop="item" content="{{ uri }}">
+        {% endif %}
+    </{{ element }}>
+{% endmacro %}
 
 {% macro list(item, matcher) %}
-
-    {% import _self as that %}
-
     {% for child in item.children %}
-        {% if child.uri and not matcher.isCurrent(child) %}
-            <a href="{{ child.uri }}">{{ child.label }}</a>
-        {% else %}
-            <span>{{ child.label }}</span>
-        {% endif %}
-        {{ that.list(child, matcher) }}
+        {{ _self.item(child, matcher) }}
+        {{ _self.list(child, matcher) }}
     {% endfor %}
 {% endmacro %}
 
-{{ that.list(item, matcher) }}
+<div class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+
+    {% block homepage %}
+        {% if options.homepageUrl is defined and options.homepageUrl is not same as(null) %}
+            <a href="{{ options.homepageUrl }}">{% trans %}breadcrumbs.homepage{% endtrans %}</a>
+        {% endif %}
+    {% endblock %}
+
+    {{ _self.list(item, matcher) }}
+</div>

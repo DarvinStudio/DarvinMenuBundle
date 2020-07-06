@@ -11,6 +11,7 @@
 namespace Darvin\MenuBundle\Twig\Extension;
 
 use Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilderInterface;
+use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Knp\Menu\Twig\Helper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -31,6 +32,11 @@ class BreadcrumbsExtension extends AbstractExtension
     private $helper;
 
     /**
+     * @var \Darvin\Utils\Homepage\HomepageRouterInterface
+     */
+    private $homepageRouter;
+
+    /**
      * @var array
      */
     private $defaultOptions;
@@ -43,17 +49,20 @@ class BreadcrumbsExtension extends AbstractExtension
     /**
      * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilderInterface $breadcrumbsBuilder Breadcrumbs builder
      * @param \Knp\Menu\Twig\Helper                                      $helper             Helper
+     * @param \Darvin\Utils\Homepage\HomepageRouterInterface             $homepageRouter     Homepage router
      * @param array                                                      $defaultOptions     Default options
      * @param string                                                     $defaultTemplate    Default template
      */
     public function __construct(
         BreadcrumbsBuilderInterface $breadcrumbsBuilder,
         Helper $helper,
+        HomepageRouterInterface $homepageRouter,
         array $defaultOptions,
         string $defaultTemplate
     ) {
         $this->breadcrumbsBuilder = $breadcrumbsBuilder;
         $this->helper = $helper;
+        $this->homepageRouter = $homepageRouter;
         $this->defaultOptions = $defaultOptions;
         $this->defaultTemplate = $defaultTemplate;
     }
@@ -90,6 +99,9 @@ class BreadcrumbsExtension extends AbstractExtension
     ): string {
         $options = array_merge($this->defaultOptions, $options);
 
+        if (!isset($options['homepageUrl'])) {
+            $options['homepageUrl'] = $this->homepageRouter->generate();
+        }
         if (!isset($options['template'])) {
             $options['template'] = $this->defaultTemplate;
         }
