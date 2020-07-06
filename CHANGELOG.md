@@ -80,3 +80,16 @@ darvin_menu:
 
 {{ darvin_menu_json(header_menu) }}
 ```
+
+7.0.20: Rework breadcrumbs:
+
+```twig
+{# Default breadcrumbs, block "title" will be used as fallback crumb. #}
+{{ darvin_menu_breadcrumbs(block('title')) }}
+
+{# Add custom item to the end of breadcrumbs. #}
+{{ darvin_menu_breadcrumbs(block('title'), null, null, {(catalog.extraCrumb): null}) }}
+
+{# Add custom item to the beginning of breadcrumbs. #}
+{{ darvin_menu_breadcrumbs(block('title'), {'checkout.checkout.breadcrumbs.cart': path('darvin_ecommerce_cart_item')}) }}
+```
