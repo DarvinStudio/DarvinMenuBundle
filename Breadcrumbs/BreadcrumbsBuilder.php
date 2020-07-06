@@ -226,6 +226,12 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         $i = 0;
 
         foreach ($crumbs as $label => $url) {
+            $label = trim((string)$label);
+
+            if ('' === $label) {
+                continue;
+            }
+
             $child = $this->itemFactoryPool->createItem(implode('-', [self::MENU_NAME, $nameSuffix, $i]));
             $child->setLabel($this->translator->trans($label));
             $child->setUri($this->makeUrlAbsolute($url));
