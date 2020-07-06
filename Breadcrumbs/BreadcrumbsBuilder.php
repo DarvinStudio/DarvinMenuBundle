@@ -118,14 +118,23 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
             $parent = $this->addScalars($root, $firstCrumbs, 'first');
         }
 
-        $parent = null !== $mainCrumbs
-            ? $this->addScalars($parent, $mainCrumbs, 'main')
-            : $this->addCurrent($parent);
+        $addFallback = false;
 
+        if (null !== $mainCrumbs) {
+            $parent = $this->addScalars($parent, $mainCrumbs, 'main');
+        } else {
+            $newParent = $this->addCurrent($parent);
+
+            if ($newParent->getName() === $parent->getName()) {
+                $addFallback = true;
+            }
+
+            $parent = $newParent;
+        }
         if (null !== $lastCrumbs) {
             $parent = $this->addScalars($parent, $lastCrumbs, 'last');
         }
-        if ($parent->getName() === $root->getName()) {
+        if ($addFallback) {
             $this->addScalars($parent, [$fallback => null], 'fallback');
         }
 
