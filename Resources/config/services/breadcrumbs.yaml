@@ -21,7 +21,6 @@ services:
         arguments:
             - '@darvin_menu.breadcrumbs.builder'
             - '@knp_menu.helper'
-            - '@darvin_utils.homepage.router'
             - '%darvin_menu.breadcrumbs.twig_extension.default_options%'
             - '%darvin_menu.breadcrumbs.template%'
         tags:
