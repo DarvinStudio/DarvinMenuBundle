@@ -1,4 +1,4 @@
-{% macro item(item, matcher) %}
+{% macro item(item, matcher, position) %}
 
     {% set uri = item.uri %}
 
@@ -25,7 +25,7 @@
     {% endif %}
 
     <{{ element }}{% for name, value in attr %} {{ name }}{% if value is not same as(null) %}="{{ value }}"{% endif %}{% endfor %}>
-        <meta itemprop="position" content="1">
+        <meta itemprop="position" content="{{ position }}">
         <meta itemprop="name" content="{{ item.label }}">
         {% if uri is not same as(null) %}
             <meta itemprop="item" content="{{ uri }}">
@@ -33,10 +33,13 @@
         {{ item.label }}</{{ element }}>
 {% endmacro %}
 
-{% macro list(item, matcher) %}
+{% macro list(item, matcher, position = 0) %}
+
+    {% set position = position + 1 %}
+
     {% for child in item.children %}
-        {{ _self.item(child, matcher) }}
-        {{ _self.list(child, matcher) }}
+        {{ _self.item(child, matcher, position) }}
+        {{ _self.list(child, matcher, position) }}
     {% endfor %}
 {% endmacro %}
 
