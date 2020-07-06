@@ -205,6 +205,8 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
                 $child->setUri(null);
             }
 
+            $child->setUri($this->makeUrlAbsolute($child->getUri()));
+
             $parent->addChild($child);
             $parent = $child;
         }
@@ -223,10 +225,10 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     {
         $i = 0;
 
-        foreach ($crumbs as $label => $uri) {
+        foreach ($crumbs as $label => $url) {
             $child = $this->itemFactoryPool->createItem(implode('-', [self::MENU_NAME, $nameSuffix, $i]));
             $child->setLabel($this->translator->trans($label));
-            $child->setUri($uri);
+            $child->setUri($this->makeUrlAbsolute($url));
 
             $parent->addChild($child);
 
@@ -235,6 +237,29 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         }
 
         return $parent;
+    }
+
+    /**
+     * @param string|null $url URL
+     *
+     * @return string|null
+     */
+    private function makeUrlAbsolute(?string $url): ?string
+    {
+        if (null === $url || null !== parse_url($url, PHP_URL_HOST)) {
+            return $url;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return $url;
+        }
+
+        $url = ltrim($url, '/');
+        $url = implode('/', [$request->getSchemeAndHttpHost(), $url]);
+
+        return $url;
     }
 
     /**

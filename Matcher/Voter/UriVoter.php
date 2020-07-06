@@ -43,6 +43,7 @@ class UriVoter implements VoterInterface
             return false;
         }
 
-        return $item->getUri() === $request->getBaseUrl().$request->getPathInfo();
+        return $item->getUri() === $request->getBaseUrl().$request->getPathInfo()
+            || $item->getUri() === $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
     }
 }
