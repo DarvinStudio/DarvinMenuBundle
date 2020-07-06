@@ -25,13 +25,12 @@
     {% endif %}
 
     <{{ element }}{% for name, value in attr %} {{ name }}{% if value is not same as(null) %}="{{ value }}"{% endif %}{% endfor %}>
-        {{ item.label }}
         <meta itemprop="position" content="1">
         <meta itemprop="name" content="{{ item.label }}">
         {% if uri is not same as(null) %}
             <meta itemprop="item" content="{{ uri }}">
         {% endif %}
-    </{{ element }}>
+        {{ item.label }}</{{ element }}>
 {% endmacro %}
 
 {% macro list(item, matcher) %}

@@ -15,6 +15,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface;
 use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
+use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
 use Knp\Menu\ItemInterface;
@@ -26,12 +27,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 {
-    private const MENU_NAME = 'breadcrumbs';
+    private const HOMEPAGE_LABEL = 'breadcrumbs.homepage';
+    private const MENU_NAME      = 'breadcrumbs';
 
     /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
+
+    /**
+     * @var \Darvin\Utils\Homepage\HomepageRouterInterface
+     */
+    private $homepageRouter;
 
     /**
      * @var \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface
@@ -65,6 +72,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 
     /**
      * @param \Doctrine\ORM\EntityManager                                   $em                  Entity manager
+     * @param \Darvin\Utils\Homepage\HomepageRouterInterface                $homepageRouter      Homepage router
      * @param \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface $itemFactoryPool     Item factory pool
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory     Extended metadata factory
      * @param \Symfony\Component\HttpFoundation\RequestStack                $requestStack        Request stack
@@ -74,6 +82,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
      */
     public function __construct(
         EntityManager $em,
+        HomepageRouterInterface $homepageRouter,
         ItemFactoryPoolInterface $itemFactoryPool,
         MetadataFactoryInterface $metadataFactory,
         RequestStack $requestStack,
@@ -82,6 +91,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         string $slugParameterName
     ) {
         $this->em = $em;
+        $this->homepageRouter = $homepageRouter;
         $this->itemFactoryPool = $itemFactoryPool;
         $this->metadataFactory = $metadataFactory;
         $this->requestStack = $requestStack;
@@ -99,6 +109,11 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 
         $parent = $root;
 
+        $homepageUrl = $this->homepageRouter->generate();
+
+        if (null !== $homepageUrl) {
+            $parent = $this->addScalars($parent, [self::HOMEPAGE_LABEL => $homepageUrl], 'homepage');
+        }
         if (null !== $firstCrumbs) {
             $parent = $this->addScalars($root, $firstCrumbs, 'first');
         }
