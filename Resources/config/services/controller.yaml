@@ -1,0 +1,10 @@
+parameters:
+    darvin_menu.controller.menu.class: Darvin\MenuBundle\Controller\MenuController
+
+services:
+    darvin_menu.controller.menu:
+        class: '%darvin_menu.controller.menu.class%'
+        arguments:
+            - '@knp_menu.helper'
+        tags:
+            - { name: controller.service_arguments }

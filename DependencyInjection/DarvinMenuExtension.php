@@ -54,6 +54,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             'breadcrumbs',
             'builder',
             'configuration',
+            'controller',
             'item_factory',
             'matcher',
             'provider',
