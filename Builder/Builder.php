@@ -24,6 +24,7 @@ use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Sortable\SortableListener;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -442,7 +443,14 @@ class Builder implements MenuBuilderInterface
     {
         $resolver
             ->setDefault('depth', null)
-            ->setAllowedTypes('depth', ['integer', 'null']);
+            ->setAllowedTypes('depth', ['integer', 'null', 'string'])
+            ->setNormalizer('depth', function (Options $options, $depth): ?int {
+                if (null !== $depth) {
+                    $depth = (int)$depth;
+                }
+
+                return $depth;
+            });
     }
 
     /**
