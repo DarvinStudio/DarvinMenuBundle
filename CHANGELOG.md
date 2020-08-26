@@ -93,3 +93,5 @@ darvin_menu:
 {# Add custom item to the beginning of breadcrumbs. #}
 {{ darvin_menu_breadcrumbs(block('title'), {'checkout.checkout.breadcrumbs.cart': path('darvin_ecommerce_cart_item')}) }}
 ```
+
+7.0.21: Allow to cache menus.
