@@ -101,3 +101,5 @@ darvin_menu:
 - Replace JSON renderer interface with KNP menu's one.
 
 - Register "json" KNP menu renderer.
+
+- Add "renderer" argument to menu controller.

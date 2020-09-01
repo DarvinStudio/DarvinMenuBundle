@@ -33,16 +33,22 @@ class MenuController
     }
 
     /**
-     * @param string $menu          Menu alias
-     * @param array  $buildOptions  Build options
-     * @param array  $renderOptions Render options
-     * @param int    $maxAge        Max age
+     * @param string      $menu          Menu alias
+     * @param array       $buildOptions  Build options
+     * @param array       $renderOptions Render options
+     * @param string|null $renderer      Renderer
+     * @param int         $maxAge        Max age
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function __invoke(string $menu, array $buildOptions = [], array $renderOptions = [], int $maxAge = 30 * 24 * 60 * 60): Response
-    {
-        $response = new Response($this->helper->render($this->helper->get($menu, [], $buildOptions), $renderOptions));
+    public function __invoke(
+        string $menu,
+        array $buildOptions = [],
+        array $renderOptions = [],
+        ?string $renderer = null,
+        int $maxAge = 30 * 24 * 60 * 60
+    ): Response {
+        $response = new Response($this->helper->render($this->helper->get($menu, [], $buildOptions), $renderOptions, $renderer));
         $response->setPublic();
         $response->setMaxAge($maxAge);
         $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, 'true');
