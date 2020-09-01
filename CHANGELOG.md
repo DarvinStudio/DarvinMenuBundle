@@ -96,4 +96,8 @@ darvin_menu:
 
 7.0.21: Allow to cache menus.
 
-7.0.22: Replace JSON renderer interface with KNP menu's one.
+7.0.22:
+ 
+- Replace JSON renderer interface with KNP menu's one.
+
+- Register "json" KNP menu renderer.
