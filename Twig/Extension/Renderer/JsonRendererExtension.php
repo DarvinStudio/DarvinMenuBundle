@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Twig\Extension\Renderer;
 
-use Darvin\MenuBundle\Renderer\JsonRendererInterface;
+use Knp\Menu\Renderer\RendererInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -20,14 +20,14 @@ use Twig\TwigFunction;
 class JsonRendererExtension extends AbstractExtension
 {
     /**
-     * @var \Darvin\MenuBundle\Renderer\JsonRendererInterface
+     * @var \Knp\Menu\Renderer\RendererInterface
      */
     private $renderer;
 
     /**
-     * @param \Darvin\MenuBundle\Renderer\JsonRendererInterface $renderer JSON renderer
+     * @param \Knp\Menu\Renderer\RendererInterface $renderer JSON renderer
      */
-    public function __construct(JsonRendererInterface $renderer)
+    public function __construct(RendererInterface $renderer)
     {
         $this->renderer = $renderer;
     }
@@ -38,7 +38,7 @@ class JsonRendererExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('darvin_menu_json', [$this->renderer, 'renderJson'], [
+            new TwigFunction('darvin_menu_json', [$this->renderer, 'render'], [
                 'is_safe' => ['html'],
             ]),
         ];

@@ -12,11 +12,12 @@ namespace Darvin\MenuBundle\Renderer;
 
 use Darvin\Utils\Json\JsonEncoderInterface;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\Renderer\RendererInterface;
 
 /**
  * JSON renderer
  */
-class JsonRenderer implements JsonRendererInterface
+class JsonRenderer implements RendererInterface
 {
     /**
      * @var \Darvin\Utils\Json\JsonEncoderInterface
@@ -34,7 +35,7 @@ class JsonRenderer implements JsonRendererInterface
     /**
      * {@inheritDoc}
      */
-    public function renderJson(ItemInterface $item): string
+    public function render(ItemInterface $item, array $options = []): string
     {
         $ids = $this->generateIds($item);
 
