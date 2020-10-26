@@ -26,6 +26,7 @@ services:
         arguments:
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_menu.switcher'
+            - '@darvin_content.translatable.translation_initializer'
             - '%locales%'
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }

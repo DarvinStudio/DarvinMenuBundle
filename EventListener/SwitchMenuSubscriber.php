@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\EventListener;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
 use Darvin\MenuBundle\Entity\Menu\Item;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
@@ -38,18 +39,36 @@ class SwitchMenuSubscriber implements EventSubscriber
     private $menuSwitcher;
 
     /**
+     * @var \Darvin\ContentBundle\Translatable\TranslationInitializerInterface
+     */
+    private $translationInitializer;
+
+    /**
+     * @var string[]
+     */
+    private $locales;
+
+    /**
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
 
     /**
-     * @param \Darvin\Utils\ORM\EntityResolverInterface         $entityResolver Entity resolver
-     * @param \Darvin\MenuBundle\Switcher\MenuSwitcherInterface $menuSwitcher   Menu switcher
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                          $entityResolver         Entity resolver
+     * @param \Darvin\MenuBundle\Switcher\MenuSwitcherInterface                  $menuSwitcher           Menu switcher
+     * @param \Darvin\ContentBundle\Translatable\TranslationInitializerInterface $translationInitializer Translation initializer
+     * @param string[]                                                           $locales                Locales
      */
-    public function __construct(EntityResolverInterface $entityResolver, MenuSwitcherInterface $menuSwitcher)
-    {
+    public function __construct(
+        EntityResolverInterface $entityResolver,
+        MenuSwitcherInterface $menuSwitcher,
+        TranslationInitializerInterface $translationInitializer,
+        array $locales
+    ) {
         $this->entityResolver = $entityResolver;
         $this->menuSwitcher = $menuSwitcher;
+        $this->translationInitializer = $translationInitializer;
+        $this->locales = $locales;
 
         $this->em = null;
     }
@@ -144,6 +163,8 @@ class SwitchMenuSubscriber implements EventSubscriber
         $item
             ->setMenu($menuAlias)
             ->setSlugMapItem($slugMapItem);
+
+        $this->translationInitializer->initializeTranslations($item, $this->locales);
 
         return $item;
     }

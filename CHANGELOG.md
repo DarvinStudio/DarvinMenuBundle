@@ -103,3 +103,5 @@ darvin_menu:
 - Register "json" KNP menu renderer.
 
 - Add "renderer" argument to menu controller.
+
+7.0.23: Initialize menu item translations in switch menu event subscriber.
