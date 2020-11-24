@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Renderer;
+namespace Darvin\MenuBundle\Renderer\Json;
 
 use Darvin\Utils\Json\JsonEncoderInterface;
 use Knp\Menu\ItemInterface;
