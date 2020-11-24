@@ -43,6 +43,23 @@ class JsonRenderer implements RendererInterface
     }
 
     /**
+     * @param \Knp\Menu\ItemInterface $item Menu item
+     * @param array                   $ids  IDs
+     *
+     * @return array
+     */
+    protected function toArray(ItemInterface $item, array $ids): array
+    {
+        return [
+            'id'       => $ids[$item->getName()],
+            'name'     => $item->getLabel(),
+            'href'     => $item->getUri(),
+            'hasChild' => $item->hasChildren(),
+            'parentId' => null !== $item->getParent() && !$item->getParent()->isRoot() ? $ids[$item->getParent()->getName()] : null,
+        ];
+    }
+
+    /**
      * @param \Knp\Menu\ItemInterface $item   Menu item
      * @param string                  $prefix ID prefix
      *
@@ -95,22 +112,5 @@ class JsonRenderer implements RendererInterface
         }
 
         return $array;
-    }
-
-    /**
-     * @param \Knp\Menu\ItemInterface $item Menu item
-     * @param array                   $ids  IDs
-     *
-     * @return array
-     */
-    private function toArray(ItemInterface $item, array $ids): array
-    {
-        return [
-            'id'       => $ids[$item->getName()],
-            'name'     => $item->getLabel(),
-            'href'     => $item->getUri(),
-            'hasChild' => $item->hasChildren(),
-            'parentId' => null !== $item->getParent() && !$item->getParent()->isRoot() ? $ids[$item->getParent()->getName()] : null,
-        ];
     }
 }
