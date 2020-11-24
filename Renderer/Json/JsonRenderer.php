@@ -20,15 +20,22 @@ use Knp\Menu\Renderer\RendererInterface;
 class JsonRenderer implements RendererInterface
 {
     /**
+     * @var \Darvin\MenuBundle\Renderer\Json\DataCollectorInterface
+     */
+    private $dataCollector;
+
+    /**
      * @var \Darvin\Utils\Json\JsonEncoderInterface
      */
     private $encoder;
 
     /**
-     * @param \Darvin\Utils\Json\JsonEncoderInterface $encoder JSON encoder
+     * @param \Darvin\MenuBundle\Renderer\Json\DataCollectorInterface $dataCollector Data collector
+     * @param \Darvin\Utils\Json\JsonEncoderInterface                 $encoder       JSON encoder
      */
-    public function __construct(JsonEncoderInterface $encoder)
+    public function __construct(DataCollectorInterface $dataCollector, JsonEncoderInterface $encoder)
     {
+        $this->dataCollector = $dataCollector;
         $this->encoder = $encoder;
     }
 
@@ -40,23 +47,6 @@ class JsonRenderer implements RendererInterface
         $ids = $this->generateIds($item);
 
         return $this->encoder->encode($this->buildArray($item, $ids));
-    }
-
-    /**
-     * @param \Knp\Menu\ItemInterface $item Menu item
-     * @param array                   $ids  IDs
-     *
-     * @return array
-     */
-    protected function toArray(ItemInterface $item, array $ids): array
-    {
-        return [
-            'id'       => $ids[$item->getName()],
-            'name'     => $item->getLabel(),
-            'href'     => $item->getUri(),
-            'hasChild' => $item->hasChildren(),
-            'parentId' => null !== $item->getParent() && !$item->getParent()->isRoot() ? $ids[$item->getParent()->getName()] : null,
-        ];
     }
 
     /**
@@ -102,7 +92,7 @@ class JsonRenderer implements RendererInterface
                 continue;
             }
 
-            $array[] = array_filter($this->toArray($child, $ids), function ($value): bool {
+            $array[] = array_filter($this->dataCollector->getData($child, $ids), function ($value): bool {
                 return null !== $value;
             });
 

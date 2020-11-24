@@ -1,18 +1,24 @@
 parameters:
     darvin_menu.renderer.json.class: Darvin\MenuBundle\Renderer\Json\JsonRenderer
 
-    darvin_menu.renderer.json.twig_extension.class: Darvin\MenuBundle\Twig\Extension\Renderer\JsonRendererExtension
+    darvin_menu.renderer.json.data.collector.class: Darvin\MenuBundle\Renderer\Json\DataCollector
+
+    darvin_menu.renderer.json.twig.extension.class: Darvin\MenuBundle\Twig\Extension\Renderer\JsonRendererExtension
 
 services:
     darvin_menu.renderer.json:
         class: '%darvin_menu.renderer.json.class%'
         arguments:
+            - '@darvin_menu.renderer.json.data.collector'
             - '@darvin_utils.json.encoder'
         tags:
             - { name: knp_menu.renderer, alias: json }
 
-    darvin_menu.renderer.json.twig_extension:
-        class: '%darvin_menu.renderer.json.twig_extension.class%'
+    darvin_menu.renderer.json.data.collector:
+        class: '%darvin_menu.renderer.json.data.collector.class%'
+
+    darvin_menu.renderer.json.twig.extension:
+        class: '%darvin_menu.renderer.json.twig.extension.class%'
         arguments:
             - '@darvin_menu.renderer.json'
         tags:

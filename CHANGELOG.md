@@ -107,3 +107,5 @@ darvin_menu:
 7.0.23: Initialize menu item translations in switch menu event subscriber.
 
 7.0.24: Make private JsonRenderer::toArray() protected.
+
+7.0.25: Extract JSON renderer data collector service.
