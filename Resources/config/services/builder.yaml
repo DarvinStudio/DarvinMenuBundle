@@ -15,3 +15,8 @@ services:
             - '@darvin_menu.slug_map.object_loader'
             - '@stof_doctrine_extensions.listener.sortable'
             - '%darvin_menu.entities%'
+
+    darvin_menu.builder.runtime:
+        parent: darvin_menu.builder.abstract
+        tags:
+            - { name: knp_menu.menu_builder, method: buildMenu, alias: darvin_menu }

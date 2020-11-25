@@ -109,3 +109,17 @@ darvin_menu:
 7.0.24: Make private JsonRenderer::toArray() protected.
 
 7.0.25: Extract JSON renderer data collector service.
+
+7.1.0: Add runtime menu builder:
+
+```twig
+{{ knp_menu_render(knp_menu_get('darvin_menu_top')) }}
+```
+
+equals to
+
+```twig
+{{ knp_menu_render(knp_menu_get('darvin_menu', [], {'alias': 'top'})) }}
+```
+
+but in this case alias may be defined in runtime.

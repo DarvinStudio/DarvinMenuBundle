@@ -79,7 +79,7 @@ class Builder implements MenuBuilderInterface
     private $entityConfig;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $menuAlias;
 
@@ -125,6 +125,7 @@ class Builder implements MenuBuilderInterface
         $this->sortableListener = $sortableListener;
         $this->entityConfig = $entityConfig;
 
+        $this->menuAlias          = null;
         $this->optionsResolver    = null;
         $this->slugPartSeparators = [];
     }
@@ -142,11 +143,16 @@ class Builder implements MenuBuilderInterface
      */
     public function buildMenu(array $options = []): ItemInterface
     {
-        $options = $this->getOptionsResolver()->resolve($options);
+        $menuAlias = $this->menuAlias;
+        $options   = $this->getOptionsResolver()->resolve($options);
 
-        $root = $this->itemFactoryPool->createItem($this->menuAlias);
+        if (null === $menuAlias) {
+            $menuAlias = $options['alias'];
+        }
 
-        $entities = $this->getMenuItemEntities($options);
+        $root = $this->itemFactoryPool->createItem($menuAlias);
+
+        $entities = $this->getMenuItemEntities($menuAlias, $options);
 
         $this->addItems($root, $entities, $options);
 
@@ -251,13 +257,14 @@ class Builder implements MenuBuilderInterface
     }
 
     /**
-     * @param array $options Options
+     * @param string $menuAlias Menu alias
+     * @param array  $options   Options
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    private function getMenuItemEntities(array $options): array
+    private function getMenuItemEntities(string $menuAlias, array $options): array
     {
-        $entities = $this->getEntityRepository()->getForMenuBuilder($this->menuAlias, $options['depth'], $this->localeProvider->getCurrentLocale());
+        $entities = $this->getEntityRepository()->getForMenuBuilder($menuAlias, $options['depth'], $this->localeProvider->getCurrentLocale());
 
         if (empty($entities)) {
             return $entities;
@@ -451,6 +458,12 @@ class Builder implements MenuBuilderInterface
 
                 return $depth;
             });
+
+        if (null === $this->menuAlias) {
+            $resolver
+                ->setRequired('alias')
+                ->setAllowedTypes('alias', 'string');
+        }
     }
 
     /**
