@@ -30,8 +30,12 @@ class CreateBuildersPass implements CompilerPassInterface
         $definitions = [];
 
         foreach ($this->getMenuConfig($container)->getMenus() as $menu) {
-            $id = $menu->getBuilderId();
+            $id    = $menu->getBuilderId();
+            $alias = $menu->getBuilderAlias();
 
+            if (null === $id || null === $alias) {
+                continue;
+            }
             if ($container->hasDefinition($id)) {
                 $class = new \ReflectionClass($container->getDefinition($id)->getClass());
 
@@ -49,7 +53,7 @@ class CreateBuildersPass implements CompilerPassInterface
             $definition->addMethodCall('setMenuAlias', [$menu->getAlias()]);
             $definition->addTag('knp_menu.menu_builder', [
                 'method' => MenuBuilderInterface::BUILD_METHOD,
-                'alias'  => $menu->getBuilderAlias(),
+                'alias'  => $alias,
             ]);
 
             $definitions[$id] = $definition;

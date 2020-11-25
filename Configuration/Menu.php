@@ -26,25 +26,31 @@ class Menu
     private $title;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $builderId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $builderAlias;
 
     /**
-     * @param string $alias Alias
+     * @param string      $alias        Alias
+     * @param string|null $title        Title
+     * @param string|null $builderId    Builder ID
+     * @param string|null $builderAlias Builder alias
      */
-    public function __construct(string $alias)
+    public function __construct(string $alias, ?string $title = null, ?string $builderId = null, ?string $builderAlias = null)
     {
-        $this->alias = $alias;
+        if (null === $title) {
+            $title = sprintf('menu.%s', $alias);
+        }
 
-        $this->title        = sprintf('menu.%s', $alias);
-        $this->builderId    = sprintf('darvin_menu.builder.%s', $alias);
-        $this->builderAlias = sprintf('darvin_menu_%s', $alias);
+        $this->alias = $alias;
+        $this->title = $title;
+        $this->builderId = $builderId;
+        $this->builderAlias = $builderAlias;
     }
 
     /**
@@ -64,17 +70,17 @@ class Menu
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getBuilderId(): string
+    public function getBuilderId(): ?string
     {
         return $this->builderId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getBuilderAlias(): string
+    public function getBuilderAlias(): ?string
     {
         return $this->builderAlias;
     }
