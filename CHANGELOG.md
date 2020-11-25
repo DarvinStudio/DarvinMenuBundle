@@ -122,4 +122,4 @@ equals to
 {{ knp_menu_render(knp_menu_get('darvin_menu', [], {'alias': 'top'})) }}
 ```
 
-but in this case alias may be defined in runtime.
+but in the last case alias may be defined in runtime.
