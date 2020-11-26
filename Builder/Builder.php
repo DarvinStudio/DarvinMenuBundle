@@ -147,7 +147,7 @@ class Builder implements MenuBuilderInterface
         $options   = $this->getOptionsResolver()->resolve($options);
 
         if (null === $menuAlias) {
-            $menuAlias = $options['alias'];
+            $menuAlias = $options['menu'];
         }
 
         $root = $this->itemFactoryPool->createItem($menuAlias);
@@ -461,8 +461,8 @@ class Builder implements MenuBuilderInterface
 
         if (null === $this->menuAlias) {
             $resolver
-                ->setRequired('alias')
-                ->setAllowedTypes('alias', 'string');
+                ->setRequired('menu')
+                ->setAllowedTypes('menu', 'string');
         }
     }
 

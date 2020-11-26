@@ -119,7 +119,7 @@ darvin_menu:
 equals to
 
 ```twig
-{{ knp_menu_render(knp_menu_get('darvin_menu', [], {'alias': 'top'})) }}
+{{ knp_menu_render(knp_menu_get('darvin_menu', [], {'menu': 'top'})) }}
 ```
 
 but in the last case alias may be defined in runtime.
