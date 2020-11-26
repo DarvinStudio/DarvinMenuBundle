@@ -53,6 +53,16 @@ class MenuConfiguration implements MenuConfigurationInterface
     /**
      * {@inheritDoc}
      */
+    public function hasMenu(string $alias): bool
+    {
+        $menus = $this->getMenus();
+
+        return isset($menus[$alias]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getMenus(): array
     {
         if (null === $this->menus) {

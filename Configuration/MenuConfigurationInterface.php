@@ -24,6 +24,13 @@ interface MenuConfigurationInterface
     public function getMenu(string $alias): Menu;
 
     /**
+     * @param string $alias Menu alias
+     *
+     * @return bool
+     */
+    public function hasMenu(string $alias): bool;
+
+    /**
      * @return \Darvin\MenuBundle\Configuration\Menu[]
      *
      * @throws \LogicException

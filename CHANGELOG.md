@@ -123,3 +123,5 @@ equals to
 ```
 
 but in the last case alias may be defined in runtime.
+
+7.1.2: Add "menu_title" admin view widget.

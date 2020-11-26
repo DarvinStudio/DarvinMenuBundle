@@ -11,7 +11,9 @@ parameters:
 
     darvin_menu.admin.menu_item_sorter.class: Darvin\MenuBundle\Admin\Sorter\MenuItemSorter
 
-    darvin_menu.admin.slug_map_item_link_view_widget.class: Darvin\MenuBundle\Admin\View\SlugMapItemLinkWidget
+    darvin_menu.admin.view.widget.menu_title.class: Darvin\MenuBundle\Admin\View\MenuTitleWidget
+
+    darvin_menu.admin.view.widget.slug_map_item_link.class: Darvin\MenuBundle\Admin\View\SlugMapItemLinkWidget
 
 services:
     darvin_menu.admin.form_type.menu:
@@ -72,8 +74,16 @@ services:
             - '@darvin_menu.slug_map.object_loader'
             - '@darvin_utils.tree.sorter'
 
-    darvin_menu.admin.slug_map_item_link_view_widget:
-        class:  '%darvin_menu.admin.slug_map_item_link_view_widget.class%'
+    darvin_menu.admin.view.widget.menu_title:
+        class:  '%darvin_menu.admin.view.widget.menu_title.class%'
+        parent: darvin_admin.view.widget.abstract
+        arguments:
+            - '@darvin_menu.configuration.menu'
+        tags:
+            - { name: darvin_admin.view_widget }
+
+    darvin_menu.admin.view.widget.slug_map_item_link:
+        class:  '%darvin_menu.admin.view.widget.slug_map_item_link.class%'
         parent: darvin_admin.view.widget.abstract
         arguments:
             - '@darvin_admin.entity_namer'

@@ -26,7 +26,8 @@ view:
     index:
         fields:
             menuTitle:
-                size: sm
+                size:   sm
+                widget: menu_title
             position:
                 type: position
             enabled:
@@ -34,7 +35,7 @@ view:
             showChildren:
                 type: checkbox
             slugMapItem:
-                size: xxxl
+                size:   xxxl
                 widget: slug_map_item_link
             image:
                 size:   xxs
