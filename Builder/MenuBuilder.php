@@ -21,7 +21,7 @@ use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Sortable\SortableListener;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -29,12 +29,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * Builder
+ * Menu builder
  */
-class Builder implements MenuBuilderInterface
+class MenuBuilder implements MenuBuilderInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManagerInterface
      */
     private $em;
 
@@ -79,11 +79,6 @@ class Builder implements MenuBuilderInterface
     private $entityConfig;
 
     /**
-     * @var string|null
-     */
-    private $menuAlias;
-
-    /**
      * @var \Symfony\Component\OptionsResolver\OptionsResolver|null
      */
     private $optionsResolver;
@@ -94,7 +89,7 @@ class Builder implements MenuBuilderInterface
     private $slugPartSeparators;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                   $em                  Entity manager
+     * @param \Doctrine\ORM\EntityManagerInterface                          $em                  Entity manager
      * @param \Darvin\Utils\ORM\EntityResolverInterface                     $entityResolver      Entity resolver
      * @param \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface $itemFactoryPool     Item factory pool
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider      Locale provider
@@ -105,7 +100,7 @@ class Builder implements MenuBuilderInterface
      * @param array                                                         $entityConfig        Entity configuration
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         EntityResolverInterface $entityResolver,
         ItemFactoryPoolInterface $itemFactoryPool,
         LocaleProviderInterface $localeProvider,
@@ -125,17 +120,8 @@ class Builder implements MenuBuilderInterface
         $this->sortableListener = $sortableListener;
         $this->entityConfig = $entityConfig;
 
-        $this->menuAlias          = null;
         $this->optionsResolver    = null;
         $this->slugPartSeparators = [];
-    }
-
-    /**
-     * @param string $menuAlias Menu alias
-     */
-    public function setMenuAlias(string $menuAlias): void
-    {
-        $this->menuAlias = $menuAlias;
     }
 
     /**
@@ -143,12 +129,9 @@ class Builder implements MenuBuilderInterface
      */
     public function buildMenu(array $options = []): ItemInterface
     {
-        $menuAlias = $this->menuAlias;
-        $options   = $this->getOptionsResolver()->resolve($options);
+        $options = $this->getOptionsResolver()->resolve($options);
 
-        if (null === $menuAlias) {
-            $menuAlias = $options['menu'];
-        }
+        $menuAlias = $options['menu'];
 
         $root = $this->itemFactoryPool->createItem($menuAlias);
 
@@ -449,7 +432,9 @@ class Builder implements MenuBuilderInterface
     private function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
+            ->setRequired('menu')
             ->setDefault('depth', null)
+            ->setAllowedTypes('menu', 'string')
             ->setAllowedTypes('depth', ['integer', 'null', 'string'])
             ->setNormalizer('depth', function (Options $options, $depth): ?int {
                 if (null !== $depth) {
@@ -458,12 +443,6 @@ class Builder implements MenuBuilderInterface
 
                 return $depth;
             });
-
-        if (null === $this->menuAlias) {
-            $resolver
-                ->setRequired('menu')
-                ->setAllowedTypes('menu', 'string');
-        }
     }
 
     /**

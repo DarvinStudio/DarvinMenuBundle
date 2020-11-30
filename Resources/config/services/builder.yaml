@@ -1,10 +1,9 @@
 parameters:
-    darvin_menu.builder.abstract.class: Darvin\MenuBundle\Builder\Builder
+    darvin_menu.builder.class: Darvin\MenuBundle\Builder\MenuBuilder
 
 services:
-    darvin_menu.builder.abstract:
-        class:    '%darvin_menu.builder.abstract.class%'
-        abstract: true
+    darvin_menu.builder:
+        class: '%darvin_menu.builder.class%'
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.orm.entity_resolver'
@@ -15,8 +14,5 @@ services:
             - '@darvin_menu.slug_map.object_loader'
             - '@stof_doctrine_extensions.listener.sortable'
             - '%darvin_menu.entities%'
-
-    darvin_menu.builder.runtime:
-        parent: darvin_menu.builder.abstract
         tags:
             - { name: knp_menu.menu_builder, method: buildMenu, alias: darvin_menu }

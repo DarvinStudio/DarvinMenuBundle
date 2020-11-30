@@ -26,22 +26,10 @@ class Menu
     private $title;
 
     /**
-     * @var string|null
+     * @param string      $alias Alias
+     * @param string|null $title Title
      */
-    private $builderId;
-
-    /**
-     * @var string|null
-     */
-    private $builderAlias;
-
-    /**
-     * @param string      $alias        Alias
-     * @param string|null $title        Title
-     * @param string|null $builderId    Builder ID
-     * @param string|null $builderAlias Builder alias
-     */
-    public function __construct(string $alias, ?string $title = null, ?string $builderId = null, ?string $builderAlias = null)
+    public function __construct(string $alias, ?string $title = null)
     {
         if (null === $title) {
             $title = sprintf('menu.%s', $alias);
@@ -49,8 +37,6 @@ class Menu
 
         $this->alias = $alias;
         $this->title = $title;
-        $this->builderId = $builderId;
-        $this->builderAlias = $builderAlias;
     }
 
     /**
@@ -67,21 +53,5 @@ class Menu
     public function getTitle(): string
     {
         return $this->title;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBuilderId(): ?string
-    {
-        return $this->builderId;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBuilderAlias(): ?string
-    {
-        return $this->builderAlias;
     }
 }
