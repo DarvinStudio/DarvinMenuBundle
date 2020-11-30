@@ -14,7 +14,7 @@ use Darvin\AdminBundle\EntityNamer\EntityNamerInterface;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\AdminBundle\View\Widget\Widget\ShowLinkWidget;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -50,8 +50,8 @@ class SlugMapItemLinkWidget extends AbstractWidget
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item $menuItem Menu item
-     * @param array                               $options  Options
+     * @param \Darvin\MenuBundle\Entity\MenuItem $menuItem Menu item
+     * @param array                              $options  Options
      *
      * @return string
      */
@@ -85,7 +85,7 @@ class SlugMapItemLinkWidget extends AbstractWidget
      */
     protected function getAllowedEntityClasses(): iterable
     {
-        yield Item::class;
+        yield MenuItem::class;
     }
 
     /**

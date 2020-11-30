@@ -12,9 +12,9 @@ namespace Darvin\MenuBundle\DataFixtures\ORM\Menu;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
-use Darvin\MenuBundle\Entity\Menu\Item;
-use Darvin\MenuBundle\Entity\Menu\ItemTranslation;
-use Darvin\MenuBundle\Entity\Menu\MenuItemImage;
+use Darvin\MenuBundle\Entity\MenuItem;
+use Darvin\MenuBundle\Entity\MenuItemTranslation;
+use Darvin\MenuBundle\Entity\MenuItemImage;
 use Darvin\Utils\DataFixtures\ORM\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -82,12 +82,12 @@ class LoadItemData extends AbstractFixture
     /**
      * @param string $menu Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item
+     * @return \Darvin\MenuBundle\Entity\MenuItem
      */
-    private function createItem(string $menu): Item
+    private function createItem(string $menu): MenuItem
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $item */
-        $item  = $this->instantiateEntity(Item::class);
+        /** @var \Darvin\MenuBundle\Entity\MenuItem $item */
+        $item  = $this->instantiateEntity(MenuItem::class);
         $item->setLevel(1);
         $item->setMenu($menu);
 
@@ -119,11 +119,11 @@ class LoadItemData extends AbstractFixture
     /**
      * @param bool $grayscale Whether to generate grayscale image
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage
+     * @return \Darvin\MenuBundle\Entity\MenuItemImage
      */
     private function createImage(bool $grayscale = false): MenuItemImage
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage $image */
+        /** @var \Darvin\MenuBundle\Entity\MenuItemImage $image */
         $image = $this->instantiateEntity(MenuItemImage::class);
         $image->setFile($this->generateImageFile(null, null, null, $grayscale ? 'fff' : null, $grayscale ? 'ccc' : null));
 
@@ -131,16 +131,16 @@ class LoadItemData extends AbstractFixture
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item $item        Menu item
-     * @param string                              $locale      Locale
-     * @param string                              $fakerLocale Faker locale
+     * @param \Darvin\MenuBundle\Entity\MenuItem $item        Menu item
+     * @param string                             $locale      Locale
+     * @param string                             $fakerLocale Faker locale
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\ItemTranslation|\Knp\DoctrineBehaviors\Model\Translatable\Translation
+     * @return \Darvin\MenuBundle\Entity\MenuItemTranslation|\Knp\DoctrineBehaviors\Model\Translatable\Translation
      */
-    private function createTranslation(Item $item, string $locale, string $fakerLocale): ItemTranslation
+    private function createTranslation(MenuItem $item, string $locale, string $fakerLocale): MenuItemTranslation
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\ItemTranslation $translation */
-        $translation = $this->instantiateTranslation(Item::class);
+        /** @var \Darvin\MenuBundle\Entity\MenuItemTranslation $translation */
+        $translation = $this->instantiateTranslation(MenuItem::class);
         $faker       = $this->getFaker($fakerLocale);
 
         $translation->setLocale($locale);
@@ -159,11 +159,11 @@ class LoadItemData extends AbstractFixture
     /**
      * @param string $menu Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item|null
+     * @return \Darvin\MenuBundle\Entity\MenuItem|null
      */
-    private function getParentItem(string $menu): ?Item
+    private function getParentItem(string $menu): ?MenuItem
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item[] $items */
+        /** @var \Darvin\MenuBundle\Entity\MenuItem[] $items */
         $items = $this->items[$menu];
 
         shuffle($items);

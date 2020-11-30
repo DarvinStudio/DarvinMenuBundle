@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Entity\Menu;
+namespace Darvin\MenuBundle\Entity;
 
 use Darvin\ContentBundle\Traits\TranslationTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="menu_item_translation")
  */
-class ItemTranslation
+class MenuItemTranslation
 {
     use TranslationTrait;
 
@@ -64,9 +64,9 @@ class ItemTranslation
     /**
      * @param bool $enabled enabled
      *
-     * @return ItemTranslation
+     * @return MenuItemTranslation
      */
-    public function setEnabled(?bool $enabled): ItemTranslation
+    public function setEnabled(?bool $enabled): MenuItemTranslation
     {
         $this->enabled = $enabled;
 
@@ -84,9 +84,9 @@ class ItemTranslation
     /**
      * @param string $title title
      *
-     * @return ItemTranslation
+     * @return MenuItemTranslation
      */
-    public function setTitle(?string $title): ItemTranslation
+    public function setTitle(?string $title): MenuItemTranslation
     {
         $this->title = $title;
 
@@ -104,9 +104,9 @@ class ItemTranslation
     /**
      * @param string $url url
      *
-     * @return ItemTranslation
+     * @return MenuItemTranslation
      */
-    public function setUrl(?string $url): ItemTranslation
+    public function setUrl(?string $url): MenuItemTranslation
     {
         $this->url = $url;
 

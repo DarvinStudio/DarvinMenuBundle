@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\MenuBundle\Admin\Sorter\MenuItemSorter;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
@@ -65,7 +65,7 @@ class MenuItemParentType extends AbstractType
 
         /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
         foreach ($view->vars['choices'] as $choice) {
-            /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+            /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
             $menuItem = $choice->data;
             $menuItems[] = $menuItem;
 
@@ -101,7 +101,7 @@ class MenuItemParentType extends AbstractType
         $locale = $this->localeProvider->getCurrentLocale();
 
         $resolver->setDefaults([
-            'class'         => Item::class,
+            'class'         => MenuItem::class,
             'required'      => false,
             'query_builder' => function (ItemRepository $repository) use ($locale) {
                 return $repository->getAdminBuilder(null, $locale);

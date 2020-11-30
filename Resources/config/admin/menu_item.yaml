@@ -98,10 +98,10 @@ form:
             image:
                 type: Darvin\ImageBundle\Form\Type\ImageType
                 options:
-                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
+                    data_class: Darvin\MenuBundle\Entity\MenuItemImage
                     filters:    menu_main
             hoverImage:
                 type: Darvin\ImageBundle\Form\Type\ImageType
                 options:
-                    data_class: Darvin\MenuBundle\Entity\Menu\MenuItemImage
+                    data_class: Darvin\MenuBundle\Entity\MenuItemImage
                     filters:    menu_hover

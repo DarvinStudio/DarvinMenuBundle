@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\EventListener;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
@@ -152,13 +152,13 @@ class SwitchMenuSubscriber implements EventSubscriber
      * @param string                                   $menuName    Menu name
      * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item
+     * @return \Darvin\MenuBundle\Entity\MenuItem
      */
-    private function createMenuItem(string $menuName, SlugMapItem $slugMapItem): Item
+    private function createMenuItem(string $menuName, SlugMapItem $slugMapItem): MenuItem
     {
-        $class = $this->entityResolver->resolve(Item::class);
+        $class = $this->entityResolver->resolve(MenuItem::class);
 
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $item */
+        /** @var \Darvin\MenuBundle\Entity\MenuItem $item */
         $item = new $class();
         $item
             ->setMenu($menuName)
@@ -173,7 +173,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      * @param object      $entity   Entity
      * @param string|null $menuName Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     * @return \Darvin\MenuBundle\Entity\MenuItem[]
      */
     private function getMenuItems(object $entity, ?string $menuName = null): array
     {
@@ -218,7 +218,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getMenuItemRepository(): ItemRepository
     {
-        return $this->em->getRepository(Item::class);
+        return $this->em->getRepository(MenuItem::class);
     }
 
     /**

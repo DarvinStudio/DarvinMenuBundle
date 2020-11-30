@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Entity\Menu;
+namespace Darvin\MenuBundle\Entity;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Traits\TranslatableTrait;
@@ -32,9 +32,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @method string getTitle()
  * @method string getUrl()
  *
- * @method ItemTranslation[]|Collection getTranslations()
+ * @method \Darvin\MenuBundle\Entity\MenuItemTranslation[]|Collection getTranslations()
  */
-class Item
+class MenuItem
 {
     use TranslatableTrait;
 
@@ -50,9 +50,9 @@ class Item
     protected $id;
 
     /**
-     * @var Item|null
+     * @var MenuItem|null
      *
-     * @ORM\ManyToOne(targetEntity="Item", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="MenuItem", inversedBy="children")
      *
      * @Gedmo\TreeParent
      * @Gedmo\SortableGroup
@@ -60,9 +60,9 @@ class Item
     protected $parent;
 
     /**
-     * @var Item[]|\Doctrine\Common\Collections\Collection
+     * @var MenuItem[]|\Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="parent", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="MenuItem", mappedBy="parent", cascade={"remove"})
      */
     protected $children;
 
@@ -75,9 +75,9 @@ class Item
     protected $slugMapItem;
 
     /**
-     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
+     * @var \Darvin\MenuBundle\Entity\MenuItemImage|null
      *
-     * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\MenuItemImage", cascade={"persist", "remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      *
      * @Assert\Valid
@@ -85,9 +85,9 @@ class Item
     protected $image;
 
     /**
-     * @var \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
+     * @var \Darvin\MenuBundle\Entity\MenuItemImage|null
      *
-     * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\Menu\MenuItemImage", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\MenuItemImage", cascade={"persist", "remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      *
      * @Assert\Valid
@@ -186,19 +186,19 @@ class Item
     }
 
     /**
-     * @return \Darvin\MenuBundle\Entity\Menu\Item|null
+     * @return \Darvin\MenuBundle\Entity\MenuItem|null
      */
-    public function getParent(): ?Item
+    public function getParent(): ?MenuItem
     {
         return $this->parent;
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item|null $parent parent
+     * @param \Darvin\MenuBundle\Entity\MenuItem|null $parent parent
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setParent(?Item $parent): Item
+    public function setParent(?MenuItem $parent): MenuItem
     {
         $this->parent = $parent;
 
@@ -206,7 +206,7 @@ class Item
     }
 
     /**
-     * @return Item[]|\Doctrine\Common\Collections\Collection
+     * @return MenuItem[]|\Doctrine\Common\Collections\Collection
      */
     public function getChildren(): Collection
     {
@@ -214,11 +214,11 @@ class Item
     }
 
     /**
-     * @param Item[]|\Doctrine\Common\Collections\Collection $children children
+     * @param MenuItem[]|\Doctrine\Common\Collections\Collection $children children
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setChildren(Collection $children): Item
+    public function setChildren(Collection $children): MenuItem
     {
         $this->children = $children;
 
@@ -236,9 +236,9 @@ class Item
     /**
      * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slugMapItem slugMapItem
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setSlugMapItem(?SlugMapItem $slugMapItem): Item
+    public function setSlugMapItem(?SlugMapItem $slugMapItem): MenuItem
     {
         $this->slugMapItem = $slugMapItem;
 
@@ -246,7 +246,7 @@ class Item
     }
 
     /**
-     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
+     * @return \Darvin\MenuBundle\Entity\MenuItemImage|null
      */
     public function getImage(): ?MenuItemImage
     {
@@ -254,11 +254,11 @@ class Item
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null $image image
+     * @param \Darvin\MenuBundle\Entity\MenuItemImage|null $image image
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setImage(?MenuItemImage $image): Item
+    public function setImage(?MenuItemImage $image): MenuItem
     {
         $this->image = $image;
 
@@ -266,7 +266,7 @@ class Item
     }
 
     /**
-     * @return \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null
+     * @return \Darvin\MenuBundle\Entity\MenuItemImage|null
      */
     public function getHoverImage(): ?MenuItemImage
     {
@@ -274,11 +274,11 @@ class Item
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\MenuItemImage|null $hoverImage hoverImage
+     * @param \Darvin\MenuBundle\Entity\MenuItemImage|null $hoverImage hoverImage
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setHoverImage(?MenuItemImage $hoverImage): Item
+    public function setHoverImage(?MenuItemImage $hoverImage): MenuItem
     {
         $this->hoverImage = $hoverImage;
 
@@ -296,9 +296,9 @@ class Item
     /**
      * @param string $menu menu
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setMenu(?string $menu): Item
+    public function setMenu(?string $menu): MenuItem
     {
         $this->menu = $menu;
 
@@ -316,9 +316,9 @@ class Item
     /**
      * @param bool $showChildren showChildren
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setShowChildren(?bool $showChildren): Item
+    public function setShowChildren(?bool $showChildren): MenuItem
     {
         $this->showChildren = $showChildren;
 
@@ -336,9 +336,9 @@ class Item
     /**
      * @param int $position position
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setPosition(?int $position): Item
+    public function setPosition(?int $position): MenuItem
     {
         $this->position = $position;
 
@@ -356,9 +356,9 @@ class Item
     /**
      * @param string $treePath treePath
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setTreePath(?string $treePath): Item
+    public function setTreePath(?string $treePath): MenuItem
     {
         $this->treePath = $treePath;
 
@@ -376,9 +376,9 @@ class Item
     /**
      * @param int $level level
      *
-     * @return Item
+     * @return MenuItem
      */
-    public function setLevel(?int $level): Item
+    public function setLevel(?int $level): MenuItem
     {
         $this->level = $level;
 

@@ -50,7 +50,7 @@ class ItemRepository extends EntityRepository
      * @param mixed       $id      Object ID
      * @param string|null $menu    Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     * @return \Darvin\MenuBundle\Entity\MenuItem[]
      */
     public function getByObject(array $classes, $id, ?string $menu = null): array
     {
@@ -89,7 +89,7 @@ class ItemRepository extends EntityRepository
      * @param int|null    $depth  Depth
      * @param string|null $locale Locale
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     * @return \Darvin\MenuBundle\Entity\MenuItem[]
      */
     public function getForMenuBuilder(string $menu, ?int $depth = null, ?string $locale = null): array
     {

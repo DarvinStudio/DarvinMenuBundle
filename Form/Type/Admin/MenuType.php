@@ -12,7 +12,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -77,7 +77,7 @@ class MenuType extends AbstractType
                 return;
             }
 
-            $filterData = $request->query->get($metadataManager->getMetadata(Item::class)->getFilterFormTypeName());
+            $filterData = $request->query->get($metadataManager->getMetadata(MenuItem::class)->getFilterFormTypeName());
 
             if (isset($filterData['menu'])) {
                 $event->setData($filterData['menu']);

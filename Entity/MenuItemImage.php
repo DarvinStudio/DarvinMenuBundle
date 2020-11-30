@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Entity\Menu;
+namespace Darvin\MenuBundle\Entity;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
 use Doctrine\ORM\Mapping as ORM;

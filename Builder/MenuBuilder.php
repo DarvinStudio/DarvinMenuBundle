@@ -14,7 +14,7 @@ use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
 use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
@@ -143,9 +143,9 @@ class MenuBuilder implements MenuBuilderInterface
     }
 
     /**
-     * @param \Knp\Menu\ItemInterface               $root     Root item
-     * @param \Darvin\MenuBundle\Entity\Menu\Item[] $entities Menu item entities
-     * @param array                                 $options  Options
+     * @param \Knp\Menu\ItemInterface              $root     Root item
+     * @param \Darvin\MenuBundle\Entity\MenuItem[] $entities Menu item entities
+     * @param array                                $options  Options
      */
     private function addItems(ItemInterface $root, array $entities, array $options): void
     {
@@ -243,7 +243,7 @@ class MenuBuilder implements MenuBuilderInterface
      * @param string $menuName Menu name
      * @param array  $options  Options
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     * @return \Darvin\MenuBundle\Entity\MenuItem[]
      */
     private function getMenuItemEntities(string $menuName, array $options): array
     {
@@ -255,7 +255,7 @@ class MenuBuilder implements MenuBuilderInterface
 
         $slugMapItems = [];
 
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $entity */
+        /** @var \Darvin\MenuBundle\Entity\MenuItem $entity */
         foreach ($entities as $entity) {
             if (null !== $entity->getSlugMapItem()) {
                 $slugMapItems[$entity->getId()] = $entity->getSlugMapItem();
@@ -450,7 +450,7 @@ class MenuBuilder implements MenuBuilderInterface
      */
     private function getEntityRepository(): ItemRepository
     {
-        return $this->em->getRepository(Item::class);
+        return $this->em->getRepository(MenuItem::class);
     }
 
     /**

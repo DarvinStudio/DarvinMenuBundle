@@ -16,7 +16,7 @@ use Darvin\AdminBundle\Route\AdminRouterInterface;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\MenuBundle\Configuration\Menu;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -67,11 +67,11 @@ class ItemFactory implements ItemFactoryInterface
      */
     public function getItems(): iterable
     {
-        if (!$this->authorizationChecker->isGranted(Permission::VIEW, Item::class)) {
+        if (!$this->authorizationChecker->isGranted(Permission::VIEW, MenuItem::class)) {
             return;
         }
 
-        $filterFormTypeName = $this->metadataManager->getMetadata(Item::class)->getFilterFormTypeName();
+        $filterFormTypeName = $this->metadataManager->getMetadata(MenuItem::class)->getFilterFormTypeName();
 
         foreach (array_values($this->menuConfig->getMenus()) as $i => $menu) {
             yield $this->createItem($menu, $filterFormTypeName, ($i + 1) * 100);
@@ -94,9 +94,9 @@ class ItemFactory implements ItemFactoryInterface
         ];
 
         return (new \Darvin\AdminBundle\Menu\Item(sprintf('menu_%s', $menu->getName())))
-            ->setAssociatedObject(Item::class)
+            ->setAssociatedObject(MenuItem::class)
             ->setIndexTitle($menu->getTitle())
-            ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_INDEX, $routeParams))
+            ->setIndexUrl($this->adminRouter->generate(null, MenuItem::class, AdminRouterInterface::TYPE_INDEX, $routeParams))
             ->setParentName('menu')
             ->setPosition($position);
     }

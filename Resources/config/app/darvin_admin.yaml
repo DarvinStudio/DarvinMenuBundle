@@ -4,4 +4,4 @@ darvin_admin:
             menu:
                 position: 20
     sections:
-        Darvin\MenuBundle\Entity\Menu\Item: '@DarvinMenuBundle/Resources/config/admin/menu/item.yaml'
+        Darvin\MenuBundle\Entity\MenuItem: '@DarvinMenuBundle/Resources/config/admin/menu_item.yaml'

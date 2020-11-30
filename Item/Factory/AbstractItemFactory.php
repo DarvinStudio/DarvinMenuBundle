@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Item\Factory;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -121,7 +121,7 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
         foreach ([
             'hoverImage' => AbstractImage::class,
             'image'      => AbstractImage::class,
-            'itemEntity' => Item::class,
+            'itemEntity' => MenuItem::class,
             'object'     => 'object',
             'objectId'   => null,
             'objectName' => 'string',

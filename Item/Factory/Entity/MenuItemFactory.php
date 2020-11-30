@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Item\Factory\Entity;
 
 use Darvin\ImageBundle\Imageable\ImageableInterface;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -37,7 +37,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     public function supports($source): bool
     {
-        return $source instanceof Item;
+        return $source instanceof MenuItem;
     }
 
     /**
@@ -45,7 +45,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getLabel($source): ?string
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+        /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
         $menuItem = $source;
 
         $title = $menuItem->getTitle();
@@ -65,7 +65,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getUri($source): ?string
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+        /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
         $menuItem = $source;
 
         $url = $menuItem->getUrl();
@@ -97,7 +97,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getExtras($source): array
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+        /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
         $menuItem = $source;
 
         $image      = $menuItem->getImage();

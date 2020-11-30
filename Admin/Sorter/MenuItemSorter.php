@@ -39,9 +39,9 @@ class MenuItemSorter
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\Menu\Item[] $menuItems Menu items
+     * @param \Darvin\MenuBundle\Entity\MenuItem[] $menuItems Menu items
      *
-     * @return \Darvin\MenuBundle\Entity\Menu\Item[]
+     * @return \Darvin\MenuBundle\Entity\MenuItem[]
      * @throws \Darvin\Utils\Tree\Exception\ClassIsNotTreeException
      */
     public function sort(array $menuItems): array

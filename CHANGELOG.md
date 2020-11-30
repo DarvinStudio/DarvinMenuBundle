@@ -126,4 +126,10 @@ but in the last case alias may be defined in runtime.
 
 7.1.2: Add "menu_title" admin view widget.
 
-8.0.0: Use single menu builder for all menus.
+8.0.0:
+
+- Use single menu builder for all menus.
+
+- Rename "menu alias" to "menu name".
+
+- Rename entities.

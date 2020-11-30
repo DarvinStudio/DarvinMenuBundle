@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Admin\View;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
-use Darvin\MenuBundle\Entity\Menu\Item;
+use Darvin\MenuBundle\Entity\MenuItem;
 
 /**
  * Menu title admin view widget
@@ -38,7 +38,7 @@ class MenuTitleWidget extends AbstractWidget
      */
     protected function createContent(object $entity, array $options): ?string
     {
-        /** @var \Darvin\MenuBundle\Entity\Menu\Item $item */
+        /** @var \Darvin\MenuBundle\Entity\MenuItem $item */
         $item = $entity;
 
         if ($this->menuConfig->hasMenu($item->getMenu())) {
@@ -53,7 +53,7 @@ class MenuTitleWidget extends AbstractWidget
      */
     protected function getAllowedEntityClasses(): iterable
     {
-        yield Item::class;
+        yield MenuItem::class;
     }
 
     /**
