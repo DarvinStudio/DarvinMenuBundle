@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
  */
 class MenuController
 {
+    private const MENU = 'darvin_menu';
+
     /**
      * @var \Knp\Menu\Twig\Helper
      */
@@ -33,7 +35,6 @@ class MenuController
     }
 
     /**
-     * @param string      $menu          Menu alias
      * @param array       $buildOptions  Build options
      * @param array       $renderOptions Render options
      * @param string|null $renderer      Renderer
@@ -42,13 +43,12 @@ class MenuController
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function __invoke(
-        string $menu,
         array $buildOptions = [],
         array $renderOptions = [],
         ?string $renderer = null,
         int $maxAge = 30 * 24 * 60 * 60
     ): Response {
-        $response = new Response($this->helper->render($this->helper->get($menu, [], $buildOptions), $renderOptions, $renderer));
+        $response = new Response($this->helper->render($this->helper->get(self::MENU, [], $buildOptions), $renderOptions, $renderer));
         $response->setPublic();
         $response->setMaxAge($maxAge);
         $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, 'true');
