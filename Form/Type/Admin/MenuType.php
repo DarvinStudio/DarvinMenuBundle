@@ -117,7 +117,7 @@ class MenuType extends AbstractType
         $choices = [];
 
         foreach ($this->menuConfig->getMenus() as $menu) {
-            $choices[$menu->getTitle()] = $menu->getAlias();
+            $choices[$menu->getTitle()] = $menu->getName();
         }
 
         return $choices;

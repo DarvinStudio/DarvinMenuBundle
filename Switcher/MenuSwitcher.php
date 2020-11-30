@@ -34,7 +34,7 @@ class MenuSwitcher implements MenuSwitcherInterface
     /**
      * @var array
      */
-    private $defaultMenuAliases;
+    private $defaultMenuNames;
 
     /**
      * @var array
@@ -52,15 +52,15 @@ class MenuSwitcher implements MenuSwitcherInterface
     private $menusToDisable;
 
     /**
-     * @param \Doctrine\ORM\EntityManager               $em                 Entity manager
-     * @param \Darvin\Utils\ORM\EntityResolverInterface $entityResolver     Entity resolver
-     * @param array                                     $defaultMenuAliases Default menu aliases
+     * @param \Doctrine\ORM\EntityManager               $em               Entity manager
+     * @param \Darvin\Utils\ORM\EntityResolverInterface $entityResolver   Entity resolver
+     * @param array                                     $defaultMenuNames Default menu names
      */
-    public function __construct(EntityManager $em, EntityResolverInterface $entityResolver, array $defaultMenuAliases)
+    public function __construct(EntityManager $em, EntityResolverInterface $entityResolver, array $defaultMenuNames)
     {
         $this->em = $em;
         $this->entityResolver = $entityResolver;
-        $this->defaultMenuAliases = $defaultMenuAliases;
+        $this->defaultMenuNames = $defaultMenuNames;
 
         $this->menuItems = null;
         $this->menusToEnable = $this->menusToDisable = [];
@@ -71,9 +71,9 @@ class MenuSwitcher implements MenuSwitcherInterface
      */
     public function getDefaultMenus($entity): array
     {
-        foreach ($this->defaultMenuAliases as $entityClass => $entityDefaultMenuAliases) {
+        foreach ($this->defaultMenuNames as $entityClass => $entityDefaultMenuNames) {
             if ($entity instanceof $entityClass) {
-                return $entityDefaultMenuAliases;
+                return $entityDefaultMenuNames;
             }
         }
 
@@ -101,8 +101,8 @@ class MenuSwitcher implements MenuSwitcherInterface
      */
     public function hasEnabledMenus($entity): bool
     {
-        foreach (array_keys($this->getMenuItems()) as $menuAlias) {
-            if ($this->isMenuEnabled($entity, $menuAlias)) {
+        foreach (array_keys($this->getMenuItems()) as $menuName) {
+            if ($this->isMenuEnabled($entity, $menuName)) {
                 return true;
             }
         }
@@ -113,7 +113,7 @@ class MenuSwitcher implements MenuSwitcherInterface
     /**
      * {@inheritDoc}
      */
-    public function isMenuEnabled($entity, string $menuAlias): bool
+    public function isMenuEnabled($entity, string $menuName): bool
     {
         $menuItems   = $this->getMenuItems();
         $entityClass = ClassUtils::getClass($entity);
@@ -122,7 +122,7 @@ class MenuSwitcher implements MenuSwitcherInterface
         $entityId = reset($entityIds);
 
         foreach ([$entityClass, $this->entityResolver->reverseResolve($entityClass)] as $class) {
-            if (isset($menuItems[$menuAlias][$class][$entityId])) {
+            if (isset($menuItems[$menuName][$class][$entityId])) {
                 return true;
             }
         }
@@ -133,41 +133,41 @@ class MenuSwitcher implements MenuSwitcherInterface
     /**
      * {@inheritDoc}
      */
-    public function toggleMenu($entity, string $menuAlias, bool $enable): void
+    public function toggleMenu($entity, string $menuName, bool $enable): void
     {
-        $enable ? $this->enableMenu($entity, $menuAlias) : $this->disableMenu($entity, $menuAlias);
+        $enable ? $this->enableMenu($entity, $menuName) : $this->disableMenu($entity, $menuName);
     }
 
     /**
-     * @param object $entity    Entity
-     * @param string $menuAlias Menu alias
+     * @param object $entity   Entity
+     * @param string $menuName Menu name
      */
-    private function enableMenu(object $entity, string $menuAlias): void
+    private function enableMenu(object $entity, string $menuName): void
     {
-        if ($this->isMenuEnabled($entity, $menuAlias)) {
+        if ($this->isMenuEnabled($entity, $menuName)) {
             return;
         }
-        if (!isset($this->toEnable[$menuAlias])) {
-            $this->menusToEnable[$menuAlias] = [];
+        if (!isset($this->toEnable[$menuName])) {
+            $this->menusToEnable[$menuName] = [];
         }
 
-        $this->menusToEnable[$menuAlias][] = $entity;
+        $this->menusToEnable[$menuName][] = $entity;
     }
 
     /**
-     * @param object $entity    Entity
-     * @param string $menuAlias Menu alias
+     * @param object $entity   Entity
+     * @param string $menuName Menu name
      */
-    private function disableMenu(object $entity, string $menuAlias): void
+    private function disableMenu(object $entity, string $menuName): void
     {
-        if (!$this->isMenuEnabled($entity, $menuAlias)) {
+        if (!$this->isMenuEnabled($entity, $menuName)) {
             return;
         }
-        if (!isset($this->toDisable[$menuAlias])) {
-            $this->menusToDisable[$menuAlias] = [];
+        if (!isset($this->toDisable[$menuName])) {
+            $this->menusToDisable[$menuName] = [];
         }
 
-        $this->menusToDisable[$menuAlias][] = $entity;
+        $this->menusToDisable[$menuName][] = $entity;
     }
 
     /**

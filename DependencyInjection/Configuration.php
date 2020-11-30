@@ -59,7 +59,7 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('')
                     ->end()
                 ->end()
-                ->arrayNode('menus')->useAttributeAsKey('alias')->prototype('array')->end()->end()
+                ->arrayNode('menus')->useAttributeAsKey('name')->prototype('array')->end()->end()
                 ->arrayNode('switcher')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('default_menus')->useAttributeAsKey('entity')
@@ -88,10 +88,10 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->validate()
                 ->ifTrue(function (array $config) {
-                    foreach ($config['switcher']['default_menus'] as $aliases) {
-                        foreach ($aliases as $alias) {
-                            if (!isset($config['menus'][$alias])) {
-                                throw new \RuntimeException(sprintf('Menu "%s" does not defined in the "menus" section.', $alias));
+                    foreach ($config['switcher']['default_menus'] as $names) {
+                        foreach ($names as $name) {
+                            if (!isset($config['menus'][$name])) {
+                                throw new \RuntimeException(sprintf('Menu "%s" does not defined in the "menus" section.', $name));
                             }
                         }
                     }

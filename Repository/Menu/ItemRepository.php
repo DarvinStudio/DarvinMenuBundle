@@ -24,7 +24,7 @@ class ItemRepository extends EntityRepository
     use TranslatableRepositoryTrait;
 
     /**
-     * @param string|null $menu   Menu alias
+     * @param string|null $menu   Menu name
      * @param string|null $locale Locale
      *
      * @return \Doctrine\ORM\QueryBuilder
@@ -48,7 +48,7 @@ class ItemRepository extends EntityRepository
     /**
      * @param string[]    $classes Object classes
      * @param mixed       $id      Object ID
-     * @param string|null $menu    Menu alias
+     * @param string|null $menu    Menu name
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
@@ -85,7 +85,7 @@ class ItemRepository extends EntityRepository
     }
 
     /**
-     * @param string      $menu   Menu alias
+     * @param string      $menu   Menu name
      * @param int|null    $depth  Depth
      * @param string|null $locale Locale
      *
@@ -179,7 +179,7 @@ class ItemRepository extends EntityRepository
 
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
-     * @param string                     $menu Menu alias
+     * @param string                     $menu Menu name
      *
      * @return ItemRepository
      */

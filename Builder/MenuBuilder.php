@@ -131,11 +131,11 @@ class MenuBuilder implements MenuBuilderInterface
     {
         $options = $this->getOptionsResolver()->resolve($options);
 
-        $menuAlias = $options['menu'];
+        $menuName = $options['menu'];
 
-        $root = $this->itemFactoryPool->createItem($menuAlias);
+        $root = $this->itemFactoryPool->createItem($menuName);
 
-        $entities = $this->getMenuItemEntities($menuAlias, $options);
+        $entities = $this->getMenuItemEntities($menuName, $options);
 
         $this->addItems($root, $entities, $options);
 
@@ -240,14 +240,14 @@ class MenuBuilder implements MenuBuilderInterface
     }
 
     /**
-     * @param string $menuAlias Menu alias
-     * @param array  $options   Options
+     * @param string $menuName Menu name
+     * @param array  $options  Options
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    private function getMenuItemEntities(string $menuAlias, array $options): array
+    private function getMenuItemEntities(string $menuName, array $options): array
     {
-        $entities = $this->getEntityRepository()->getForMenuBuilder($menuAlias, $options['depth'], $this->localeProvider->getCurrentLocale());
+        $entities = $this->getEntityRepository()->getForMenuBuilder($menuName, $options['depth'], $this->localeProvider->getCurrentLocale());
 
         if (empty($entities)) {
             return $entities;

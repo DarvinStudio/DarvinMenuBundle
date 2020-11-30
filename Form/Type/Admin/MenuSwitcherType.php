@@ -68,18 +68,18 @@ class MenuSwitcherType extends AbstractType
 
                 $entity = $parentForm->getData();
 
-                $defaultMenuAliases = 'new' === $parentForm->getConfig()->getOption('action_type')
+                $defaultMenuNames = 'new' === $parentForm->getConfig()->getOption('action_type')
                     ? $menuSwitcher->getDefaultMenus($entity)
                     : [];
 
                 foreach ($menus as $menu) {
                     $attr = [];
 
-                    if (in_array($menu->getAlias(), $defaultMenuAliases)) {
+                    if (in_array($menu->getName(), $defaultMenuNames)) {
                         $attr['data-default'] = 1;
                     }
 
-                    $event->getForm()->add($menu->getAlias(), CheckboxType::class, [
+                    $event->getForm()->add($menu->getName(), CheckboxType::class, [
                         'label' => $menu->getTitle(),
                         'attr'  => $attr,
                     ]);
@@ -88,10 +88,10 @@ class MenuSwitcherType extends AbstractType
                 $data = [];
 
                 foreach ($menus as $menu) {
-                    if ($menuSwitcher->isMenuEnabled($entity, $menu->getAlias())
-                        || in_array($menu->getAlias(), $defaultMenuAliases)
+                    if ($menuSwitcher->isMenuEnabled($entity, $menu->getName())
+                        || in_array($menu->getName(), $defaultMenuNames)
                     ) {
-                        $data[$menu->getAlias()] = true;
+                        $data[$menu->getName()] = true;
                     }
                 }
 
@@ -102,7 +102,7 @@ class MenuSwitcherType extends AbstractType
                 $entity = $event->getForm()->getParent()->getData();
 
                 foreach ($menuConfig->getMenus() as $menu) {
-                    $menuSwitcher->toggleMenu($entity, $menu->getAlias(), $data[$menu->getAlias()]);
+                    $menuSwitcher->toggleMenu($entity, $menu->getName(), $data[$menu->getName()]);
                 }
             });
     }

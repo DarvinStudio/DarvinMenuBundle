@@ -18,7 +18,7 @@ class Menu
     /**
      * @var string
      */
-    private $alias;
+    private $name;
 
     /**
      * @var string
@@ -26,25 +26,25 @@ class Menu
     private $title;
 
     /**
-     * @param string      $alias Alias
+     * @param string      $name  Name
      * @param string|null $title Title
      */
-    public function __construct(string $alias, ?string $title = null)
+    public function __construct(string $name, ?string $title = null)
     {
         if (null === $title) {
-            $title = sprintf('menu.%s', $alias);
+            $title = sprintf('menu.%s', $name);
         }
 
-        $this->alias = $alias;
+        $this->name = $name;
         $this->title = $title;
     }
 
     /**
      * @return string
      */
-    public function getAlias(): string
+    public function getName(): string
     {
-        return $this->alias;
+        return $this->name;
     }
 
     /**

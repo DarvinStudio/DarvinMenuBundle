@@ -16,19 +16,19 @@ namespace Darvin\MenuBundle\Configuration;
 interface MenuConfigurationInterface
 {
     /**
-     * @param string $alias Menu alias
+     * @param string $name Menu name
      *
      * @return \Darvin\MenuBundle\Configuration\Menu
      * @throws \InvalidArgumentException
      */
-    public function getMenu(string $alias): Menu;
+    public function getMenu(string $name): Menu;
 
     /**
-     * @param string $alias Menu alias
+     * @param string $name Menu name
      *
      * @return bool
      */
-    public function hasMenu(string $alias): bool;
+    public function hasMenu(string $name): bool;
 
     /**
      * @return \Darvin\MenuBundle\Configuration\Menu[]

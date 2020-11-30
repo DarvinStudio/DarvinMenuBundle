@@ -39,25 +39,25 @@ class MenuConfiguration implements MenuConfigurationInterface
     /**
      * {@inheritDoc}
      */
-    public function getMenu(string $alias): Menu
+    public function getMenu(string $name): Menu
     {
         $menus = $this->getMenus();
 
-        if (!isset($menus[$alias])) {
-            throw new \InvalidArgumentException(sprintf('Menu with alias "%s" does not exist.', $alias));
+        if (!isset($menus[$name])) {
+            throw new \InvalidArgumentException(sprintf('Menu "%s" does not exist.', $name));
         }
 
-        return $menus[$alias];
+        return $menus[$name];
     }
 
     /**
      * {@inheritDoc}
      */
-    public function hasMenu(string $alias): bool
+    public function hasMenu(string $name): bool
     {
         $menus = $this->getMenus();
 
-        return isset($menus[$alias]);
+        return isset($menus[$name]);
     }
 
     /**
@@ -68,12 +68,12 @@ class MenuConfiguration implements MenuConfigurationInterface
         if (null === $this->menus) {
             $menus = [];
 
-            foreach ($this->configs as $alias => $config) {
-                if (isset($menus[$alias])) {
-                    throw new \LogicException(sprintf('Menu with alias "%s" already exists.', $alias));
+            foreach ($this->configs as $name => $config) {
+                if (isset($menus[$name])) {
+                    throw new \LogicException(sprintf('Menu "%s" already exists.', $name));
                 }
 
-                $menus[$alias] = new Menu($alias);
+                $menus[$name] = new Menu($name);
             }
 
             $this->menus = $menus;

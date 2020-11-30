@@ -89,11 +89,11 @@ class ItemFactory implements ItemFactoryInterface
     {
         $routeParams = [
             $filterFormTypeName => [
-                'menu' => $menu->getAlias(),
+                'menu' => $menu->getName(),
             ],
         ];
 
-        return (new \Darvin\AdminBundle\Menu\Item(sprintf('menu_%s', $menu->getAlias())))
+        return (new \Darvin\AdminBundle\Menu\Item(sprintf('menu_%s', $menu->getName())))
             ->setAssociatedObject(Item::class)
             ->setIndexTitle($menu->getTitle())
             ->setIndexUrl($this->adminRouter->generate(null, Item::class, AdminRouterInterface::TYPE_INDEX, $routeParams))

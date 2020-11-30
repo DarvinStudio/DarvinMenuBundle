@@ -63,16 +63,16 @@ class LoadItemData extends AbstractFixture
     public function load(ObjectManager $manager): void
     {
         foreach ($this->getMenuConfig()->getMenus() as $menu) {
-            $this->items[$menu->getAlias()] = [];
+            $this->items[$menu->getName()] = [];
 
             $count = $this->getFaker()->numberBetween($this->minCount, $this->maxCount);
 
             for ($i = 0; $i < $count; $i++) {
-                $item = $this->createItem($menu->getAlias());
+                $item = $this->createItem($menu->getName());
 
                 $manager->persist($item);
 
-                $this->items[$menu->getAlias()][] = $item;
+                $this->items[$menu->getName()][] = $item;
             }
         }
 
@@ -80,7 +80,7 @@ class LoadItemData extends AbstractFixture
     }
 
     /**
-     * @param string $menu Menu alias
+     * @param string $menu Menu name
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item
      */
@@ -157,7 +157,7 @@ class LoadItemData extends AbstractFixture
     }
 
     /**
-     * @param string $menu Menu alias
+     * @param string $menu Menu name
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item|null
      */

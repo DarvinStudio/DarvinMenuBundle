@@ -40,17 +40,17 @@ interface MenuSwitcherInterface
     public function hasEnabledMenus(object $entity): bool;
 
     /**
-     * @param object $entity    Entity
-     * @param string $menuAlias Menu alias
+     * @param object $entity   Entity
+     * @param string $menuName Menu name
      *
      * @return bool
      */
-    public function isMenuEnabled(object $entity, string $menuAlias): bool;
+    public function isMenuEnabled(object $entity, string $menuName): bool;
 
     /**
-     * @param object $entity    Entity
-     * @param string $menuAlias Menu alias
-     * @param bool   $enable    Whether to enable menu
+     * @param object $entity   Entity
+     * @param string $menuName Menu name
+     * @param bool   $enable   Whether to enable menu
      */
-    public function toggleMenu(object $entity, string $menuAlias, bool $enable): void;
+    public function toggleMenu(object $entity, string $menuName, bool $enable): void;
 }

@@ -98,12 +98,12 @@ class SwitchMenuSubscriber implements EventSubscriber
             if (!$slugMapItem instanceof SlugMapItem) {
                 continue;
             }
-            foreach ($this->menuSwitcher->getMenusToEnable() as $menuAlias => $entities) {
+            foreach ($this->menuSwitcher->getMenusToEnable() as $menuName => $entities) {
                 foreach ($entities as $entity) {
                     if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
                         && $slugMapItem->getObjectId() === $this->getEntityId($entity)
                     ) {
-                        $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
+                        $em->persist($this->createMenuItem($menuName, $slugMapItem));
 
                         $computeChangeSets = true;
                     }
@@ -130,18 +130,18 @@ class SwitchMenuSubscriber implements EventSubscriber
     {
         $this->em = $em = $args->getEntityManager();
 
-        foreach ($this->menuSwitcher->getMenusToEnable() as $menuAlias => $entities) {
+        foreach ($this->menuSwitcher->getMenusToEnable() as $menuName => $entities) {
             foreach ($entities as $entity) {
                 $slugMapItem = $this->getSlugMapItem($entity);
 
                 if (null !== $slugMapItem) {
-                    $em->persist($this->createMenuItem($menuAlias, $slugMapItem));
+                    $em->persist($this->createMenuItem($menuName, $slugMapItem));
                 }
             }
         }
-        foreach ($this->menuSwitcher->getMenusToDisable() as $menuAlias => $entities) {
+        foreach ($this->menuSwitcher->getMenusToDisable() as $menuName => $entities) {
             foreach ($entities as $entity) {
-                foreach ($this->getMenuItems($entity, $menuAlias) as $menuItem) {
+                foreach ($this->getMenuItems($entity, $menuName) as $menuItem) {
                     $em->remove($menuItem);
                 }
             }
@@ -149,19 +149,19 @@ class SwitchMenuSubscriber implements EventSubscriber
     }
 
     /**
-     * @param string                                   $menuAlias   Menu alias
+     * @param string                                   $menuName    Menu name
      * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item
      */
-    private function createMenuItem(string $menuAlias, SlugMapItem $slugMapItem): Item
+    private function createMenuItem(string $menuName, SlugMapItem $slugMapItem): Item
     {
         $class = $this->entityResolver->resolve(Item::class);
 
         /** @var \Darvin\MenuBundle\Entity\Menu\Item $item */
         $item = new $class();
         $item
-            ->setMenu($menuAlias)
+            ->setMenu($menuName)
             ->setSlugMapItem($slugMapItem);
 
         $this->translationInitializer->initializeTranslations($item, $this->locales);
@@ -170,19 +170,19 @@ class SwitchMenuSubscriber implements EventSubscriber
     }
 
     /**
-     * @param object      $entity    Entity
-     * @param string|null $menuAlias Menu alias
+     * @param object      $entity   Entity
+     * @param string|null $menuName Menu name
      *
      * @return \Darvin\MenuBundle\Entity\Menu\Item[]
      */
-    private function getMenuItems(object $entity, ?string $menuAlias = null): array
+    private function getMenuItems(object $entity, ?string $menuName = null): array
     {
         $class = ClassUtils::getClass($entity);
 
         return $this->getMenuItemRepository()->getByObject(
             [$class, $this->entityResolver->reverseResolve($class)],
             $this->getEntityId($entity),
-            $menuAlias
+            $menuName
         );
     }
 
