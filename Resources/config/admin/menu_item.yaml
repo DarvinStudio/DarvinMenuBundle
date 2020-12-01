@@ -9,7 +9,7 @@ searchable_fields:
     - url
 
 sorter:
-    id:     darvin_menu.admin.menu_item_sorter
+    id:     darvin_menu.admin.sorter.menu_entry
     method: sort
 
 joins:

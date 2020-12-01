@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
-use Darvin\MenuBundle\Admin\Sorter\MenuItemSorter;
+use Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface;
 use Darvin\MenuBundle\Entity\MenuItem;
 use Darvin\MenuBundle\Repository\MenuItemRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
@@ -32,9 +32,9 @@ class MenuItemParentType extends AbstractType
     private $localeProvider;
 
     /**
-     * @var \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter
+     * @var \Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface
      */
-    private $menuItemSorter;
+    private $menuEntrySorter;
 
     /**
      * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
@@ -42,17 +42,17 @@ class MenuItemParentType extends AbstractType
     private $slugMapObjectLoader;
 
     /**
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface            $localeProvider      Locale provider
-     * @param \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter          $menuItemSorter      Menu item sorter
-     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface             $localeProvider      Locale provider
+     * @param \Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface $menuEntrySorter     Menu entry sorter
+     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface  $slugMapObjectLoader Slug map object loader
      */
     public function __construct(
         LocaleProviderInterface $localeProvider,
-        MenuItemSorter $menuItemSorter,
+        MenuEntrySorterInterface $menuEntrySorter,
         SlugMapObjectLoaderInterface $slugMapObjectLoader
     ) {
         $this->localeProvider = $localeProvider;
-        $this->menuItemSorter = $menuItemSorter;
+        $this->menuEntrySorter = $menuEntrySorter;
         $this->slugMapObjectLoader = $slugMapObjectLoader;
     }
 
@@ -84,7 +84,7 @@ class MenuItemParentType extends AbstractType
 
         $choices = [];
 
-        foreach ($this->menuItemSorter->sort($menuItems) as $menuItem) {
+        foreach ($this->menuEntrySorter->sort($menuItems) as $menuItem) {
             $choice = $view->vars['choices'][$menuItem->getId()];
             $choice->label = $menuItem->__toString();
             $choices[$menuItem->getId()] = $choice;

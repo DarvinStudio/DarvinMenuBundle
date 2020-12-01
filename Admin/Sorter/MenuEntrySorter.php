@@ -14,9 +14,9 @@ use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Tree\TreeSorterInterface;
 
 /**
- * Menu item sorter
+ * Menu entry sorter
  */
-class MenuItemSorter
+class MenuEntrySorter implements MenuEntrySorterInterface
 {
     /**
      * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
@@ -39,27 +39,24 @@ class MenuItemSorter
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\MenuItem[] $menuItems Menu items
-     *
-     * @return \Darvin\MenuBundle\Entity\MenuItem[]
-     * @throws \Darvin\Utils\Tree\Exception\ClassIsNotTreeException
+     * {@inheritDoc}
      */
-    public function sort(array $menuItems): array
+    public function sort(array $entries): array
     {
-        if (empty($menuItems)) {
-            return $menuItems;
+        if (empty($entries)) {
+            return $entries;
         }
 
         $slugMapItems = [];
 
-        foreach ($menuItems as $menuItem) {
-            if (null !== $menuItem->getSlugMapItem()) {
-                $slugMapItems[] = $menuItem->getSlugMapItem();
+        foreach ($entries as $entry) {
+            if (null !== $entry->getSlugMapItem()) {
+                $slugMapItems[] = $entry->getSlugMapItem();
             }
         }
 
         $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
-        return $this->treeSorter->sortTree($menuItems);
+        return $this->treeSorter->sortTree($entries);
     }
 }

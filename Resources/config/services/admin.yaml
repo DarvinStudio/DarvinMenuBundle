@@ -9,7 +9,7 @@ parameters:
 
     darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
 
-    darvin_menu.admin.menu_item_sorter.class: Darvin\MenuBundle\Admin\Sorter\MenuItemSorter
+    darvin_menu.admin.sorter.menu_entry.class: Darvin\MenuBundle\Admin\Sorter\MenuEntrySorter
 
     darvin_menu.admin.view.widget.menu_title.class: Darvin\MenuBundle\Admin\View\MenuTitleWidget
 
@@ -34,7 +34,7 @@ services:
         class: '%darvin_menu.admin.form_type.menu_item_parent.class%'
         arguments:
             - '@darvin_utils.locale.provider'
-            - '@darvin_menu.admin.menu_item_sorter'
+            - '@darvin_menu.admin.sorter.menu_entry'
             - '@darvin_content.slug_map.object_loader'
         tags:
             - { name: form.type }
@@ -56,8 +56,8 @@ services:
         tags:
             - { name: darvin_admin.menu_item_factory }
 
-    darvin_menu.admin.menu_item_sorter:
-        class:  '%darvin_menu.admin.menu_item_sorter.class%'
+    darvin_menu.admin.sorter.menu_entry:
+        class:  '%darvin_menu.admin.sorter.menu_entry.class%'
         public: true
         arguments:
             - '@darvin_content.slug_map.object_loader'

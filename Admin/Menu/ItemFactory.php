@@ -10,13 +10,14 @@
 
 namespace Darvin\MenuBundle\Admin\Menu;
 
+use Darvin\AdminBundle\Menu\Item;
 use Darvin\AdminBundle\Menu\ItemFactoryInterface;
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Route\AdminRouterInterface;
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\MenuBundle\Configuration\Menu;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
-use Darvin\MenuBundle\Entity\MenuItem;
+use Darvin\MenuBundle\Entity\MenuEntry;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -67,11 +68,11 @@ class ItemFactory implements ItemFactoryInterface
      */
     public function getItems(): iterable
     {
-        if (!$this->authorizationChecker->isGranted(Permission::VIEW, MenuItem::class)) {
+        if (!$this->authorizationChecker->isGranted(Permission::VIEW, MenuEntry::class)) {
             return;
         }
 
-        $filterFormTypeName = $this->metadataManager->getMetadata(MenuItem::class)->getFilterFormTypeName();
+        $filterFormTypeName = $this->metadataManager->getMetadata(MenuEntry::class)->getFilterFormTypeName();
 
         foreach (array_values($this->menuConfig->getMenus()) as $i => $menu) {
             yield $this->createItem($menu, $filterFormTypeName, ($i + 1) * 100);
@@ -85,7 +86,7 @@ class ItemFactory implements ItemFactoryInterface
      *
      * @return \Darvin\AdminBundle\Menu\Item
      */
-    private function createItem(Menu $menu, string $filterFormTypeName, int $position): \Darvin\AdminBundle\Menu\Item
+    private function createItem(Menu $menu, string $filterFormTypeName, int $position): Item
     {
         $routeParams = [
             $filterFormTypeName => [
@@ -93,10 +94,10 @@ class ItemFactory implements ItemFactoryInterface
             ],
         ];
 
-        return (new \Darvin\AdminBundle\Menu\Item(sprintf('menu_%s', $menu->getName())))
-            ->setAssociatedObject(MenuItem::class)
+        return (new Item(sprintf('menu_%s', $menu->getName())))
+            ->setAssociatedObject(MenuEntry::class)
             ->setIndexTitle($menu->getTitle())
-            ->setIndexUrl($this->adminRouter->generate(null, MenuItem::class, AdminRouterInterface::TYPE_INDEX, $routeParams))
+            ->setIndexUrl($this->adminRouter->generate(null, MenuEntry::class, AdminRouterInterface::TYPE_INDEX, $routeParams))
             ->setParentName('menu')
             ->setPosition($position);
     }
