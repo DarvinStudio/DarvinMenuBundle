@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\Form\Type\EntityType;
-use Darvin\MenuBundle\Repository\MenuItemRepository;
+use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,9 +19,9 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 /**
- * Menu item admin form type
+ * Menu entry admin form type
  */
-class MenuItemType extends AbstractType
+class MenuEntryType extends AbstractType
 {
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
@@ -54,9 +54,9 @@ class MenuItemType extends AbstractType
 
             $menu = $data['menu'];
 
-            $parentField = $builder->create('parent', MenuItemParentType::class, [
+            $parentField = $builder->create('parent', MenuEntryParentType::class, [
                 'auto_initialize' => false,
-                'query_builder'   => function (MenuItemRepository $repository) use ($locale, $menu) {
+                'query_builder'   => function (MenuEntryRepository $repository) use ($locale, $menu) {
                     return $repository->getAdminBuilder($menu, $locale);
                 },
             ])->getForm();
@@ -77,6 +77,6 @@ class MenuItemType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_menu_admin_menu_item';
+        return 'darvin_menu_admin_menu_entry';
     }
 }

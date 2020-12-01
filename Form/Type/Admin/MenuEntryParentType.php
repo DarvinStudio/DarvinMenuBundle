@@ -12,8 +12,8 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface;
-use Darvin\MenuBundle\Entity\MenuItem;
-use Darvin\MenuBundle\Repository\MenuItemRepository;
+use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,9 +22,9 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Menu item parent admin form type
+ * Menu entry parent admin form type
  */
-class MenuItemParentType extends AbstractType
+class MenuEntryParentType extends AbstractType
 {
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
@@ -61,22 +61,22 @@ class MenuItemParentType extends AbstractType
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        $menuItems = $slugMapItems = [];
+        $entries = $slugMapItems = [];
 
         /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
         foreach ($view->vars['choices'] as $choice) {
-            /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
-            $menuItem = $choice->data;
-            $menuItems[] = $menuItem;
+            /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
+            $entry = $choice->data;
+            $entries[] = $entry;
 
-            if (null !== $menuItem->getSlugMapItem()) {
-                $slugMapItems[] = $menuItem->getSlugMapItem();
+            if (null !== $entry->getSlugMapItem()) {
+                $slugMapItems[] = $entry->getSlugMapItem();
             }
 
             $choice->attr = array_merge($choice->attr, [
                 'data-master'  => '.menu',
-                'data-show-on' => $menuItem->getMenu(),
-                'disabled'     => $menuItem === $form->getParent()->getData(),
+                'data-show-on' => $entry->getMenu(),
+                'disabled'     => $entry === $form->getParent()->getData(),
             ]);
         }
 
@@ -84,10 +84,10 @@ class MenuItemParentType extends AbstractType
 
         $choices = [];
 
-        foreach ($this->menuEntrySorter->sort($menuItems) as $menuItem) {
-            $choice = $view->vars['choices'][$menuItem->getId()];
-            $choice->label = $menuItem->__toString();
-            $choices[$menuItem->getId()] = $choice;
+        foreach ($this->menuEntrySorter->sort($entries) as $entry) {
+            $choice = $view->vars['choices'][$entry->getId()];
+            $choice->label = $entry->__toString();
+            $choices[$entry->getId()] = $choice;
         }
 
         $view->vars['choices'] = $choices;
@@ -101,9 +101,9 @@ class MenuItemParentType extends AbstractType
         $locale = $this->localeProvider->getCurrentLocale();
 
         $resolver->setDefaults([
-            'class'         => MenuItem::class,
+            'class'         => MenuEntry::class,
             'required'      => false,
-            'query_builder' => function (MenuItemRepository $repository) use ($locale) {
+            'query_builder' => function (MenuEntryRepository $repository) use ($locale) {
                 return $repository->getAdminBuilder(null, $locale);
             },
         ]);
@@ -122,6 +122,6 @@ class MenuItemParentType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_menu_admin_menu_item_parent';
+        return 'darvin_menu_admin_menu_entry_parent';
     }
 }
