@@ -83,7 +83,7 @@ form:
             parent:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuItemParentType
             slugMapItem:
-                type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemType
+                type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
             showChildren:
                 options:
                     required: false

@@ -43,7 +43,6 @@ menu_item:
         position_from:    Позиция (с)
         position_to:      Позиция (по)
         show_children:    Показывать потомков
-        slug_map_item:    Объект
         title:            Название
         url:              Ссылка
 
