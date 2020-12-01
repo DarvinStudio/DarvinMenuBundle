@@ -12,16 +12,16 @@ namespace Darvin\MenuBundle\DataFixtures\ORM\Menu;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
-use Darvin\MenuBundle\Entity\MenuItem;
-use Darvin\MenuBundle\Entity\MenuItemTranslation;
-use Darvin\MenuBundle\Entity\MenuItemImage;
+use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Entity\MenuEntryImage;
+use Darvin\MenuBundle\Entity\MenuEntryTranslation;
 use Darvin\Utils\DataFixtures\ORM\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Menu item data fixture
+ * Menu entry data fixture
  */
-class LoadItemData extends AbstractFixture
+class LoadMenuEntryData extends AbstractFixture
 {
     /**
      * @var int
@@ -41,7 +41,7 @@ class LoadItemData extends AbstractFixture
     /**
      * @var array
      */
-    private $items;
+    private $entries;
 
     /**
      * @param int $minCount Minimum count
@@ -54,7 +54,7 @@ class LoadItemData extends AbstractFixture
         $this->maxCount = $maxCount;
         $this->maxLevel = $maxLevel;
 
-        $this->items = [];
+        $this->entries = [];
     }
 
     /**
@@ -63,16 +63,16 @@ class LoadItemData extends AbstractFixture
     public function load(ObjectManager $manager): void
     {
         foreach ($this->getMenuConfig()->getMenus() as $menu) {
-            $this->items[$menu->getName()] = [];
+            $this->entries[$menu->getName()] = [];
 
             $count = $this->getFaker()->numberBetween($this->minCount, $this->maxCount);
 
             for ($i = 0; $i < $count; $i++) {
-                $item = $this->createItem($menu->getName());
+                $entry = $this->createEntry($menu->getName());
 
-                $manager->persist($item);
+                $manager->persist($entry);
 
-                $this->items[$menu->getName()][] = $item;
+                $this->entries[$menu->getName()][] = $entry;
             }
         }
 
@@ -82,70 +82,70 @@ class LoadItemData extends AbstractFixture
     /**
      * @param string $menu Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItem
+     * @return \Darvin\MenuBundle\Entity\MenuEntry
      */
-    private function createItem(string $menu): MenuItem
+    private function createEntry(string $menu): MenuEntry
     {
-        /** @var \Darvin\MenuBundle\Entity\MenuItem $item */
-        $item  = $this->instantiateEntity(MenuItem::class);
-        $item->setLevel(1);
-        $item->setMenu($menu);
+        /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
+        $entry = $this->instantiateEntity(MenuEntry::class);
+        $entry->setLevel(1);
+        $entry->setMenu($menu);
 
         if ($this->getFaker()->boolean(70)) {
-            $item->setParent($this->getParentItem($menu));
+            $entry->setParent($this->getParentEntry($menu));
 
-            if (null !== $item->getParent()) {
-                $item->setLevel($item->getLevel() + $item->getParent()->getLevel());
+            if (null !== $entry->getParent()) {
+                $entry->setLevel($entry->getLevel() + $entry->getParent()->getLevel());
             }
         }
-        if (1 === $item->getLevel()) {
-            $item->setShowChildren($this->getFaker()->boolean(50));
-            $item->setSlugMapItem($this->getRandomEntity(SlugMapItem::class));
+        if (1 === $entry->getLevel()) {
+            $entry->setShowChildren($this->getFaker()->boolean(50));
+            $entry->setSlugMapItem($this->getRandomEntity(SlugMapItem::class));
         }
         if ($this->getFaker()->boolean(80)) {
-            $item->setImage($this->createImage(true));
+            $entry->setImage($this->createImage(true));
 
             if ($this->getFaker()->boolean(90)) {
-                $item->setHoverImage($this->createImage());
+                $entry->setHoverImage($this->createImage());
             }
         }
         foreach ($this->getFakerLocales() as $locale => $fakerLocale) {
-            $item->addTranslation($this->createTranslation($item, $locale, $fakerLocale));
+            $entry->addTranslation($this->createTranslation($entry, $locale, $fakerLocale));
         }
 
-        return $item;
+        return $entry;
     }
 
     /**
      * @param bool $grayscale Whether to generate grayscale image
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItemImage
+     * @return \Darvin\MenuBundle\Entity\MenuEntryImage
      */
-    private function createImage(bool $grayscale = false): MenuItemImage
+    private function createImage(bool $grayscale = false): MenuEntryImage
     {
-        /** @var \Darvin\MenuBundle\Entity\MenuItemImage $image */
-        $image = $this->instantiateEntity(MenuItemImage::class);
+        /** @var \Darvin\MenuBundle\Entity\MenuEntryImage $image */
+        $image = $this->instantiateEntity(MenuEntryImage::class);
         $image->setFile($this->generateImageFile(null, null, null, $grayscale ? 'fff' : null, $grayscale ? 'ccc' : null));
 
         return $image;
     }
 
     /**
-     * @param \Darvin\MenuBundle\Entity\MenuItem $item        Menu item
-     * @param string                             $locale      Locale
-     * @param string                             $fakerLocale Faker locale
+     * @param \Darvin\MenuBundle\Entity\MenuEntry $entry       Menu entry
+     * @param string                              $locale      Locale
+     * @param string                              $fakerLocale Faker locale
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItemTranslation|\Knp\DoctrineBehaviors\Model\Translatable\Translation
+     * @return \Darvin\MenuBundle\Entity\MenuEntryTranslation|\Knp\DoctrineBehaviors\Model\Translatable\Translation
      */
-    private function createTranslation(MenuItem $item, string $locale, string $fakerLocale): MenuItemTranslation
+    private function createTranslation(MenuEntry $entry, string $locale, string $fakerLocale): MenuEntryTranslation
     {
-        /** @var \Darvin\MenuBundle\Entity\MenuItemTranslation $translation */
-        $translation = $this->instantiateTranslation(MenuItem::class);
+        /** @var \Darvin\MenuBundle\Entity\MenuEntryTranslation $translation */
+        $translation = $this->instantiateTranslation(MenuEntry::class);
         $faker       = $this->getFaker($fakerLocale);
 
         $translation->setLocale($locale);
 
-        if (null === $item->getSlugMapItem()) {
+        if (null === $entry->getSlugMapItem()) {
             $translation->setTitle($faker->sentence(3));
 
             if ($faker->boolean(80)) {
@@ -159,18 +159,18 @@ class LoadItemData extends AbstractFixture
     /**
      * @param string $menu Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItem|null
+     * @return \Darvin\MenuBundle\Entity\MenuEntry|null
      */
-    private function getParentItem(string $menu): ?MenuItem
+    private function getParentEntry(string $menu): ?MenuEntry
     {
-        /** @var \Darvin\MenuBundle\Entity\MenuItem[] $items */
-        $items = $this->items[$menu];
+        /** @var \Darvin\MenuBundle\Entity\MenuEntry[] $entries */
+        $entries = $this->entries[$menu];
 
-        shuffle($items);
+        shuffle($entries);
 
-        foreach ($items as $item) {
-            if ($item->getLevel() < $this->maxLevel) {
-                return $item;
+        foreach ($entries as $entry) {
+            if ($entry->getLevel() < $this->maxLevel) {
+                return $entry;
             }
         }
 
