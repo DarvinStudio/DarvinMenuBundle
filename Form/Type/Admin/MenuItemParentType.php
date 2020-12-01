@@ -10,10 +10,10 @@
 
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
+use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Admin\Sorter\MenuItemSorter;
 use Darvin\MenuBundle\Entity\MenuItem;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
-use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -37,14 +37,14 @@ class MenuItemParentType extends AbstractType
     private $menuItemSorter;
 
     /**
-     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
+     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
      */
     private $slugMapObjectLoader;
 
     /**
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface         $localeProvider      Locale provider
-     * @param \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter       $menuItemSorter      Menu item sorter
-     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface            $localeProvider      Locale provider
+     * @param \Darvin\MenuBundle\Admin\Sorter\MenuItemSorter          $menuItemSorter      Menu item sorter
+     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
      */
     public function __construct(
         LocaleProviderInterface $localeProvider,

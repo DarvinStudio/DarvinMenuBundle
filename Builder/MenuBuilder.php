@@ -14,10 +14,10 @@ use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Entity\MenuItem;
 use Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface;
 use Darvin\MenuBundle\Repository\Menu\ItemRepository;
-use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
@@ -64,7 +64,7 @@ class MenuBuilder implements MenuBuilderInterface
     private $propertyAccessor;
 
     /**
-     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
+     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
      */
     private $slugMapObjectLoader;
 
@@ -95,7 +95,7 @@ class MenuBuilder implements MenuBuilderInterface
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                  $localeProvider      Locale provider
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory     Extended metadata factory
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface   $propertyAccessor    Property accessor
-     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface          $slugMapObjectLoader Slug map object loader
+     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface       $slugMapObjectLoader Slug map object loader
      * @param \Gedmo\Sortable\SortableListener                              $sortableListener    Sortable event listener
      * @param array                                                         $entityConfig        Entity configuration
      */

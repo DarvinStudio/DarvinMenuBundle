@@ -13,8 +13,8 @@ namespace Darvin\MenuBundle\Breadcrumbs;
 use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface;
-use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
@@ -56,7 +56,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     private $requestStack;
 
     /**
-     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
+     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
      */
     private $slugMapObjectLoader;
 
@@ -76,7 +76,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
      * @param \Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPoolInterface $itemFactoryPool     Item factory pool
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                $metadataFactory     Extended metadata factory
      * @param \Symfony\Component\HttpFoundation\RequestStack                $requestStack        Request stack
-     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface          $slugMapObjectLoader Slug map object loader
+     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface       $slugMapObjectLoader Slug map object loader
      * @param \Symfony\Contracts\Translation\TranslatorInterface            $translator          Translator
      * @param string                                                        $slugParameterName   Slug route parameter name
      */

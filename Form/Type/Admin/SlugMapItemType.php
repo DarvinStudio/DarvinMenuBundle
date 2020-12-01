@@ -15,8 +15,8 @@ use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
 use Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Form\DataTransformer\Admin\SlugMapItemToArrayTransformer;
-use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
@@ -67,7 +67,7 @@ class SlugMapItemType extends AbstractType
     private $propertyAccessor;
 
     /**
-     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
+     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
      */
     private $slugMapObjectLoader;
 
@@ -93,7 +93,7 @@ class SlugMapItemType extends AbstractType
      * @param \Darvin\Utils\ORM\EntityResolverInterface                   $entityResolver       Entity resolver
      * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager      Metadata manager
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface $propertyAccessor     Property accessor
-     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface        $slugMapObjectLoader  Slug map object loader
+     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface     $slugMapObjectLoader  Slug map object loader
      * @param \Darvin\AdminBundle\Metadata\SortCriteriaDetectorInterface  $sortCriteriaDetector Sort criteria detector
      * @param \Gedmo\Tree\TreeListener                                    $treeListener         Tree event listener
      * @param array                                                       $entityConfig         Entity configuration

@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Admin\Sorter;
 
-use Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface;
+use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\Utils\Tree\TreeSorterInterface;
 
 /**
@@ -19,7 +19,7 @@ use Darvin\Utils\Tree\TreeSorterInterface;
 class MenuItemSorter
 {
     /**
-     * @var \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface
+     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
      */
     private $slugMapObjectLoader;
 
@@ -29,8 +29,8 @@ class MenuItemSorter
     private $treeSorter;
 
     /**
-     * @param \Darvin\MenuBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
-     * @param \Darvin\Utils\Tree\TreeSorterInterface               $treeSorter          Tree sorter
+     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
+     * @param \Darvin\Utils\Tree\TreeSorterInterface                  $treeSorter          Tree sorter
      */
     public function __construct(SlugMapObjectLoaderInterface $slugMapObjectLoader, TreeSorterInterface $treeSorter)
     {

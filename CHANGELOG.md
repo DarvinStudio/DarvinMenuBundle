@@ -133,3 +133,5 @@ but in the last case alias may be defined in runtime.
 - Rename "menu alias" to "menu name".
 
 - Rename entities.
+
+- Move slug map object loader to Content bundle.
