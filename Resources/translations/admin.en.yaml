@@ -41,6 +41,7 @@ menu_item:
         position_from: 'Position (From)'
         position_to: 'Position (To)'
         show_children: 'Show Children'
+        slug_map_item: Object
         title: Title
         url: URL
 menu_switcher:
