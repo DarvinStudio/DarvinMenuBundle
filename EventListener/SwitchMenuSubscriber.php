@@ -13,8 +13,8 @@ namespace Darvin\MenuBundle\EventListener;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
-use Darvin\MenuBundle\Entity\MenuItem;
-use Darvin\MenuBundle\Repository\MenuItemRepository;
+use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
@@ -98,12 +98,12 @@ class SwitchMenuSubscriber implements EventSubscriber
             if (!$slugMapItem instanceof SlugMapItem) {
                 continue;
             }
-            foreach ($this->menuSwitcher->getMenusToEnable() as $menuName => $entities) {
+            foreach ($this->menuSwitcher->getMenusToEnable() as $menu => $entities) {
                 foreach ($entities as $entity) {
                     if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
                         && $slugMapItem->getObjectId() === $this->getEntityId($entity)
                     ) {
-                        $em->persist($this->createMenuItem($menuName, $slugMapItem));
+                        $em->persist($this->createEntry($menu, $slugMapItem));
 
                         $computeChangeSets = true;
                     }
@@ -114,8 +114,8 @@ class SwitchMenuSubscriber implements EventSubscriber
             if (!$this->menuSwitcher->hasEnabledMenus($entity)) {
                 continue;
             }
-            foreach ($this->getMenuItems($entity) as $menuItem) {
-                $em->remove($menuItem);
+            foreach ($this->getEntries($entity) as $entry) {
+                $em->remove($entry);
             }
         }
         if ($computeChangeSets) {
@@ -130,59 +130,59 @@ class SwitchMenuSubscriber implements EventSubscriber
     {
         $this->em = $em = $args->getEntityManager();
 
-        foreach ($this->menuSwitcher->getMenusToEnable() as $menuName => $entities) {
+        foreach ($this->menuSwitcher->getMenusToEnable() as $menu => $entities) {
             foreach ($entities as $entity) {
                 $slugMapItem = $this->getSlugMapItem($entity);
 
                 if (null !== $slugMapItem) {
-                    $em->persist($this->createMenuItem($menuName, $slugMapItem));
+                    $em->persist($this->createEntry($menu, $slugMapItem));
                 }
             }
         }
-        foreach ($this->menuSwitcher->getMenusToDisable() as $menuName => $entities) {
+        foreach ($this->menuSwitcher->getMenusToDisable() as $menu => $entities) {
             foreach ($entities as $entity) {
-                foreach ($this->getMenuItems($entity, $menuName) as $menuItem) {
-                    $em->remove($menuItem);
+                foreach ($this->getEntries($entity, $menu) as $entry) {
+                    $em->remove($entry);
                 }
             }
         }
     }
 
     /**
-     * @param string                                   $menuName    Menu name
+     * @param string                                   $menu        Menu name
      * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItem
+     * @return \Darvin\MenuBundle\Entity\MenuEntry
      */
-    private function createMenuItem(string $menuName, SlugMapItem $slugMapItem): MenuItem
+    private function createEntry(string $menu, SlugMapItem $slugMapItem): MenuEntry
     {
-        $class = $this->entityResolver->resolve(MenuItem::class);
+        $class = $this->entityResolver->resolve(MenuEntry::class);
 
-        /** @var \Darvin\MenuBundle\Entity\MenuItem $item */
-        $item = new $class();
-        $item
-            ->setMenu($menuName)
+        /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
+        $entry = new $class();
+        $entry
+            ->setMenu($menu)
             ->setSlugMapItem($slugMapItem);
 
-        $this->translationInitializer->initializeTranslations($item, $this->locales);
+        $this->translationInitializer->initializeTranslations($entry, $this->locales);
 
-        return $item;
+        return $entry;
     }
 
     /**
-     * @param object      $entity   Entity
-     * @param string|null $menuName Menu name
+     * @param object      $entity Entity
+     * @param string|null $menu   Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItem[]
+     * @return \Darvin\MenuBundle\Entity\MenuEntry[]
      */
-    private function getMenuItems(object $entity, ?string $menuName = null): array
+    private function getEntries(object $entity, ?string $menu = null): array
     {
         $class = ClassUtils::getClass($entity);
 
-        return $this->getMenuItemRepository()->getByObject(
+        return $this->getMenuEntryRepository()->getByObject(
             [$class, $this->entityResolver->reverseResolve($class)],
             $this->getEntityId($entity),
-            $menuName
+            $menu
         );
     }
 
@@ -214,11 +214,11 @@ class SwitchMenuSubscriber implements EventSubscriber
     }
 
     /**
-     * @return \Darvin\MenuBundle\Repository\MenuItemRepository
+     * @return \Darvin\MenuBundle\Repository\MenuEntryRepository
      */
-    private function getMenuItemRepository(): MenuItemRepository
+    private function getMenuEntryRepository(): MenuEntryRepository
     {
-        return $this->em->getRepository(MenuItem::class);
+        return $this->em->getRepository(MenuEntry::class);
     }
 
     /**
