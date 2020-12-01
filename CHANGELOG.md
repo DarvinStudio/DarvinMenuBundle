@@ -135,3 +135,5 @@ but in the last case alias may be defined in runtime.
 - Rename entities.
 
 - Move slug map object loader to Content bundle.
+
+- Move slug map item to array admin form data transformer to Content bundle.
