@@ -11,13 +11,13 @@
 namespace Darvin\MenuBundle\Item\Factory\Entity;
 
 use Darvin\ImageBundle\Imageable\ImageableInterface;
-use Darvin\MenuBundle\Entity\MenuItem;
+use Darvin\MenuBundle\Entity\MenuEntry;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Item from menu item entity factory
+ * Menu entry KNP menu item factory
  */
-class MenuItemFactory extends AbstractEntityItemFactory
+class MenuEntryFactory extends AbstractEntityItemFactory
 {
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack
@@ -37,7 +37,7 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     public function supports($source): bool
     {
-        return $source instanceof MenuItem;
+        return $source instanceof MenuEntry;
     }
 
     /**
@@ -45,19 +45,19 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getLabel($source): ?string
     {
-        /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
-        $menuItem = $source;
+        /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
+        $entry = $source;
 
-        $title = $menuItem->getTitle();
+        $title = $entry->getTitle();
 
         if (null !== $title) {
             return $title;
         }
-        if (null === $menuItem->getSlugMapItem()) {
-            return $menuItem->getUrl();
+        if (null === $entry->getSlugMapItem()) {
+            return $entry->getUrl();
         }
 
-        return (string)$menuItem->getSlugMapItem()->getObject();
+        return (string)$entry->getSlugMapItem()->getObject();
     }
 
     /**
@@ -65,13 +65,13 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getUri($source): ?string
     {
-        /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
-        $menuItem = $source;
+        /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
+        $entry = $source;
 
-        $url = $menuItem->getUrl();
+        $url = $entry->getUrl();
 
         if (null === $url) {
-            return $this->slugMapRouter->generateUrl($menuItem->getSlugMapItem());
+            return $this->slugMapRouter->generateUrl($entry->getSlugMapItem());
         }
         if (0 !== strpos($url, '/') || 0 === strpos($url, '//')) {
             return $url;
@@ -97,15 +97,15 @@ class MenuItemFactory extends AbstractEntityItemFactory
      */
     protected function getExtras($source): array
     {
-        /** @var \Darvin\MenuBundle\Entity\MenuItem $menuItem */
-        $menuItem = $source;
+        /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
+        $entry = $source;
 
-        $image      = $menuItem->getImage();
-        $hoverImage = $menuItem->getHoverImage();
+        $image      = $entry->getImage();
+        $hoverImage = $entry->getHoverImage();
         $object = $objectId = $objectName = null;
 
-        if (null !== $menuItem->getSlugMapItem() && null !== $menuItem->getSlugMapItem()->getObject()) {
-            $slugMapItem = $menuItem->getSlugMapItem();
+        if (null !== $entry->getSlugMapItem() && null !== $entry->getSlugMapItem()->getObject()) {
+            $slugMapItem = $entry->getSlugMapItem();
 
             $object     = $slugMapItem->getObject();
             $objectId   = $slugMapItem->getObjectId();
@@ -117,10 +117,10 @@ class MenuItemFactory extends AbstractEntityItemFactory
             }
         }
 
-        return array_merge(parent::getExtras($menuItem), [
+        return array_merge(parent::getExtras($entry), [
+            'entry'      => $entry,
             'hoverImage' => $hoverImage,
             'image'      => $image,
-            'itemEntity' => $menuItem,
             'object'     => $object,
             'objectId'   => $objectId,
             'objectName' => $objectName,

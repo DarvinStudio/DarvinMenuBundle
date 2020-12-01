@@ -17,7 +17,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 
 /**
- * Entity item factory abstract implementation
+ * Entity KNP menu item factory abstract implementation
  */
 abstract class AbstractEntityItemFactory extends AbstractItemFactory
 {

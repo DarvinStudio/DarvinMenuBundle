@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Item\Factory\Entity;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 
 /**
- * Item from slug map item entity factory
+ * Slug map item KNP menu item factory
  */
 class SlugMapItemFactory extends AbstractEntityItemFactory
 {

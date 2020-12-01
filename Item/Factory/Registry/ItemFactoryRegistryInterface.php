@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Item\Factory\Registry;
 use Knp\Menu\ItemInterface;
 
 /**
- * Item factory registry
+ * KNP menu item factory registry
  */
 interface ItemFactoryRegistryInterface
 {

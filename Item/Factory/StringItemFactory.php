@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Item\Factory;
 
 /**
- * String item factory
+ * String KNP menu item factory
  */
 class StringItemFactory extends AbstractItemFactory
 {

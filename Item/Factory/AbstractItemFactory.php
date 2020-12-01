@@ -11,13 +11,13 @@
 namespace Darvin\MenuBundle\Item\Factory;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
-use Darvin\MenuBundle\Entity\MenuItem;
+use Darvin\MenuBundle\Entity\MenuEntry;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Item factory abstract implementation
+ * KNP menu item factory abstract implementation
  */
 abstract class AbstractItemFactory implements ItemFactoryInterface
 {
@@ -32,7 +32,7 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
     protected $extrasResolver = null;
 
     /**
-     * @param \Knp\Menu\FactoryInterface $genericItemFactory Generic item factory
+     * @param \Knp\Menu\FactoryInterface $genericItemFactory Generic KNP menu item factory
      */
     public function setGenericItemFactory(FactoryInterface $genericItemFactory): void
     {
@@ -119,9 +119,9 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
     protected function configureExtras(OptionsResolver $resolver): void
     {
         foreach ([
+            'entry'      => MenuEntry::class,
             'hoverImage' => AbstractImage::class,
             'image'      => AbstractImage::class,
-            'itemEntity' => MenuItem::class,
             'object'     => 'object',
             'objectId'   => null,
             'objectName' => 'string',

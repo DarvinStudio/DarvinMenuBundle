@@ -14,7 +14,7 @@ use Darvin\MenuBundle\Item\Factory\ItemFactoryInterface;
 use Knp\Menu\ItemInterface;
 
 /**
- * Item factory registry
+ * KNP menu item factory registry
  */
 class ItemFactoryRegistry implements ItemFactoryRegistryInterface
 {
@@ -24,7 +24,7 @@ class ItemFactoryRegistry implements ItemFactoryRegistryInterface
     private $factories;
 
     /**
-     * Item factory registry constructor.
+     * KNP menu item factory registry constructor.
      */
     public function __construct()
     {
@@ -32,7 +32,7 @@ class ItemFactoryRegistry implements ItemFactoryRegistryInterface
     }
 
     /**
-     * @param \Darvin\MenuBundle\Item\Factory\ItemFactoryInterface $factory Item factory
+     * @param \Darvin\MenuBundle\Item\Factory\ItemFactoryInterface $factory KNP menu item factory
      */
     public function addFactory(ItemFactoryInterface $factory): void
     {
@@ -50,6 +50,6 @@ class ItemFactoryRegistry implements ItemFactoryRegistryInterface
             }
         }
 
-        throw new \InvalidArgumentException('Unable to find any suitable item factory.');
+        throw new \InvalidArgumentException('Unable to find any suitable KNP menu item factory.');
     }
 }

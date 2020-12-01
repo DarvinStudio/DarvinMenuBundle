@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Item\Factory;
 use Knp\Menu\ItemInterface;
 
 /**
- * Item factory
+ * KNP menu item factory
  */
 interface ItemFactoryInterface
 {
