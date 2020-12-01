@@ -137,3 +137,5 @@ but in the last case alias may be defined in runtime.
 - Move slug map object loader to Content bundle.
 
 - Move slug map item to array admin form data transformer to Content bundle.
+
+- Remove unsupported ar, fr, zh translations.
