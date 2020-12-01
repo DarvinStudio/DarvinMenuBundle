@@ -7,7 +7,7 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.orm.entity_resolver'
-            - '@darvin_menu.item_factory.pool'
+            - '@darvin_menu.item_factory_registry'
             - '@darvin_utils.locale.provider'
             - '@darvin_utils.mapping.metadata_factory'
             - '@property_accessor'

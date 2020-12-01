@@ -9,7 +9,7 @@ parameters:
 
     darvin_menu.item_factory.slug_map_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\SlugMapItemFactory
 
-    darvin_menu.item_factory.pool.class: Darvin\MenuBundle\Item\Factory\Pool\ItemFactoryPool
+    darvin_menu.item_factory_registry.class: Darvin\MenuBundle\Item\Factory\Registry\ItemFactoryRegistry
 
 services:
     darvin_menu.item_factory.abstract:
@@ -47,5 +47,5 @@ services:
         tags:
             - { name: darvin_menu.item_factory }
 
-    darvin_menu.item_factory.pool:
-        class: '%darvin_menu.item_factory.pool.class%'
+    darvin_menu.item_factory_registry:
+        class: '%darvin_menu.item_factory_registry.class%'

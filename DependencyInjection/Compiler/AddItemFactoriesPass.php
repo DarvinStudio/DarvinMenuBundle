@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add item factories to pool compiler pass
+ * Add item factories to registry compiler pass
  */
 class AddItemFactoriesPass implements CompilerPassInterface
 {
@@ -25,10 +25,10 @@ class AddItemFactoriesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $pool = $container->getDefinition('darvin_menu.item_factory.pool');
+        $registry = $container->getDefinition('darvin_menu.item_factory_registry');
 
         foreach (array_keys($container->findTaggedServiceIds(DarvinMenuExtension::TAG_ITEM_FACTORY)) as $id) {
-            $pool->addMethodCall('addFactory', [new Reference($id)]);
+            $registry->addMethodCall('addFactory', [new Reference($id)]);
         }
     }
 }

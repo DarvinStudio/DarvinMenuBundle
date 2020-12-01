@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory\Pool;
+namespace Darvin\MenuBundle\Item\Factory\Registry;
 
 use Darvin\MenuBundle\Item\Factory\ItemFactoryInterface;
 use Knp\Menu\ItemInterface;
 
 /**
- * Item factory pool
+ * Item factory registry
  */
-class ItemFactoryPool implements ItemFactoryPoolInterface
+class ItemFactoryRegistry implements ItemFactoryRegistryInterface
 {
     /**
      * @var \Darvin\MenuBundle\Item\Factory\ItemFactoryInterface[]
@@ -24,7 +24,7 @@ class ItemFactoryPool implements ItemFactoryPoolInterface
     private $factories;
 
     /**
-     * Item factory pool constructor.
+     * Item factory registry constructor.
      */
     public function __construct()
     {
