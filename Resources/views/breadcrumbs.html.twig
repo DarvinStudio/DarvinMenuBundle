@@ -27,9 +27,11 @@
     <{{ element }}{% for name, value in attr %} {{ name }}{% if value is not same as(null) %}="{{ value }}"{% endif %}{% endfor %}>
         <meta itemprop="position" content="{{ position }}">
         <meta itemprop="name" content="{{ item.label }}">
+
         {% if uri is not same as(null) %}
             <meta itemprop="item" content="{{ uri }}">
         {% endif %}
+
         {{ item.label }}</{{ element }}>
 {% endmacro %}
 
@@ -38,11 +40,17 @@
     {% set position = position + 1 %}
 
     {% for child in item.children %}
+
         {{ _self.item(child, matcher, position) }}
+
         {{ _self.list(child, matcher, position) }}
+
     {% endfor %}
+
 {% endmacro %}
 
 <div class="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+
     {{ _self.list(item, matcher) }}
+
 </div>
