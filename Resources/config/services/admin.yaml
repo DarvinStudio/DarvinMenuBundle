@@ -13,8 +13,6 @@ parameters:
 
     darvin_menu.admin.view.widget.menu_title.class: Darvin\MenuBundle\Admin\View\MenuTitleWidget
 
-    darvin_menu.admin.view.widget.slug_map_item_link.class: Darvin\MenuBundle\Admin\View\SlugMapItemLinkWidget
-
 services:
     darvin_menu.admin.form_type.menu:
         class: '%darvin_menu.admin.form_type.menu.class%'
@@ -70,15 +68,5 @@ services:
         parent: darvin_admin.view.widget.abstract
         arguments:
             - '@darvin_menu.configuration.menu'
-        tags:
-            - { name: darvin_admin.view_widget }
-
-    darvin_menu.admin.view.widget.slug_map_item_link:
-        class:  '%darvin_menu.admin.view.widget.slug_map_item_link.class%'
-        parent: darvin_admin.view.widget.abstract
-        arguments:
-            - '@darvin_admin.entity_namer'
-            - '@darvin_admin.view.widget.show_link'
-            - '@translator'
         tags:
             - { name: darvin_admin.view_widget }

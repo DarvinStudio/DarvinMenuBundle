@@ -141,3 +141,5 @@ but in the last case alias may be defined in runtime.
 - Remove unsupported ar, fr, zh translations.
 
 - Rename "item factory pool" => "item factory registry".
+
+- Replace "slug_map_item_link" admin view widget with the "slug_map_item" one from Content bundle.

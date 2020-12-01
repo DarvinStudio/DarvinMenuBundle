@@ -36,7 +36,7 @@ view:
                 type: checkbox
             slugMapItem:
                 size:   xxxl
-                widget: slug_map_item_link
+                widget: slug_map_item
             image:
                 size:   xxs
                 widget: image_link
