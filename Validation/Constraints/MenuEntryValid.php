@@ -13,16 +13,16 @@ namespace Darvin\MenuBundle\Validation\Constraints;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Menu item valid validation constraint
+ * Menu entry valid validation constraint
  *
  * @Annotation
  */
-class MenuItemValid extends Constraint
+class MenuEntryValid extends Constraint
 {
     /**
      * @var string
      */
-    public $message = 'menu_item.valid';
+    public $message = 'menu_entry.valid';
 
     /**
      * {@inheritDoc}

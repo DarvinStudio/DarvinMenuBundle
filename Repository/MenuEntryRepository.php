@@ -16,9 +16,9 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * Menu item entity repository
+ * Menu entry entity repository
  */
-class MenuItemRepository extends EntityRepository
+class MenuEntryRepository extends EntityRepository
 {
     use ImageableRepositoryTrait;
     use TranslatableRepositoryTrait;
@@ -50,7 +50,7 @@ class MenuItemRepository extends EntityRepository
      * @param mixed       $id      Object ID
      * @param string|null $menu    Menu name
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItem[]
+     * @return \Darvin\MenuBundle\Entity\MenuEntry[]
      */
     public function getByObject(array $classes, $id, ?string $menu = null): array
     {
@@ -89,7 +89,7 @@ class MenuItemRepository extends EntityRepository
      * @param int|null    $depth  Depth
      * @param string|null $locale Locale
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItem[]
+     * @return \Darvin\MenuBundle\Entity\MenuEntry[]
      */
     public function getForMenuBuilder(string $menu, ?int $depth = null, ?string $locale = null): array
     {
@@ -125,24 +125,24 @@ class MenuItemRepository extends EntityRepository
             ->addSelect('slug_map_item.objectId id');
         $this->joinSlugMapItem($qb, false, true);
 
-        $items = [];
+        $entries = [];
 
         foreach ($qb->getQuery()->getScalarResult() as $row) {
             $menu  = $row['menu'];
             $class = $row['class'];
             $id    = $row['id'];
 
-            if (!isset($items[$menu])) {
-                $items[$menu] = [];
+            if (!isset($entries[$menu])) {
+                $entries[$menu] = [];
             }
-            if (!isset($items[$menu][$class])) {
-                $items[$menu][$class] = [];
+            if (!isset($entries[$menu][$class])) {
+                $entries[$menu][$class] = [];
             }
 
-            $items[$menu][$class][$id] = $id;
+            $entries[$menu][$class][$id] = $id;
         }
 
-        return $items;
+        return $entries;
     }
 
     /**
@@ -150,9 +150,9 @@ class MenuItemRepository extends EntityRepository
      * @param bool                       $addSelect Whether to add select
      * @param bool                       $inner     Whether to use inner join
      *
-     * @return MenuItemRepository
+     * @return MenuEntryRepository
      */
-    private function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): MenuItemRepository
+    private function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): MenuEntryRepository
     {
         $inner
             ? $qb->innerJoin('o.slugMapItem', 'slug_map_item')
@@ -168,9 +168,9 @@ class MenuItemRepository extends EntityRepository
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      *
-     * @return MenuItemRepository
+     * @return MenuEntryRepository
      */
-    private function addEnabledFilter(QueryBuilder $qb): MenuItemRepository
+    private function addEnabledFilter(QueryBuilder $qb): MenuEntryRepository
     {
         $qb->andWhere('translations.enabled = :enabled')->setParameter('enabled', true);
 
@@ -181,9 +181,9 @@ class MenuItemRepository extends EntityRepository
      * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
      * @param string                     $menu Menu name
      *
-     * @return MenuItemRepository
+     * @return MenuEntryRepository
      */
-    private function addMenuFilter(QueryBuilder $qb, string $menu): MenuItemRepository
+    private function addMenuFilter(QueryBuilder $qb, string $menu): MenuEntryRepository
     {
         $qb->andWhere('o.menu = :menu')->setParameter('menu', $menu);
 

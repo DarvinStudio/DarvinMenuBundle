@@ -10,39 +10,39 @@
 
 namespace Darvin\MenuBundle\Validation\Constraints;
 
-use Darvin\MenuBundle\Entity\MenuItem;
+use Darvin\MenuBundle\Entity\MenuEntry;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Menu item valid constraint validator
+ * Menu entry valid constraint validator
  */
-class MenuItemValidValidator extends ConstraintValidator
+class MenuEntryValidValidator extends ConstraintValidator
 {
     /**
-     * Checks if the passed menu item is valid.
+     * Checks if the passed menu entry is valid.
      *
-     * @param \Darvin\MenuBundle\Entity\MenuItem                                                              $menuItem   Menu item that should be validated
-     * @param \Darvin\MenuBundle\Validation\Constraints\MenuItemValid|\Symfony\Component\Validator\Constraint $constraint Menu item valid validation constraint
+     * @param \Darvin\MenuBundle\Entity\MenuEntry                                                              $entry      Menu entry that should be validated
+     * @param \Darvin\MenuBundle\Validation\Constraints\MenuEntryValid|\Symfony\Component\Validator\Constraint $constraint Menu entry valid validation constraint
      *
      * @throws \InvalidArgumentException
      */
-    public function validate($menuItem, Constraint $constraint): void
+    public function validate($entry, Constraint $constraint): void
     {
-        if (!$menuItem instanceof MenuItem) {
+        if (!$entry instanceof MenuEntry) {
             $message = sprintf(
-                'Validated menu item must be instance of "%s", got instance of "%s".',
-                MenuItem::class,
-                ClassUtils::getClass($menuItem)
+                'Validated menu entry must be instance of "%s", got instance of "%s".',
+                MenuEntry::class,
+                ClassUtils::getClass($entry)
             );
 
             throw new \InvalidArgumentException($message);
         }
-        if (null !== $menuItem->getSlugMapItem()) {
+        if (null !== $entry->getSlugMapItem()) {
             return;
         }
-        foreach ($menuItem->getTranslations() as $translation) {
+        foreach ($entry->getTranslations() as $translation) {
             $title = $translation->getTitle();
             $url   = $translation->getUrl();
 

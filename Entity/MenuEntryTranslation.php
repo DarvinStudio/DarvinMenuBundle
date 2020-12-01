@@ -14,13 +14,13 @@ use Darvin\ContentBundle\Traits\TranslationTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Menu item translation
+ * Menu entry translation
  *
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\Table(name="menu_item_translation")
+ * @ORM\Table(name="menu_entry_translation")
  */
-class MenuItemTranslation
+class MenuEntryTranslation
 {
     use TranslationTrait;
 
@@ -64,9 +64,9 @@ class MenuItemTranslation
     /**
      * @param bool $enabled enabled
      *
-     * @return MenuItemTranslation
+     * @return MenuEntryTranslation
      */
-    public function setEnabled(?bool $enabled): MenuItemTranslation
+    public function setEnabled(?bool $enabled): MenuEntryTranslation
     {
         $this->enabled = $enabled;
 
@@ -84,9 +84,9 @@ class MenuItemTranslation
     /**
      * @param string $title title
      *
-     * @return MenuItemTranslation
+     * @return MenuEntryTranslation
      */
-    public function setTitle(?string $title): MenuItemTranslation
+    public function setTitle(?string $title): MenuEntryTranslation
     {
         $this->title = $title;
 
@@ -104,9 +104,9 @@ class MenuItemTranslation
     /**
      * @param string $url url
      *
-     * @return MenuItemTranslation
+     * @return MenuEntryTranslation
      */
-    public function setUrl(?string $url): MenuItemTranslation
+    public function setUrl(?string $url): MenuEntryTranslation
     {
         $this->url = $url;
 

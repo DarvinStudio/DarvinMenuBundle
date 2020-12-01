@@ -14,11 +14,11 @@ use Darvin\ImageBundle\Entity\Image\AbstractImage;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Menu item image
+ * Menu entry image
  *
  * @ORM\Entity
  */
-class MenuItemImage extends AbstractImage
+class MenuEntryImage extends AbstractImage
 {
     /**
      * {@inheritDoc}
