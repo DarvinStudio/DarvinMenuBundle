@@ -15,9 +15,9 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
-use Darvin\MenuBundle\Entity\MenuItem;
+use Darvin\MenuBundle\Entity\MenuEntry;
 use Darvin\MenuBundle\Item\Factory\Registry\ItemFactoryRegistryInterface;
-use Darvin\MenuBundle\Repository\MenuItemRepository;
+use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
@@ -135,52 +135,52 @@ class MenuBuilder implements MenuBuilderInterface
 
         $root = $this->itemFactoryRegistry->createItem($menuName);
 
-        $entities = $this->getMenuItemEntities($menuName, $options);
+        $entries = $this->getEntries($menuName, $options);
 
-        $this->addItems($root, $entities, $options);
+        $this->addItems($root, $entries, $options);
 
         return $root;
     }
 
     /**
-     * @param \Knp\Menu\ItemInterface              $root     Root item
-     * @param \Darvin\MenuBundle\Entity\MenuItem[] $entities Menu item entities
-     * @param array                                $options  Options
+     * @param \Knp\Menu\ItemInterface               $root    Root item
+     * @param \Darvin\MenuBundle\Entity\MenuEntry[] $entries Menu entries
+     * @param array                                 $options Options
      */
-    private function addItems(ItemInterface $root, array $entities, array $options): void
+    private function addItems(ItemInterface $root, array $entries, array $options): void
     {
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = $parentSlugs = $separatorCounts = [];
 
-        foreach ($entities as $key => $entity) {
-            $slugMapItem = $entity->getSlugMapItem();
+        foreach ($entries as $key => $entry) {
+            $slugMapItem = $entry->getSlugMapItem();
 
             if (null !== $slugMapItem) {
                 $separator = $this->getSlugPartsSeparator($slugMapItem->getObjectClass(), $slugMapItem->getProperty());
 
                 if (false === $separator) {
-                    unset($entities[$key]);
+                    unset($entries[$key]);
 
                     continue;
                 }
-                if ($entity->isShowChildren() && (null === $options['depth'] || $entity->getLevel() < $options['depth'])) {
+                if ($entry->isShowChildren() && (null === $options['depth'] || $entry->getLevel() < $options['depth'])) {
                     $parentSlug = $slugMapItem->getSlug().$separator;
-                    $parentSlugs[$entity->getId()] = $parentSlug;
+                    $parentSlugs[$entry->getId()] = $parentSlug;
 
-                    $separatorCounts[$entity->getId()] = substr_count($parentSlug, $separator);
+                    $separatorCounts[$entry->getId()] = substr_count($parentSlug, $separator);
                 }
             }
 
-            $item = $this->itemFactoryRegistry->createItem($entity);
-            $items[$entity->getId()] = $item;
+            $item = $this->itemFactoryRegistry->createItem($entry);
+            $items[$entry->getId()] = $item;
 
-            if (null === $entity->getParent()) {
+            if (null === $entry->getParent()) {
                 $root->addChild($item);
 
                 continue;
             }
 
-            $parentId = $entity->getParent()->getId();
+            $parentId = $entry->getParent()->getId();
 
             if (isset($items[$parentId])) {
                 $items[$parentId]->addChild($item);
@@ -243,34 +243,33 @@ class MenuBuilder implements MenuBuilderInterface
      * @param string $menuName Menu name
      * @param array  $options  Options
      *
-     * @return \Darvin\MenuBundle\Entity\MenuItem[]
+     * @return \Darvin\MenuBundle\Entity\MenuEntry[]
      */
-    private function getMenuItemEntities(string $menuName, array $options): array
+    private function getEntries(string $menuName, array $options): array
     {
-        $entities = $this->getEntityRepository()->getForMenuBuilder($menuName, $options['depth'], $this->localeProvider->getCurrentLocale());
+        $entries = $this->getMenuEntryRepository()->getForMenuBuilder($menuName, $options['depth'], $this->localeProvider->getCurrentLocale());
 
-        if (empty($entities)) {
-            return $entities;
+        if (empty($entries)) {
+            return $entries;
         }
 
         $slugMapItems = [];
 
-        /** @var \Darvin\MenuBundle\Entity\MenuItem $entity */
-        foreach ($entities as $entity) {
-            if (null !== $entity->getSlugMapItem()) {
-                $slugMapItems[$entity->getId()] = $entity->getSlugMapItem();
+        foreach ($entries as $entry) {
+            if (null !== $entry->getSlugMapItem()) {
+                $slugMapItems[$entry->getId()] = $entry->getSlugMapItem();
             }
         }
 
         $this->slugMapObjectLoader->loadObjects($slugMapItems);
 
-        foreach ($entities as $key => $entity) {
-            if (null !== $entity->getSlugMapItem() && !$this->isSlugMapItemActive($entity->getSlugMapItem())) {
-                unset($entities[$key]);
+        foreach ($entries as $key => $entry) {
+            if (null !== $entry->getSlugMapItem() && !$this->isSlugMapItemActive($entry->getSlugMapItem())) {
+                unset($entries[$key]);
             }
         }
 
-        return $entities;
+        return $entries;
     }
 
     /**
@@ -446,11 +445,11 @@ class MenuBuilder implements MenuBuilderInterface
     }
 
     /**
-     * @return \Darvin\MenuBundle\Repository\MenuItemRepository
+     * @return \Darvin\MenuBundle\Repository\MenuEntryRepository
      */
-    private function getEntityRepository(): MenuItemRepository
+    private function getMenuEntryRepository(): MenuEntryRepository
     {
-        return $this->em->getRepository(MenuItem::class);
+        return $this->em->getRepository(MenuEntry::class);
     }
 
     /**
