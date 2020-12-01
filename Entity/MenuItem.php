@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Menu item
  *
- * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\Menu\ItemRepository")
+ * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\MenuItemRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="menu_item")
  *

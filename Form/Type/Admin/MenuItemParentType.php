@@ -13,7 +13,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Admin\Sorter\MenuItemSorter;
 use Darvin\MenuBundle\Entity\MenuItem;
-use Darvin\MenuBundle\Repository\Menu\ItemRepository;
+use Darvin\MenuBundle\Repository\MenuItemRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -103,7 +103,7 @@ class MenuItemParentType extends AbstractType
         $resolver->setDefaults([
             'class'         => MenuItem::class,
             'required'      => false,
-            'query_builder' => function (ItemRepository $repository) use ($locale) {
+            'query_builder' => function (MenuItemRepository $repository) use ($locale) {
                 return $repository->getAdminBuilder(null, $locale);
             },
         ]);

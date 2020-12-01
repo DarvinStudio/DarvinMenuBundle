@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\Form\Type\EntityType;
-use Darvin\MenuBundle\Repository\Menu\ItemRepository;
+use Darvin\MenuBundle\Repository\MenuItemRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -56,7 +56,7 @@ class MenuItemType extends AbstractType
 
             $parentField = $builder->create('parent', MenuItemParentType::class, [
                 'auto_initialize' => false,
-                'query_builder'   => function (ItemRepository $repository) use ($locale, $menu) {
+                'query_builder'   => function (MenuItemRepository $repository) use ($locale, $menu) {
                     return $repository->getAdminBuilder($menu, $locale);
                 },
             ])->getForm();

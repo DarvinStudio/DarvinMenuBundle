@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Repository\Menu;
+namespace Darvin\MenuBundle\Repository;
 
 use Darvin\ContentBundle\Traits\TranslatableRepositoryTrait;
 use Darvin\ImageBundle\Traits\ImageableRepositoryTrait;
@@ -18,7 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * Menu item entity repository
  */
-class ItemRepository extends EntityRepository
+class MenuItemRepository extends EntityRepository
 {
     use ImageableRepositoryTrait;
     use TranslatableRepositoryTrait;
@@ -150,9 +150,9 @@ class ItemRepository extends EntityRepository
      * @param bool                       $addSelect Whether to add select
      * @param bool                       $inner     Whether to use inner join
      *
-     * @return ItemRepository
+     * @return MenuItemRepository
      */
-    private function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): ItemRepository
+    private function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): MenuItemRepository
     {
         $inner
             ? $qb->innerJoin('o.slugMapItem', 'slug_map_item')
@@ -168,9 +168,9 @@ class ItemRepository extends EntityRepository
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      *
-     * @return ItemRepository
+     * @return MenuItemRepository
      */
-    private function addEnabledFilter(QueryBuilder $qb)
+    private function addEnabledFilter(QueryBuilder $qb): MenuItemRepository
     {
         $qb->andWhere('translations.enabled = :enabled')->setParameter('enabled', true);
 
@@ -181,9 +181,9 @@ class ItemRepository extends EntityRepository
      * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
      * @param string                     $menu Menu name
      *
-     * @return ItemRepository
+     * @return MenuItemRepository
      */
-    private function addMenuFilter(QueryBuilder $qb, string $menu): ItemRepository
+    private function addMenuFilter(QueryBuilder $qb, string $menu): MenuItemRepository
     {
         $qb->andWhere('o.menu = :menu')->setParameter('menu', $menu);
 

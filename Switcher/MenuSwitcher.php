@@ -11,7 +11,7 @@
 namespace Darvin\MenuBundle\Switcher;
 
 use Darvin\MenuBundle\Entity\MenuItem;
-use Darvin\MenuBundle\Repository\Menu\ItemRepository;
+use Darvin\MenuBundle\Repository\MenuItemRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
@@ -183,9 +183,9 @@ class MenuSwitcher implements MenuSwitcherInterface
     }
 
     /**
-     * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
+     * @return \Darvin\MenuBundle\Repository\MenuItemRepository
      */
-    private function getMenuItemRepository(): ItemRepository
+    private function getMenuItemRepository(): MenuItemRepository
     {
         return $this->em->getRepository(MenuItem::class);
     }

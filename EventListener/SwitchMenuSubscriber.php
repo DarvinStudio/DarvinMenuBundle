@@ -14,7 +14,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
 use Darvin\MenuBundle\Entity\MenuItem;
-use Darvin\MenuBundle\Repository\Menu\ItemRepository;
+use Darvin\MenuBundle\Repository\MenuItemRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\EventSubscriber;
@@ -214,9 +214,9 @@ class SwitchMenuSubscriber implements EventSubscriber
     }
 
     /**
-     * @return \Darvin\MenuBundle\Repository\Menu\ItemRepository
+     * @return \Darvin\MenuBundle\Repository\MenuItemRepository
      */
-    private function getMenuItemRepository(): ItemRepository
+    private function getMenuItemRepository(): MenuItemRepository
     {
         return $this->em->getRepository(MenuItem::class);
     }
