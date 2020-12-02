@@ -4,6 +4,10 @@ menu:
 pagination:
     enabled: false
 
+joins:
+    image:         image
+    slug_map_item: slugMapItem
+
 searchable_fields:
     - title
     - url
@@ -11,10 +15,6 @@ searchable_fields:
 sorter:
     id:     darvin_menu.admin.sorter.menu_entry
     method: sort
-
-joins:
-    image:         image
-    slug_map_item: slugMapItem
 
 order_by:
     menu:     asc
@@ -45,10 +45,6 @@ view:
                 size:   free
                 type:   link
                 widget: simple_link
-    extend~index~show:
-        fields:
-            remove~position:    ~
-            remove~slugMapItem: ~
 
 form:
     index:
