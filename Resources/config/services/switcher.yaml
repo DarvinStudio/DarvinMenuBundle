@@ -9,7 +9,7 @@ services:
     darvin_menu.switcher.admin.form_type:
         class: '%darvin_menu.switcher.admin.form_type.class%'
         arguments:
-            - '@darvin_menu.configuration.menu'
+            - '@darvin_menu.provider_registry'
             - '@darvin_menu.switcher'
         tags:
             - { name: form.type }
