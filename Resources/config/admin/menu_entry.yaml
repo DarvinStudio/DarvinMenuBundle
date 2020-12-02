@@ -95,4 +95,4 @@ form:
                 type: Darvin\ImageBundle\Form\Type\ImageType
                 options:
                     data_class: Darvin\MenuBundle\Entity\MenuEntryImage
-                    filters:    menu_main
+                    filters:    ~
