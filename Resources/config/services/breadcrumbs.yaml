@@ -15,7 +15,6 @@ services:
             - '@request_stack'
             - '@darvin_content.slug_map.object_loader'
             - '@translator'
-            - '%darvin_menu.breadcrumbs.slug_parameter_name%'
 
     darvin_menu.breadcrumbs.twig_extension:
         class: '%darvin_menu.breadcrumbs.twig_extension.class%'

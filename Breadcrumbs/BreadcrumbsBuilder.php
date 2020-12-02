@@ -29,6 +29,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 {
     private const HOMEPAGE_LABEL = 'breadcrumbs.homepage';
     private const MENU_NAME      = 'breadcrumbs';
+    private const SLUG_PARAM     = 'slug';
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -66,11 +67,6 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     private $translator;
 
     /**
-     * @var string
-     */
-    private $slugParameterName;
-
-    /**
      * @param \Doctrine\ORM\EntityManager                                                  $em                     Entity manager
      * @param \Darvin\Utils\Homepage\HomepageRouterInterface                               $homepageRouter         Homepage router
      * @param \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface $knpItemFactoryRegistry KNP menu item factory registry
@@ -78,7 +74,6 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
      * @param \Symfony\Component\HttpFoundation\RequestStack                               $requestStack           Request stack
      * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface                      $slugMapObjectLoader    Slug map object loader
      * @param \Symfony\Contracts\Translation\TranslatorInterface                           $translator             Translator
-     * @param string                                                                       $slugParameterName      Slug route parameter name
      */
     public function __construct(
         EntityManager $em,
@@ -87,8 +82,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         MetadataFactoryInterface $metadataFactory,
         RequestStack $requestStack,
         SlugMapObjectLoaderInterface $slugMapObjectLoader,
-        TranslatorInterface $translator,
-        string $slugParameterName
+        TranslatorInterface $translator
     ) {
         $this->em = $em;
         $this->homepageRouter = $homepageRouter;
@@ -97,7 +91,6 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
         $this->requestStack = $requestStack;
         $this->slugMapObjectLoader = $slugMapObjectLoader;
         $this->translator = $translator;
-        $this->slugParameterName = $slugParameterName;
     }
 
     /**
@@ -156,11 +149,11 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 
         $routeParams = $request->attributes->get('_route_params', []);
 
-        if (!isset($routeParams[$this->slugParameterName]) || null === $routeParams[$this->slugParameterName]) {
+        if (!isset($routeParams[self::SLUG_PARAM]) || null === $routeParams[self::SLUG_PARAM]) {
             return $parent;
         }
 
-        $slug = $routeParams[$this->slugParameterName];
+        $slug = $routeParams[self::SLUG_PARAM];
 
         $currentSlugMapItem = $this->getSlugMapItemRepository()->findOneBy([
             'slug' => $slug,

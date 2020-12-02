@@ -26,19 +26,12 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $builder = new TreeBuilder('darvin_menu');
-
-        /** @var \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition $root */
-        $root = $builder->getRootNode();
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
-        $root
+        $builder->getRootNode()
             ->children()
+                ->arrayNode('menus')->useAttributeAsKey('name')->prototype('array')->end()->end()
                 ->arrayNode('breadcrumbs')->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('template')->defaultValue('@DarvinMenu/breadcrumbs.html.twig')->cannotBeEmpty()->end()
-                        ->scalarNode('slug_parameter_name')->defaultValue('slug')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
                 ->arrayNode('entities')->useAttributeAsKey('entity')
@@ -59,7 +52,6 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('')
                     ->end()
                 ->end()
-                ->arrayNode('menus')->useAttributeAsKey('name')->prototype('array')->end()->end()
                 ->arrayNode('switcher')->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('default_menus')->useAttributeAsKey('entity')

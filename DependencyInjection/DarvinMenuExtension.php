@@ -47,11 +47,6 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
 
         (new ConfigInjector($container))->inject($config, $this->getAlias());
 
-        $container->setParameter(
-            'darvin_menu.breadcrumbs.slug_parameter_name',
-            $config['breadcrumbs']['slug_parameter_name']
-        );
-
         (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'admin',
             'breadcrumbs',
