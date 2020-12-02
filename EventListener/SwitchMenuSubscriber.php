@@ -102,7 +102,7 @@ class SwitchMenuSubscriber implements EventSubscriber
             foreach ($this->menuSwitcher->getMenusToEnable() as $menu => $entities) {
                 foreach ($entities as $entity) {
                     if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
-                        && $slugMapItem->getObjectId() === $this->getEntityId($entity)
+                        && (string)$slugMapItem->getObjectId() === (string)$this->getEntityId($entity)
                     ) {
                         $em->persist($this->createEntry($menu, $slugMapItem));
 
