@@ -193,6 +193,7 @@ class MenuEntryRepository extends EntityRepository
      * @param mixed                      $id      Object ID
      *
      * @return MenuEntryRepository
+     * @throws \InvalidArgumentException
      */
     protected function addObjectFilter(QueryBuilder $qb, array $classes, $id): MenuEntryRepository
     {

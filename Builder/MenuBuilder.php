@@ -335,7 +335,7 @@ class MenuBuilder implements MenuBuilderInterface
         $propertyAccessor = $this->propertyAccessor;
         $sortableListener = $this->sortableListener;
 
-        uasort($children, function (array $a, array $b) use ($em, $entityResolver, $propertyAccessor, $sortableListener) {
+        uasort($children, function (array $a, array $b) use ($em, $entityResolver, $propertyAccessor, $sortableListener): int {
             if ($a['separator_count'] !== $b['separator_count']) {
                 return $a['separator_count'] > $b['separator_count'] ? 1 : -1;
             }

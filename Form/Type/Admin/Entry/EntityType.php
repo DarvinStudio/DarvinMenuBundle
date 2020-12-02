@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Form\Type\Admin\Entry;
 
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -44,7 +45,7 @@ class EntityType extends AbstractType
 
         $locale = $this->localeProvider->getCurrentLocale();
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($builder, $locale) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($builder, $locale): void {
             $data = $event->getData();
 
             if (null === $data['menu']) {
@@ -55,7 +56,7 @@ class EntityType extends AbstractType
 
             $parentField = $builder->create('parent', ParentChoiceType::class, [
                 'auto_initialize' => false,
-                'query_builder'   => function (MenuEntryRepository $repository) use ($locale, $menu) {
+                'query_builder'   => function (MenuEntryRepository $repository) use ($locale, $menu): QueryBuilder {
                     return $repository->createBuilderForAdminForm($menu, $locale);
                 },
             ])->getForm();

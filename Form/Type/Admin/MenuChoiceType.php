@@ -64,7 +64,7 @@ class MenuChoiceType extends AbstractType
         $metadataManager = $this->metadataManager;
         $requestStack    = $this->requestStack;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($metadataManager, $requestStack) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($metadataManager, $requestStack): void {
             $data = $event->getData();
 
             if (!empty($data)) {

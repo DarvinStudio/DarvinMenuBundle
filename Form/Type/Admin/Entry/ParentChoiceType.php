@@ -16,6 +16,7 @@ use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
@@ -112,7 +113,7 @@ class ParentChoiceType extends AbstractType
         $resolver->setDefaults([
             'class'         => $this->entityResolver->resolve(MenuEntryInterface::class),
             'required'      => false,
-            'query_builder' => function (MenuEntryRepository $repository) use ($locale) {
+            'query_builder' => function (MenuEntryRepository $repository) use ($locale): QueryBuilder {
                 return $repository->createBuilderForAdminForm(null, $locale);
             },
         ]);

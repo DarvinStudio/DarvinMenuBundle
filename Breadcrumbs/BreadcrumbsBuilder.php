@@ -184,7 +184,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
             ];
         }
 
-        usort($parentSlugMapItems, function (array $a, array $b) {
+        usort($parentSlugMapItems, function (array $a, array $b): int {
             return $a['separator_count'] <=> $b['separator_count'];
         });
 

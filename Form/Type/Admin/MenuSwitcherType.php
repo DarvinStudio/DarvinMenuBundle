@@ -55,7 +55,7 @@ class MenuSwitcherType extends AbstractType
         $menuSwitcher = $this->menuSwitcher;
 
         $builder
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuProvider, $menuSwitcher) {
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuProvider, $menuSwitcher): void {
                 $parentForm = $event->getForm()->getParent();
 
                 $menuCollection = $menuProvider->getMenuCollection();
@@ -97,7 +97,7 @@ class MenuSwitcherType extends AbstractType
 
                 $event->setData($data);
             })
-            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($menuProvider, $menuSwitcher) {
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($menuProvider, $menuSwitcher): void {
                 $data   = $event->getData();
                 $entity = $event->getForm()->getParent()->getData();
 

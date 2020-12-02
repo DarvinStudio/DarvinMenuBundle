@@ -42,12 +42,14 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                     ->validate()
-                        ->ifTrue(function (array $entities) {
+                        ->ifTrue(function (array $entities): bool {
                             foreach (array_keys($entities) as $entity) {
                                 if (!class_exists($entity)) {
                                     throw new \RuntimeException(sprintf('Entity class "%s" does not exist.', $entity));
                                 }
                             }
+
+                            return false;
                         })
                         ->thenInvalid('')
                     ->end()
@@ -61,7 +63,7 @@ class Configuration implements ConfigurationInterface
                                 ->requiresAtLeastOneElement()
                             ->end()
                             ->validate()
-                                ->ifTrue(function (array $defaultMenus) {
+                                ->ifTrue(function (array $defaultMenus): bool {
                                     foreach (array_keys($defaultMenus) as $entity) {
                                         if (!class_exists($entity) && !interface_exists($entity)) {
                                             throw new \RuntimeException(
@@ -79,7 +81,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
             ->validate()
-                ->ifTrue(function (array $config) {
+                ->ifTrue(function (array $config): bool {
                     foreach ($config['switcher']['default_menus'] as $names) {
                         foreach ($names as $name) {
                             if (!isset($config['menus'][$name])) {
