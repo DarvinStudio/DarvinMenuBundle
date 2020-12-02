@@ -29,8 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @DarvinMenuAssert\MenuEntryValid
  *
- * @method string getTitle()
- * @method string getUrl()
+ * @method string|null getTitle()
+ * @method string|null getUrl()
  *
  * @method \Darvin\MenuBundle\Entity\MenuEntryTranslation[]|Collection getTranslations()
  */
@@ -39,7 +39,7 @@ class MenuEntry implements MenuEntryInterface
     use TranslatableTrait;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", unique=true)
      * @ORM\GeneratedValue
@@ -85,7 +85,14 @@ class MenuEntry implements MenuEntryInterface
     protected $image;
 
     /**
-     * @var string
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $showChildren;
+
+    /**
+     * @var string|null
      *
      * @ORM\Column
      *
@@ -96,14 +103,7 @@ class MenuEntry implements MenuEntryInterface
     protected $menu;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected $showChildren;
-
-    /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer")
      *
@@ -112,7 +112,7 @@ class MenuEntry implements MenuEntryInterface
     protected $position;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(length=2550, nullable=true)
      *
@@ -121,7 +121,7 @@ class MenuEntry implements MenuEntryInterface
     protected $treePath;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
      *
@@ -130,7 +130,7 @@ class MenuEntry implements MenuEntryInterface
     protected $level;
 
     /**
-     * Constructor
+     * Menu entry constructor.
      */
     public function __construct()
     {
@@ -160,15 +160,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @return string
-     */
-    public function getMenuTitle(): string
-    {
-        return sprintf('menu.%s', $this->menu);
-    }
-
-    /**
-     * @return int
+     * @return int|null
      */
     public function getId(): ?int
     {
@@ -256,7 +248,27 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @return string
+     * @return bool
+     */
+    public function isShowChildren(): bool
+    {
+        return $this->showChildren;
+    }
+
+    /**
+     * @param bool $showChildren showChildren
+     *
+     * @return MenuEntry
+     */
+    public function setShowChildren(bool $showChildren): MenuEntry
+    {
+        $this->showChildren = $showChildren;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
      */
     public function getMenu(): ?string
     {
@@ -264,7 +276,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @param string $menu menu
+     * @param string|null $menu menu
      *
      * @return MenuEntry
      */
@@ -276,27 +288,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @return bool
-     */
-    public function isShowChildren(): ?bool
-    {
-        return $this->showChildren;
-    }
-
-    /**
-     * @param bool $showChildren showChildren
-     *
-     * @return MenuEntry
-     */
-    public function setShowChildren(?bool $showChildren): MenuEntry
-    {
-        $this->showChildren = $showChildren;
-
-        return $this;
-    }
-
-    /**
-     * @return int
+     * @return int|null
      */
     public function getPosition(): ?int
     {
@@ -304,7 +296,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @param int $position position
+     * @param int|null $position position
      *
      * @return MenuEntry
      */
@@ -316,7 +308,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTreePath(): ?string
     {
@@ -324,7 +316,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @param string $treePath treePath
+     * @param string|null $treePath treePath
      *
      * @return MenuEntry
      */
@@ -336,7 +328,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getLevel(): ?int
     {
@@ -344,7 +336,7 @@ class MenuEntry implements MenuEntryInterface
     }
 
     /**
-     * @param int $level level
+     * @param int|null $level level
      *
      * @return MenuEntry
      */

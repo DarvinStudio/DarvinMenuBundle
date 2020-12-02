@@ -32,21 +32,21 @@ class MenuEntryTranslation
     protected $enabled;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(nullable=true)
      */
     protected $title;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(nullable=true)
      */
     protected $url;
 
     /**
-     * Constructor
+     * Menu entry translation constructor.
      */
     public function __construct()
     {
@@ -56,7 +56,7 @@ class MenuEntryTranslation
     /**
      * @return bool
      */
-    public function isEnabled(): ?bool
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -66,7 +66,7 @@ class MenuEntryTranslation
      *
      * @return MenuEntryTranslation
      */
-    public function setEnabled(?bool $enabled): MenuEntryTranslation
+    public function setEnabled(bool $enabled): MenuEntryTranslation
     {
         $this->enabled = $enabled;
 
@@ -74,7 +74,7 @@ class MenuEntryTranslation
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTitle(): ?string
     {
@@ -82,7 +82,7 @@ class MenuEntryTranslation
     }
 
     /**
-     * @param string $title title
+     * @param string|null $title title
      *
      * @return MenuEntryTranslation
      */
@@ -94,7 +94,7 @@ class MenuEntryTranslation
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getUrl(): ?string
     {
@@ -102,7 +102,7 @@ class MenuEntryTranslation
     }
 
     /**
-     * @param string $url url
+     * @param string|null $url url
      *
      * @return MenuEntryTranslation
      */
