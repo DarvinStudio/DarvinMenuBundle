@@ -43,9 +43,7 @@ class DarvinMenuExtension extends Extension implements PrependExtensionInterface
             throw new \RuntimeException('Please enable "KnpMenuBundle".');
         }
 
-        $config = $this->processConfiguration(new Configuration(), $configs);
-
-        (new ConfigInjector($container))->inject($config, $this->getAlias());
+        (new ConfigInjector($container))->inject($this->processConfiguration(new Configuration(), $configs), $this->getAlias());
 
         (new ConfigLoader($container, __DIR__.'/../Resources/config/services'))->load([
             'admin',
