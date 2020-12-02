@@ -7,7 +7,7 @@ parameters:
 
     darvin_menu.admin.form_type.slug_map_item.choice.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
 
-    darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\ItemFactory
+    darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\MenuItemFactory
 
     darvin_menu.admin.sorter.menu_entry.class: Darvin\MenuBundle\Admin\Sorter\MenuEntrySorter
 

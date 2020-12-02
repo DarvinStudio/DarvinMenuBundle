@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * Admin menu item factory
  */
-class ItemFactory implements ItemFactoryInterface
+class MenuItemFactory implements ItemFactoryInterface
 {
     /**
      * @var \Darvin\AdminBundle\Route\AdminRouterInterface
