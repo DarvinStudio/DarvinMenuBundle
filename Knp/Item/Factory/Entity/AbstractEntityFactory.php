@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory\Entity;
+namespace Darvin\MenuBundle\Knp\Item\Factory\Entity;
 
 use Darvin\ContentBundle\Router\SlugMapRouterInterface;
-use Darvin\MenuBundle\Item\Factory\AbstractItemFactory;
+use Darvin\MenuBundle\Knp\Item\Factory\AbstractFactory;
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
@@ -19,7 +19,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Entity KNP menu item factory abstract implementation
  */
-abstract class AbstractEntityItemFactory extends AbstractItemFactory
+abstract class AbstractEntityFactory extends AbstractFactory
 {
     /**
      * @var \Doctrine\ORM\EntityManager

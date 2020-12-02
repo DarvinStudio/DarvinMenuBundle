@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory\Entity;
+namespace Darvin\MenuBundle\Knp\Item\Factory\Entity;
 
 use Darvin\ImageBundle\Imageable\ImageableInterface;
 use Darvin\MenuBundle\Entity\MenuEntry;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Menu entry KNP menu item factory
  */
-class MenuEntryFactory extends AbstractEntityItemFactory
+class MenuEntryFactory extends AbstractEntityFactory
 {
     /**
      * @var \Symfony\Component\HttpFoundation\RequestStack

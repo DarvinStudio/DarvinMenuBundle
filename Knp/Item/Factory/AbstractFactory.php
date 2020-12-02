@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory;
+namespace Darvin\MenuBundle\Knp\Item\Factory;
 
 use Darvin\ImageBundle\Entity\Image\AbstractImage;
 use Darvin\MenuBundle\Entity\MenuEntry;
@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * KNP menu item factory abstract implementation
  */
-abstract class AbstractItemFactory implements ItemFactoryInterface
+abstract class AbstractFactory implements KnpItemFactoryInterface
 {
     /**
      * @var \Knp\Menu\FactoryInterface

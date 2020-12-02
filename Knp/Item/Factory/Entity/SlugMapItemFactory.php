@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory\Entity;
+namespace Darvin\MenuBundle\Knp\Item\Factory\Entity;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
 
 /**
  * Slug map item KNP menu item factory
  */
-class SlugMapItemFactory extends AbstractEntityItemFactory
+class SlugMapItemFactory extends AbstractEntityFactory
 {
     /**
      * {@inheritDoc}

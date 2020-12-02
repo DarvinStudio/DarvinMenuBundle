@@ -8,14 +8,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory;
+namespace Darvin\MenuBundle\Knp\Item\Factory;
 
 use Knp\Menu\ItemInterface;
 
 /**
  * KNP menu item factory
  */
-interface ItemFactoryInterface
+interface KnpItemFactoryInterface
 {
     /**
      * @param mixed $source Source

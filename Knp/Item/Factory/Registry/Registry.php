@@ -8,18 +8,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory\Registry;
+namespace Darvin\MenuBundle\Knp\Item\Factory\Registry;
 
-use Darvin\MenuBundle\Item\Factory\ItemFactoryInterface;
+use Darvin\MenuBundle\Knp\Item\Factory\KnpItemFactoryInterface;
 use Knp\Menu\ItemInterface;
 
 /**
  * KNP menu item factory registry
  */
-class ItemFactoryRegistry implements ItemFactoryRegistryInterface
+class Registry implements KnpItemFactoryRegistryInterface
 {
     /**
-     * @var \Darvin\MenuBundle\Item\Factory\ItemFactoryInterface[]
+     * @var \Darvin\MenuBundle\Knp\Item\Factory\KnpItemFactoryInterface[]
      */
     private $factories;
 
@@ -32,9 +32,9 @@ class ItemFactoryRegistry implements ItemFactoryRegistryInterface
     }
 
     /**
-     * @param \Darvin\MenuBundle\Item\Factory\ItemFactoryInterface $factory KNP menu item factory
+     * @param \Darvin\MenuBundle\Knp\Item\Factory\KnpItemFactoryInterface $factory KNP menu item factory
      */
-    public function addFactory(ItemFactoryInterface $factory): void
+    public function addFactory(KnpItemFactoryInterface $factory): void
     {
         $this->factories[] = $factory;
     }

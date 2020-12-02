@@ -8,12 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Item\Factory;
+namespace Darvin\MenuBundle\Knp\Item\Factory;
 
 /**
  * String KNP menu item factory
  */
-class StringItemFactory extends AbstractItemFactory
+class StringFactory extends AbstractFactory
 {
     /**
      * {@inheritDoc}
