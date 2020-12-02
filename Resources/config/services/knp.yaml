@@ -22,13 +22,13 @@ services:
 
     darvin_menu.knp.item.factory.string:
         class:  '%darvin_menu.knp.item.factory.string.class%'
-        parent: darvin_menu.item_factory.abstract
+        parent: darvin_menu.knp.item.factory.abstract
         tags:
             - { name: darvin_menu.knp.item.factory }
 
     darvin_menu.knp.item.factory.entity.abstract:
         class:    '%darvin_menu.knp.item.factory.entity.abstract.class%'
-        parent:   darvin_menu.item_factory.abstract
+        parent:   darvin_menu.knp.item.factory.abstract
         abstract: true
         calls:
             - [ setEntityManager, [ '@doctrine.orm.entity_manager' ] ]
@@ -37,7 +37,7 @@ services:
 
     darvin_menu.knp.item.factory.entity.menu_entry:
         class:  '%darvin_menu.knp.item.factory.entity.menu_entry.class%'
-        parent: darvin_menu.item_factory.abstract_entity
+        parent: darvin_menu.knp.item.factory.entity.abstract
         arguments:
             - '@request_stack'
         tags:
@@ -45,7 +45,7 @@ services:
 
     darvin_menu.knp.item.factory.entity.slug_map_item:
         class:  '%darvin_menu.knp.item.factory.entity.slug_map_item.class%'
-        parent: darvin_menu.item_factory.abstract_entity
+        parent: darvin_menu.knp.item.factory.entity.abstract
         tags:
             - { name: darvin_menu.knp.item.factory }
 
