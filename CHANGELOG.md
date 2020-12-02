@@ -147,3 +147,5 @@ but in the last case alias may be defined in runtime.
 - Remove hover image property from menu entry entity.
 
 - Add menu entry entity interface.
+
+- Rename "item factory" => "KNP item factory".

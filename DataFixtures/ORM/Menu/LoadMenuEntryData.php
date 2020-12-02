@@ -100,7 +100,7 @@ class LoadMenuEntryData extends AbstractFixture
             }
         }
         if (1 === $entry->getLevel()) {
-            $entry->setShowChildren($this->getFaker()->boolean(50));
+            $entry->setShowChildren($this->getFaker()->boolean());
             $entry->setSlugMapItem($this->getRandomEntity(SlugMapItem::class));
         }
         if ($this->getFaker()->boolean(80)) {

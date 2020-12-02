@@ -10,7 +10,7 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.homepage.router'
-            - '@darvin_menu.item_factory_registry'
+            - '@darvin_menu.knp.item.factory_registry'
             - '@darvin_utils.mapping.metadata_factory'
             - '@request_stack'
             - '@darvin_content.slug_map.object_loader'

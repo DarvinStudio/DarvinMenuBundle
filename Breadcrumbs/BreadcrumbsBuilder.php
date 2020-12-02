@@ -14,7 +14,7 @@ use Darvin\ContentBundle\Disableable\DisableableInterface;
 use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
-use Darvin\MenuBundle\Item\Factory\Registry\ItemFactoryRegistryInterface;
+use Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface;
 use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
 use Doctrine\ORM\EntityManager;
@@ -41,9 +41,9 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     private $homepageRouter;
 
     /**
-     * @var \Darvin\MenuBundle\Item\Factory\Registry\ItemFactoryRegistryInterface
+     * @var \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface
      */
-    private $itemFactoryRegistry;
+    private $knpItemFactoryRegistry;
 
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
@@ -71,19 +71,19 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     private $slugParameterName;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                           $em                  Entity manager
-     * @param \Darvin\Utils\Homepage\HomepageRouterInterface                        $homepageRouter      Homepage router
-     * @param \Darvin\MenuBundle\Item\Factory\Registry\ItemFactoryRegistryInterface $itemFactoryRegistry Item factory registry
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                        $metadataFactory     Extended metadata factory
-     * @param \Symfony\Component\HttpFoundation\RequestStack                        $requestStack        Request stack
-     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface               $slugMapObjectLoader Slug map object loader
-     * @param \Symfony\Contracts\Translation\TranslatorInterface                    $translator          Translator
-     * @param string                                                                $slugParameterName   Slug route parameter name
+     * @param \Doctrine\ORM\EntityManager                                                  $em                     Entity manager
+     * @param \Darvin\Utils\Homepage\HomepageRouterInterface                               $homepageRouter         Homepage router
+     * @param \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface $knpItemFactoryRegistry KNP menu item factory registry
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                               $metadataFactory        Extended metadata factory
+     * @param \Symfony\Component\HttpFoundation\RequestStack                               $requestStack           Request stack
+     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface                      $slugMapObjectLoader    Slug map object loader
+     * @param \Symfony\Contracts\Translation\TranslatorInterface                           $translator             Translator
+     * @param string                                                                       $slugParameterName      Slug route parameter name
      */
     public function __construct(
         EntityManager $em,
         HomepageRouterInterface $homepageRouter,
-        ItemFactoryRegistryInterface $itemFactoryRegistry,
+        KnpItemFactoryRegistryInterface $knpItemFactoryRegistry,
         MetadataFactoryInterface $metadataFactory,
         RequestStack $requestStack,
         SlugMapObjectLoaderInterface $slugMapObjectLoader,
@@ -92,7 +92,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     ) {
         $this->em = $em;
         $this->homepageRouter = $homepageRouter;
-        $this->itemFactoryRegistry = $itemFactoryRegistry;
+        $this->knpItemFactoryRegistry = $knpItemFactoryRegistry;
         $this->metadataFactory = $metadataFactory;
         $this->requestStack = $requestStack;
         $this->slugMapObjectLoader = $slugMapObjectLoader;
@@ -105,7 +105,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
      */
     public function buildBreadcrumbs(?string $fallback = null, ?array $firstCrumbs = null, ?array $mainCrumbs = null, ?array $lastCrumbs = null): ItemInterface
     {
-        $root = $this->itemFactoryRegistry->createItem(self::MENU_NAME);
+        $root = $this->knpItemFactoryRegistry->createItem(self::MENU_NAME);
 
         $parent = $root;
 
@@ -206,7 +206,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
                 continue;
             }
 
-            $child = $this->itemFactoryRegistry->createItem($slugMapItem);
+            $child = $this->knpItemFactoryRegistry->createItem($slugMapItem);
 
             $object = $slugMapItem->getObject();
 
@@ -241,7 +241,7 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
                 continue;
             }
 
-            $child = $this->itemFactoryRegistry->createItem(implode('-', [self::MENU_NAME, $nameSuffix, $i]));
+            $child = $this->knpItemFactoryRegistry->createItem(implode('-', [self::MENU_NAME, $nameSuffix, $i]));
             $child->setLabel($this->translator->trans($label));
             $child->setUri($this->makeUrlAbsolute($url));
 

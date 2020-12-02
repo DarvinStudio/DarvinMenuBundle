@@ -16,18 +16,18 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add item factories to registry compiler pass
+ * Add KNP menu item factories to registry compiler pass
  */
-class AddItemFactoriesPass implements CompilerPassInterface
+class AddKnpItemFactoriesPass implements CompilerPassInterface
 {
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container): void
     {
-        $registry = $container->getDefinition('darvin_menu.item_factory_registry');
+        $registry = $container->getDefinition('darvin_menu.knp.item.factory_registry');
 
-        foreach (array_keys($container->findTaggedServiceIds(DarvinMenuExtension::TAG_ITEM_FACTORY)) as $id) {
+        foreach (array_keys($container->findTaggedServiceIds(DarvinMenuExtension::TAG_KNP_ITEM_FACTORY)) as $id) {
             $registry->addMethodCall('addFactory', [new Reference($id)]);
         }
     }
