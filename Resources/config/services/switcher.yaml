@@ -1,19 +1,11 @@
 parameters:
-    darvin_menu.switcher.admin.form_type.class: Darvin\MenuBundle\Form\Type\Admin\MenuSwitcherType
-
     darvin_menu.switcher.class: Darvin\MenuBundle\Switcher\MenuSwitcher
 
-    darvin_menu.switcher.switch_event_subscriber.class: Darvin\MenuBundle\EventListener\SwitchMenuSubscriber
+    darvin_menu.switcher.admin.form.type.class: Darvin\MenuBundle\Form\Type\Admin\MenuSwitcherType
+
+    darvin_menu.switcher.event_subscriber.switch.class: Darvin\MenuBundle\EventListener\SwitchMenuSubscriber
 
 services:
-    darvin_menu.switcher.admin.form_type:
-        class: '%darvin_menu.switcher.admin.form_type.class%'
-        arguments:
-            - '@darvin_menu.provider_registry'
-            - '@darvin_menu.switcher'
-        tags:
-            - { name: form.type }
-
     darvin_menu.switcher:
         class: '%darvin_menu.switcher.class%'
         arguments:
@@ -21,8 +13,16 @@ services:
             - '@darvin_utils.orm.entity_resolver'
             - '%darvin_menu.switcher.default_menus%'
 
-    darvin_menu.switcher.switch_event_subscriber:
-        class: '%darvin_menu.switcher.switch_event_subscriber.class%'
+    darvin_menu.switcher.admin.form.type:
+        class: '%darvin_menu.switcher.admin.form.type.class%'
+        arguments:
+            - '@darvin_menu.provider_registry'
+            - '@darvin_menu.switcher'
+        tags:
+            - { name: form.type }
+
+    darvin_menu.switcher.event_subscriber.switch:
+        class: '%darvin_menu.switcher.event_subscriber.switch.class%'
         arguments:
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_menu.switcher'

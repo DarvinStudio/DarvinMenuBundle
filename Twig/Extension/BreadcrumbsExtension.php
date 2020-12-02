@@ -31,11 +31,6 @@ class BreadcrumbsExtension extends AbstractExtension
     private $helper;
 
     /**
-     * @var array
-     */
-    private $defaultOptions;
-
-    /**
      * @var string
      */
     private $defaultTemplate;
@@ -43,18 +38,12 @@ class BreadcrumbsExtension extends AbstractExtension
     /**
      * @param \Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilderInterface $breadcrumbsBuilder Breadcrumbs builder
      * @param \Knp\Menu\Twig\Helper                                      $helper             Helper
-     * @param array                                                      $defaultOptions     Default options
      * @param string                                                     $defaultTemplate    Default template
      */
-    public function __construct(
-        BreadcrumbsBuilderInterface $breadcrumbsBuilder,
-        Helper $helper,
-        array $defaultOptions,
-        string $defaultTemplate
-    ) {
+    public function __construct(BreadcrumbsBuilderInterface $breadcrumbsBuilder, Helper $helper, string $defaultTemplate)
+    {
         $this->breadcrumbsBuilder = $breadcrumbsBuilder;
         $this->helper = $helper;
-        $this->defaultOptions = $defaultOptions;
         $this->defaultTemplate = $defaultTemplate;
     }
 
@@ -88,8 +77,6 @@ class BreadcrumbsExtension extends AbstractExtension
         array $options = [],
         ?string $renderer = null
     ): string {
-        $options = array_merge($this->defaultOptions, $options);
-
         if (!isset($options['template'])) {
             $options['template'] = $this->defaultTemplate;
         }

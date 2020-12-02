@@ -1,8 +1,7 @@
 parameters:
     darvin_menu.breadcrumbs.builder.class: Darvin\MenuBundle\Breadcrumbs\BreadcrumbsBuilder
 
-    darvin_menu.breadcrumbs.twig_extension.class:           Darvin\MenuBundle\Twig\Extension\BreadcrumbsExtension
-    darvin_menu.breadcrumbs.twig_extension.default_options: { currentAsLink: false }
+    darvin_menu.breadcrumbs.twig.extension.class: Darvin\MenuBundle\Twig\Extension\BreadcrumbsExtension
 
 services:
     darvin_menu.breadcrumbs.builder:
@@ -16,12 +15,11 @@ services:
             - '@darvin_content.slug_map.object_loader'
             - '@translator'
 
-    darvin_menu.breadcrumbs.twig_extension:
-        class: '%darvin_menu.breadcrumbs.twig_extension.class%'
+    darvin_menu.breadcrumbs.twig.extension:
+        class: '%darvin_menu.breadcrumbs.twig.extension.class%'
         arguments:
             - '@darvin_menu.breadcrumbs.builder'
             - '@knp_menu.helper'
-            - '%darvin_menu.breadcrumbs.twig_extension.default_options%'
             - '%darvin_menu.breadcrumbs.template%'
         tags:
             - { name: twig.extension }
