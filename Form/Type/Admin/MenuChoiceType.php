@@ -22,9 +22,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Menu admin form type
+ * Menu choice admin form type
  */
-class MenuType extends AbstractType
+class MenuChoiceType extends AbstractType
 {
     /**
      * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
@@ -106,7 +106,7 @@ class MenuType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_menu_admin_menu';
+        return 'darvin_menu_admin_menu_choice';
     }
 
     /**

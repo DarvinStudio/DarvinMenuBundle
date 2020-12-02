@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Form\Type\Admin;
+namespace Darvin\MenuBundle\Form\Type\Admin\Entry;
 
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface;
@@ -23,9 +23,9 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Menu entry parent admin form type
+ * Menu entry parent choice admin form type
  */
-class MenuEntryParentType extends AbstractType
+class ParentChoiceType extends AbstractType
 {
     /**
      * @var \Darvin\Utils\ORM\EntityResolverInterface
@@ -131,6 +131,6 @@ class MenuEntryParentType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_menu_admin_menu_entry_parent';
+        return 'darvin_menu_admin_entry_parent_choice';
     }
 }

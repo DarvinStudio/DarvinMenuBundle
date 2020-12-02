@@ -8,9 +8,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Form\Type\Admin;
+namespace Darvin\MenuBundle\Form\Type\Admin\Entry;
 
-use Darvin\AdminBundle\Form\Type\EntityType;
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Symfony\Component\Form\AbstractType;
@@ -19,9 +18,9 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 /**
- * Menu entry admin form type
+ * Menu entry entity admin form type
  */
-class MenuEntryType extends AbstractType
+class EntityType extends AbstractType
 {
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
@@ -54,7 +53,7 @@ class MenuEntryType extends AbstractType
 
             $menu = $data['menu'];
 
-            $parentField = $builder->create('parent', MenuEntryParentType::class, [
+            $parentField = $builder->create('parent', ParentChoiceType::class, [
                 'auto_initialize' => false,
                 'query_builder'   => function (MenuEntryRepository $repository) use ($locale, $menu) {
                     return $repository->getAdminBuilder($menu, $locale);
@@ -69,7 +68,7 @@ class MenuEntryType extends AbstractType
      */
     public function getParent(): string
     {
-        return EntityType::class;
+        return \Darvin\AdminBundle\Form\Type\EntityType::class;
     }
 
     /**
@@ -77,6 +76,6 @@ class MenuEntryType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_menu_admin_menu_entry';
+        return 'darvin_menu_admin_entry_entity';
     }
 }

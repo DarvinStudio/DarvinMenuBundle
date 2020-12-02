@@ -1,42 +1,42 @@
 parameters:
-    darvin_menu.admin.form_type.menu.class: Darvin\MenuBundle\Form\Type\Admin\MenuType
+    darvin_menu.admin.form.type.entry.entity.class: Darvin\MenuBundle\Form\Type\Admin\Entry\EntityType
 
-    darvin_menu.admin.form_type.menu_entry.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryType
+    darvin_menu.admin.form.type.entry.parent_choice.class: Darvin\MenuBundle\Form\Type\Admin\Entry\ParentChoiceType
 
-    darvin_menu.admin.form_type.menu_entry_parent.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryParentType
+    darvin_menu.admin.form.type.menu_choice.class: Darvin\MenuBundle\Form\Type\Admin\MenuChoiceType
 
     darvin_menu.admin.form_type.slug_map_item.choice.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
 
-    darvin_menu.admin.menu_item_factory.class: Darvin\MenuBundle\Admin\Menu\MenuItemFactory
+    darvin_menu.admin.menu.item_factory.class: Darvin\MenuBundle\Admin\Menu\MenuItemFactory
 
     darvin_menu.admin.sorter.menu_entry.class: Darvin\MenuBundle\Admin\Sorter\MenuEntrySorter
 
     darvin_menu.admin.view.widget.menu_title.class: Darvin\MenuBundle\Admin\View\MenuTitleWidget
 
 services:
-    darvin_menu.admin.form_type.menu:
-        class: '%darvin_menu.admin.form_type.menu.class%'
-        arguments:
-            - '@darvin_menu.configuration.menu'
-            - '@darvin_admin.metadata.manager'
-            - '@request_stack'
-        tags:
-            - { name: form.type }
-
-    darvin_menu.admin.form_type.menu_entry:
-        class:  '%darvin_menu.admin.form_type.menu_entry.class%'
+    darvin_menu.admin.form.type.entry.entity:
+        class:  '%darvin_menu.admin.form.type.entry.entity.class%'
         arguments:
             - '@darvin_utils.locale.provider'
         tags:
             - { name: form.type }
 
-    darvin_menu.admin.form_type.menu_entry_parent:
-        class: '%darvin_menu.admin.form_type.menu_entry_parent.class%'
+    darvin_menu.admin.form.type.entry.parent_choice:
+        class: '%darvin_menu.admin.form.type.entry.parent_choice.class%'
         arguments:
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_utils.locale.provider'
             - '@darvin_menu.admin.sorter.menu_entry'
             - '@darvin_content.slug_map.object_loader'
+        tags:
+            - { name: form.type }
+
+    darvin_menu.admin.form.type.menu_choice:
+        class: '%darvin_menu.admin.form.type.menu_choice.class%'
+        arguments:
+            - '@darvin_menu.configuration.menu'
+            - '@darvin_admin.metadata.manager'
+            - '@request_stack'
         tags:
             - { name: form.type }
 
@@ -47,8 +47,8 @@ services:
         tags:
             - { name: form.type }
 
-    darvin_menu.admin.menu_item_factory:
-        class: '%darvin_menu.admin.menu_item_factory.class%'
+    darvin_menu.admin.menu.item_factory:
+        class: '%darvin_menu.admin.menu.item_factory.class%'
         arguments:
             - '@darvin_admin.router'
             - '@security.authorization_checker'

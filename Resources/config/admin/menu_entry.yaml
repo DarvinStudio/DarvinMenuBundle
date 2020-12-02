@@ -61,7 +61,7 @@ form:
         heading_field: menu
         fields:
             menu:
-                type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+                type: Darvin\MenuBundle\Form\Type\Admin\MenuChoiceType
             enabled:      ~
             showChildren: ~
             title:
@@ -69,15 +69,15 @@ form:
             url:
                 compare_strict: false
     edit:
-        type: Darvin\MenuBundle\Form\Type\Admin\MenuEntryType
+        type: Darvin\MenuBundle\Form\Type\Admin\Entry\EntityType
         fields:
             menu:
-                type: Darvin\MenuBundle\Form\Type\Admin\MenuType
+                type: Darvin\MenuBundle\Form\Type\Admin\MenuChoiceType
                 options:
                     attr:
                         class: menu
             parent:
-                type: Darvin\MenuBundle\Form\Type\Admin\MenuEntryParentType
+                type: Darvin\MenuBundle\Form\Type\Admin\Entry\ParentChoiceType
             slugMapItem:
                 type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
             showChildren:
