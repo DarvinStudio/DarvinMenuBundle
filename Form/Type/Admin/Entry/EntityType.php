@@ -56,7 +56,7 @@ class EntityType extends AbstractType
             $parentField = $builder->create('parent', ParentChoiceType::class, [
                 'auto_initialize' => false,
                 'query_builder'   => function (MenuEntryRepository $repository) use ($locale, $menu) {
-                    return $repository->getAdminBuilder($menu, $locale);
+                    return $repository->createBuilderForAdminForm($menu, $locale);
                 },
             ])->getForm();
             $event->getForm()->add($parentField);

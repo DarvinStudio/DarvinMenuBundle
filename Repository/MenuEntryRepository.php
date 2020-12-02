@@ -29,59 +29,22 @@ class MenuEntryRepository extends EntityRepository
      *
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function getAdminBuilder(?string $menu = null, ?string $locale = null): QueryBuilder
+    public function createBuilderForAdminForm(?string $menu = null, ?string $locale = null): QueryBuilder
     {
-        $qb = $this->createDefaultBuilder()
+        $qb = $this->createDefaultBuilder();
+        $qb
             ->orderBy('o.menu')
             ->addOrderBy('o.level')
             ->addOrderBy('o.position');
-        $this->joinTranslations($qb, $locale);
-        $this->joinSlugMapItem($qb);
+        $this
+            ->joinSlugMapItem($qb)
+            ->joinTranslations($qb, $locale);
 
         if (null !== $menu) {
             $this->addMenuFilter($qb, $menu);
         }
 
         return $qb;
-    }
-
-    /**
-     * @param string[]    $classes Object classes
-     * @param mixed       $id      Object ID
-     * @param string|null $menu    Menu name
-     *
-     * @return \Darvin\MenuBundle\Entity\MenuEntry[]
-     */
-    public function getByObject(array $classes, $id, ?string $menu = null): array
-    {
-        if (empty($classes)) {
-            throw new \InvalidArgumentException('Array of object classes is empty.');
-        }
-
-        $classes = array_values(array_unique($classes));
-
-        $qb = $this->createDefaultBuilder()
-            ->andWhere('slug_map_item.objectId = :object_id')
-            ->setParameter('object_id', $id);
-        $this->joinSlugMapItem($qb);
-
-        if (null !== $menu) {
-            $this->addMenuFilter($qb, $menu);
-        }
-
-        $orX = $qb->expr()->orX();
-
-        foreach ($classes as $i => $class) {
-            $param = sprintf('object_class_%d', $i);
-
-            $orX->add(sprintf('slug_map_item.objectClass = :%s', $param));
-
-            $qb->setParameter($param, $class);
-        }
-
-        $qb->andWhere($orX);
-
-        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -93,14 +56,16 @@ class MenuEntryRepository extends EntityRepository
      */
     public function getForMenuBuilder(string $menu, ?int $depth = null, ?string $locale = null): array
     {
-        $qb = $this->createDefaultBuilder()
+        $qb = $this->createDefaultBuilder();
+        $qb
             ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL')
             ->orderBy('o.level')
             ->addOrderBy('o.position');
         $this
             ->joinImage($qb, $locale)
             ->joinSlugMapItem($qb)
-            ->joinTranslations($qb, $locale)
+            ->joinTranslations($qb, $locale);
+        $this
             ->addEnabledFilter($qb)
             ->addMenuFilter($qb, $menu);
 
@@ -118,7 +83,8 @@ class MenuEntryRepository extends EntityRepository
      */
     public function getForMenuSwitcher(): array
     {
-        $qb = $this->createDefaultBuilder()
+        $qb = $this->createDefaultBuilder();
+        $qb
             ->select('o.menu')
             ->addSelect('slug_map_item.objectClass class')
             ->addSelect('slug_map_item.objectId id');
@@ -145,13 +111,52 @@ class MenuEntryRepository extends EntityRepository
     }
 
     /**
+     * @param string[]    $classes Object classes
+     * @param mixed       $id      Object ID
+     * @param string|null $menu    Menu name
+     *
+     * @return \Darvin\MenuBundle\Entity\MenuEntry[]
+     */
+    public function getForSwitchMenuSubscriber(array $classes, $id, ?string $menu = null): array
+    {
+        if (empty($classes)) {
+            throw new \InvalidArgumentException('Array of object classes is empty.');
+        }
+
+        $qb = $this->createDefaultBuilder();
+        $this->joinSlugMapItem($qb);
+
+        if (null !== $menu) {
+            $this->addMenuFilter($qb, $menu);
+        }
+
+        $qb
+            ->andWhere('slug_map_item.objectId = :object_id')
+            ->setParameter('object_id', $id);
+
+        $orX = $qb->expr()->orX();
+
+        foreach (array_values(array_unique($classes)) as $i => $class) {
+            $param = sprintf('object_class_%d', $i);
+
+            $orX->add(sprintf('slug_map_item.objectClass = :%s', $param));
+
+            $qb->setParameter($param, $class);
+        }
+
+        $qb->andWhere($orX);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @param \Doctrine\ORM\QueryBuilder $qb        Query builder
      * @param bool                       $addSelect Whether to add select
      * @param bool                       $inner     Whether to use inner join
      *
      * @return MenuEntryRepository
      */
-    private function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): MenuEntryRepository
+    protected function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): MenuEntryRepository
     {
         $inner
             ? $qb->innerJoin('o.slugMapItem', 'slug_map_item')
@@ -169,7 +174,7 @@ class MenuEntryRepository extends EntityRepository
      *
      * @return MenuEntryRepository
      */
-    private function addEnabledFilter(QueryBuilder $qb): MenuEntryRepository
+    protected function addEnabledFilter(QueryBuilder $qb): MenuEntryRepository
     {
         $qb->andWhere('translations.enabled = :enabled')->setParameter('enabled', true);
 
@@ -182,7 +187,7 @@ class MenuEntryRepository extends EntityRepository
      *
      * @return MenuEntryRepository
      */
-    private function addMenuFilter(QueryBuilder $qb, string $menu): MenuEntryRepository
+    protected function addMenuFilter(QueryBuilder $qb, string $menu): MenuEntryRepository
     {
         $qb->andWhere('o.menu = :menu')->setParameter('menu', $menu);
 
@@ -192,7 +197,7 @@ class MenuEntryRepository extends EntityRepository
     /**
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function createDefaultBuilder(): QueryBuilder
+    protected function createDefaultBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('o');
     }

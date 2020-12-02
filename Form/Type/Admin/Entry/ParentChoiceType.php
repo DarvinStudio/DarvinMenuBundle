@@ -113,7 +113,7 @@ class ParentChoiceType extends AbstractType
             'class'         => $this->entityResolver->resolve(MenuEntryInterface::class),
             'required'      => false,
             'query_builder' => function (MenuEntryRepository $repository) use ($locale) {
-                return $repository->getAdminBuilder(null, $locale);
+                return $repository->createBuilderForAdminForm(null, $locale);
             },
         ]);
     }

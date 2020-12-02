@@ -180,7 +180,7 @@ class SwitchMenuSubscriber implements EventSubscriber
     {
         $class = ClassUtils::getClass($entity);
 
-        return $this->getMenuEntryRepository()->getByObject(
+        return $this->getMenuEntryRepository()->getForSwitchMenuSubscriber(
             [$class, $this->entityResolver->reverseResolve($class)],
             $this->getEntityId($entity),
             $menu
