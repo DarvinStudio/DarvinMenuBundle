@@ -1,7 +1,0 @@
-darvin_image:
-    imagine:
-        filter_sets:
-            menu_main:
-                entities: Darvin\MenuBundle\Entity\MenuEntryImage
-                filters:
-                    thumbnail: { size: [ 50, 50 ], mode: outbound }

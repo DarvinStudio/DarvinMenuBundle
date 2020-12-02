@@ -1,5 +1,5 @@
 {% macro image(item, image) %}
-    <img src="{{ image|image_filter('menu_main') }}"
+    <img src="{{ image|image_original }}"
          alt="{{ image|image_alt(item.label) }}"
          title="{{ image|image_title(item.label) }}">
 {% endmacro %}
