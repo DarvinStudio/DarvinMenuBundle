@@ -32,17 +32,10 @@ class MenuEntryRepository extends EntityRepository
     public function createBuilderForAdminForm(?string $menu = null, ?string $locale = null): QueryBuilder
     {
         $qb = $this->createDefaultBuilder();
-        $qb
-            ->orderBy('o.menu')
-            ->addOrderBy('o.level')
-            ->addOrderBy('o.position');
         $this
             ->joinSlugMapItem($qb)
             ->joinTranslations($qb, $locale);
-
-        if (null !== $menu) {
-            $this->addMenuFilter($qb, $menu);
-        }
+        $this->addMenuFilter($qb, $menu);
 
         return $qb;
     }
@@ -57,23 +50,15 @@ class MenuEntryRepository extends EntityRepository
     public function getForMenuBuilder(string $menu, ?int $depth = null, ?string $locale = null): array
     {
         $qb = $this->createDefaultBuilder();
-        $qb
-            ->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL')
-            ->orderBy('o.level')
-            ->addOrderBy('o.position');
         $this
             ->joinImage($qb, $locale)
             ->joinSlugMapItem($qb)
             ->joinTranslations($qb, $locale);
         $this
+            ->addDepthFilter($qb, $depth)
             ->addEnabledFilter($qb)
-            ->addMenuFilter($qb, $menu);
-
-        if (null !== $depth) {
-            $qb
-                ->andWhere('o.level <= :depth')
-                ->setParameter('depth', $depth);
-        }
+            ->addMenuFilter($qb, $menu)
+            ->addNotEmptyFilter($qb);
 
         return $qb->getQuery()->enableResultCache()->getResult();
     }
@@ -90,24 +75,24 @@ class MenuEntryRepository extends EntityRepository
             ->addSelect('slug_map_item.objectId id');
         $this->joinSlugMapItem($qb, false, true);
 
-        $entries = [];
+        $ids = [];
 
         foreach ($qb->getQuery()->getScalarResult() as $row) {
             $menu  = $row['menu'];
             $class = $row['class'];
             $id    = $row['id'];
 
-            if (!isset($entries[$menu])) {
-                $entries[$menu] = [];
+            if (!isset($ids[$menu])) {
+                $ids[$menu] = [];
             }
-            if (!isset($entries[$menu][$class])) {
-                $entries[$menu][$class] = [];
+            if (!isset($ids[$menu][$class])) {
+                $ids[$menu][$class] = [];
             }
 
-            $entries[$menu][$class][$id] = $id;
+            $ids[$menu][$class][$id] = $id;
         }
 
-        return $entries;
+        return $ids;
     }
 
     /**
@@ -119,32 +104,11 @@ class MenuEntryRepository extends EntityRepository
      */
     public function getForSwitchMenuSubscriber(array $classes, $id, ?string $menu = null): array
     {
-        if (empty($classes)) {
-            throw new \InvalidArgumentException('Array of object classes is empty.');
-        }
-
         $qb = $this->createDefaultBuilder();
         $this->joinSlugMapItem($qb);
-
-        if (null !== $menu) {
-            $this->addMenuFilter($qb, $menu);
-        }
-
-        $qb
-            ->andWhere('slug_map_item.objectId = :object_id')
-            ->setParameter('object_id', $id);
-
-        $orX = $qb->expr()->orX();
-
-        foreach (array_values(array_unique($classes)) as $i => $class) {
-            $param = sprintf('object_class_%d', $i);
-
-            $orX->add(sprintf('slug_map_item.objectClass = :%s', $param));
-
-            $qb->setParameter($param, $class);
-        }
-
-        $qb->andWhere($orX);
+        $this
+            ->addMenuFilter($qb, $menu)
+            ->addObjectFilter($qb, $classes, $id);
 
         return $qb->getQuery()->getResult();
     }
@@ -170,6 +134,21 @@ class MenuEntryRepository extends EntityRepository
     }
 
     /**
+     * @param \Doctrine\ORM\QueryBuilder $qb    Query builder
+     * @param int|null                   $depth Depth
+     *
+     * @return MenuEntryRepository
+     */
+    protected function addDepthFilter(QueryBuilder $qb, ?int $depth): MenuEntryRepository
+    {
+        if (null !== $depth) {
+            $qb->andWhere('o.level <= :depth')->setParameter('depth', $depth);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param \Doctrine\ORM\QueryBuilder $qb Query builder
      *
      * @return MenuEntryRepository
@@ -183,13 +162,59 @@ class MenuEntryRepository extends EntityRepository
 
     /**
      * @param \Doctrine\ORM\QueryBuilder $qb   Query builder
-     * @param string                     $menu Menu name
+     * @param string|null                $menu Menu name
      *
      * @return MenuEntryRepository
      */
-    protected function addMenuFilter(QueryBuilder $qb, string $menu): MenuEntryRepository
+    protected function addMenuFilter(QueryBuilder $qb, ?string $menu): MenuEntryRepository
     {
-        $qb->andWhere('o.menu = :menu')->setParameter('menu', $menu);
+        if (null !== $menu) {
+            $qb->andWhere('o.menu = :menu')->setParameter('menu', $menu);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb Query builder
+     *
+     * @return MenuEntryRepository
+     */
+    protected function addNotEmptyFilter(QueryBuilder $qb): MenuEntryRepository
+    {
+        $qb->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL');
+
+        return $this;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb      Query builder
+     * @param string[]                   $classes Object classes
+     * @param mixed                      $id      Object ID
+     *
+     * @return MenuEntryRepository
+     */
+    protected function addObjectFilter(QueryBuilder $qb, array $classes, $id): MenuEntryRepository
+    {
+        if (empty($classes)) {
+            throw new \InvalidArgumentException('Array of object classes is empty.');
+        }
+
+        $qb
+            ->andWhere('slug_map_item.objectId = :object_id')
+            ->setParameter('object_id', $id);
+
+        $classExpr = $qb->expr()->orX();
+
+        foreach (array_values(array_unique($classes)) as $i => $class) {
+            $param = sprintf('object_class_%d', $i);
+
+            $classExpr->add(sprintf('slug_map_item.objectClass = :%s', $param));
+
+            $qb->setParameter($param, $class);
+        }
+
+        $qb->andWhere($classExpr);
 
         return $this;
     }
@@ -199,6 +224,9 @@ class MenuEntryRepository extends EntityRepository
      */
     protected function createDefaultBuilder(): QueryBuilder
     {
-        return $this->createQueryBuilder('o');
+        return $this->createQueryBuilder('o')
+            ->addOrderBy('o.menu')
+            ->addOrderBy('o.level')
+            ->addOrderBy('o.position');
     }
 }
