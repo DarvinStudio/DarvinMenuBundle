@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @method \Darvin\MenuBundle\Entity\MenuEntryTranslation[]|Collection getTranslations()
  */
-class MenuEntry
+class MenuEntry implements MenuEntryInterface
 {
     use TranslatableTrait;
 
@@ -52,7 +52,7 @@ class MenuEntry
     /**
      * @var MenuEntry|null
      *
-     * @ORM\ManyToOne(targetEntity="MenuEntry", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Darvin\MenuBundle\Entity\MenuEntryInterface", inversedBy="children")
      *
      * @Gedmo\TreeParent
      * @Gedmo\SortableGroup
@@ -62,7 +62,7 @@ class MenuEntry
     /**
      * @var MenuEntry[]|\Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="MenuEntry", mappedBy="parent", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Darvin\MenuBundle\Entity\MenuEntryInterface", mappedBy="parent", cascade={"remove"})
      */
     protected $children;
 

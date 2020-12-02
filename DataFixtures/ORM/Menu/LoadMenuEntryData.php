@@ -14,6 +14,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Darvin\MenuBundle\Entity\MenuEntry;
 use Darvin\MenuBundle\Entity\MenuEntryImage;
+use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Entity\MenuEntryTranslation;
 use Darvin\Utils\DataFixtures\ORM\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
@@ -87,7 +88,7 @@ class LoadMenuEntryData extends AbstractFixture
     private function createEntry(string $menu): MenuEntry
     {
         /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
-        $entry = $this->instantiateEntity(MenuEntry::class);
+        $entry = $this->instantiateEntity(MenuEntryInterface::class);
         $entry->setLevel(1);
         $entry->setMenu($menu);
 
@@ -136,7 +137,7 @@ class LoadMenuEntryData extends AbstractFixture
     private function createTranslation(MenuEntry $entry, string $locale, string $fakerLocale): MenuEntryTranslation
     {
         /** @var \Darvin\MenuBundle\Entity\MenuEntryTranslation $translation */
-        $translation = $this->instantiateTranslation(MenuEntry::class);
+        $translation = $this->instantiateTranslation(MenuEntryInterface::class);
         $faker       = $this->getFaker($fakerLocale);
 
         $translation->setLocale($locale);

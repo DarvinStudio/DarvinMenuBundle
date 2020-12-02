@@ -15,7 +15,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Hideable\HideableInterface;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
-use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Item\Factory\Registry\ItemFactoryRegistryInterface;
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
@@ -449,7 +449,7 @@ class MenuBuilder implements MenuBuilderInterface
      */
     private function getMenuEntryRepository(): MenuEntryRepository
     {
-        return $this->em->getRepository(MenuEntry::class);
+        return $this->em->getRepository(MenuEntryInterface::class);
     }
 
     /**

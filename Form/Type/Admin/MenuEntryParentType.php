@@ -12,9 +12,10 @@ namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface;
-use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
+use Darvin\Utils\ORM\EntityResolverInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
@@ -26,6 +27,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class MenuEntryParentType extends AbstractType
 {
+    /**
+     * @var \Darvin\Utils\ORM\EntityResolverInterface
+     */
+    private $entityResolver;
+
     /**
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
      */
@@ -42,15 +48,18 @@ class MenuEntryParentType extends AbstractType
     private $slugMapObjectLoader;
 
     /**
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                $entityResolver      Entity resolver
      * @param \Darvin\Utils\Locale\LocaleProviderInterface             $localeProvider      Locale provider
      * @param \Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface $menuEntrySorter     Menu entry sorter
      * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface  $slugMapObjectLoader Slug map object loader
      */
     public function __construct(
+        EntityResolverInterface $entityResolver,
         LocaleProviderInterface $localeProvider,
         MenuEntrySorterInterface $menuEntrySorter,
         SlugMapObjectLoaderInterface $slugMapObjectLoader
     ) {
+        $this->entityResolver = $entityResolver;
         $this->localeProvider = $localeProvider;
         $this->menuEntrySorter = $menuEntrySorter;
         $this->slugMapObjectLoader = $slugMapObjectLoader;
@@ -101,7 +110,7 @@ class MenuEntryParentType extends AbstractType
         $locale = $this->localeProvider->getCurrentLocale();
 
         $resolver->setDefaults([
-            'class'         => MenuEntry::class,
+            'class'         => $this->entityResolver->resolve(MenuEntryInterface::class),
             'required'      => false,
             'query_builder' => function (MenuEntryRepository $repository) use ($locale) {
                 return $repository->getAdminBuilder(null, $locale);

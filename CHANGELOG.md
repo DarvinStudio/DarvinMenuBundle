@@ -145,3 +145,5 @@ but in the last case alias may be defined in runtime.
 - Replace "slug_map_item_link" admin view widget with the "slug_map_item" one from Content bundle.
 
 - Remove hover image property from menu entry entity.
+
+- Add menu entry entity interface.

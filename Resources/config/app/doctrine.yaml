@@ -1,0 +1,4 @@
+doctrine:
+    orm:
+        resolve_target_entities:
+            Darvin\MenuBundle\Entity\MenuEntryInterface: Darvin\MenuBundle\Entity\MenuEntry

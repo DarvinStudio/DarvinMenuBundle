@@ -33,6 +33,7 @@ services:
     darvin_menu.admin.form_type.menu_entry_parent:
         class: '%darvin_menu.admin.form_type.menu_entry_parent.class%'
         arguments:
+            - '@darvin_utils.orm.entity_resolver'
             - '@darvin_utils.locale.provider'
             - '@darvin_menu.admin.sorter.menu_entry'
             - '@darvin_content.slug_map.object_loader'

@@ -14,6 +14,7 @@ use Darvin\ContentBundle\Entity\SlugMapItem;
 use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
 use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Darvin\Utils\ORM\EntityResolverInterface;
@@ -156,7 +157,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function createEntry(string $menu, SlugMapItem $slugMapItem): MenuEntry
     {
-        $class = $this->entityResolver->resolve(MenuEntry::class);
+        $class = $this->entityResolver->resolve(MenuEntryInterface::class);
 
         /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
         $entry = new $class();
@@ -218,7 +219,7 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function getMenuEntryRepository(): MenuEntryRepository
     {
-        return $this->em->getRepository(MenuEntry::class);
+        return $this->em->getRepository(MenuEntryInterface::class);
     }
 
     /**
