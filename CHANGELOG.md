@@ -151,3 +151,5 @@ but in the last case alias may be defined in runtime.
 - Rename "item factory" => "KNP item factory".
 
 - Replace menu configuration service with menu provider registry one.
+
+8.0.1: Validate builder's "menu" option.

@@ -17,6 +17,8 @@ use Darvin\ContentBundle\Repository\SlugMapItemRepository;
 use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
 use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface;
+use Darvin\MenuBundle\Provider\Model\Menu;
+use Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface;
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\Locale\LocaleProviderInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
@@ -52,6 +54,11 @@ class MenuBuilder implements MenuBuilderInterface
      * @var \Darvin\Utils\Locale\LocaleProviderInterface
      */
     private $localeProvider;
+
+    /**
+     * @var \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface
+     */
+    private $menuProvider;
 
     /**
      * @var \Darvin\Utils\Mapping\MetadataFactoryInterface
@@ -93,6 +100,7 @@ class MenuBuilder implements MenuBuilderInterface
      * @param \Darvin\Utils\ORM\EntityResolverInterface                                    $entityResolver         Entity resolver
      * @param \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface $knpItemFactoryRegistry KNP menu item factory registry
      * @param \Darvin\Utils\Locale\LocaleProviderInterface                                 $localeProvider         Locale provider
+     * @param \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface           $menuProvider           Menu provider
      * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                               $metadataFactory        Extended metadata factory
      * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface                  $propertyAccessor       Property accessor
      * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface                      $slugMapObjectLoader    Slug map object loader
@@ -104,6 +112,7 @@ class MenuBuilder implements MenuBuilderInterface
         EntityResolverInterface $entityResolver,
         KnpItemFactoryRegistryInterface $knpItemFactoryRegistry,
         LocaleProviderInterface $localeProvider,
+        MenuProviderRegistryInterface $menuProvider,
         MetadataFactoryInterface $metadataFactory,
         PropertyAccessorInterface $propertyAccessor,
         SlugMapObjectLoaderInterface $slugMapObjectLoader,
@@ -114,6 +123,7 @@ class MenuBuilder implements MenuBuilderInterface
         $this->entityResolver = $entityResolver;
         $this->knpItemFactoryRegistry = $knpItemFactoryRegistry;
         $this->localeProvider = $localeProvider;
+        $this->menuProvider = $menuProvider;
         $this->metadataFactory = $metadataFactory;
         $this->propertyAccessor = $propertyAccessor;
         $this->slugMapObjectLoader = $slugMapObjectLoader;
@@ -435,6 +445,9 @@ class MenuBuilder implements MenuBuilderInterface
             ->setDefault('depth', null)
             ->setAllowedTypes('menu', 'string')
             ->setAllowedTypes('depth', ['integer', 'null', 'string'])
+            ->setAllowedValues('menu', array_map(function (Menu $menu): string {
+                return $menu->getName();
+            }, $this->menuProvider->getMenuCollection()))
             ->setNormalizer('depth', function (Options $options, $depth): ?int {
                 if (null !== $depth) {
                     $depth = (int)$depth;

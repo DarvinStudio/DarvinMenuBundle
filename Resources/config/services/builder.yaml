@@ -9,6 +9,7 @@ services:
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_menu.knp.item.factory_registry'
             - '@darvin_utils.locale.provider'
+            - '@darvin_menu.provider_registry'
             - '@darvin_utils.mapping.metadata_factory'
             - '@property_accessor'
             - '@darvin_content.slug_map.object_loader'
