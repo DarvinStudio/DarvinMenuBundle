@@ -1,7 +1,7 @@
 darvin_utils:
     override:
         DarvinMenuBundle:
-            menu_item:
+            menu_entry:
                 entities:
                     - MenuEntry
                     - MenuEntryTranslation

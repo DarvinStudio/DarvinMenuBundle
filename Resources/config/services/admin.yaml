@@ -1,9 +1,9 @@
 parameters:
     darvin_menu.admin.form_type.menu.class: Darvin\MenuBundle\Form\Type\Admin\MenuType
 
-    darvin_menu.admin.form_type.menu_item.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryType
+    darvin_menu.admin.form_type.menu_entry.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryType
 
-    darvin_menu.admin.form_type.menu_item_parent.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryParentType
+    darvin_menu.admin.form_type.menu_entry_parent.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryParentType
 
     darvin_menu.admin.form_type.slug_map_item.choice.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
 
@@ -23,15 +23,15 @@ services:
         tags:
             - { name: form.type }
 
-    darvin_menu.admin.form_type.menu_item:
-        class:  '%darvin_menu.admin.form_type.menu_item.class%'
+    darvin_menu.admin.form_type.menu_entry:
+        class:  '%darvin_menu.admin.form_type.menu_entry.class%'
         arguments:
             - '@darvin_utils.locale.provider'
         tags:
             - { name: form.type }
 
-    darvin_menu.admin.form_type.menu_item_parent:
-        class: '%darvin_menu.admin.form_type.menu_item_parent.class%'
+    darvin_menu.admin.form_type.menu_entry_parent:
+        class: '%darvin_menu.admin.form_type.menu_entry_parent.class%'
         arguments:
             - '@darvin_utils.locale.provider'
             - '@darvin_menu.admin.sorter.menu_entry'

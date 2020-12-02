@@ -5,7 +5,7 @@ parameters:
 
     darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\Factory\Entity\AbstractEntityItemFactory
 
-    darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\MenuEntryFactory
+    darvin_menu.item_factory.menu_entry_entity.class: Darvin\MenuBundle\Item\Factory\Entity\MenuEntryFactory
 
     darvin_menu.item_factory.slug_map_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\SlugMapItemFactory
 
@@ -33,8 +33,8 @@ services:
             - [ setObjectNamer,   [ '@darvin_utils.object_namer' ] ]
             - [ setSlugMapRouter, [ '@darvin_content.router.slug_map' ] ]
 
-    darvin_menu.item_factory.menu_item_entity:
-        class:  '%darvin_menu.item_factory.menu_item_entity.class%'
+    darvin_menu.item_factory.menu_entry_entity:
+        class:  '%darvin_menu.item_factory.menu_entry_entity.class%'
         parent: darvin_menu.item_factory.abstract_entity
         arguments:
             - '@request_stack'

@@ -1,15 +1,15 @@
 entity_name:
     multiple:
-        menu_item: 'Menu Items'
-        menu_item_translation: 'Menu Items (translations)'
+        menu_entry: 'Menu Items'
+        menu_entry_translation: 'Menu Items (translations)'
     single:
-        menu_item: 'Menu Item'
-        menu_item_translation: 'Menu Item (translation)'
+        menu_entry: 'Menu Item'
+        menu_entry_translation: 'Menu Item (translation)'
 menu:
     group:
         menu:
             title: Menu
-menu_item:
+menu_entry:
     action:
         delete:
             confirm: 'Confirm Menu Item Removal'

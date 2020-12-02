@@ -1,17 +1,17 @@
 entity_name:
     multiple:
-        menu_item:             Пункты меню
-        menu_item_translation: Пункты меню (переводы)
+        menu_entry:             Пункты меню
+        menu_entry_translation: Пункты меню (переводы)
     single:
-        menu_item:             Пункт меню
-        menu_item_translation: Пункт меню (перевод)
+        menu_entry:             Пункт меню
+        menu_entry_translation: Пункт меню (перевод)
 
 menu:
     group:
         menu:
             title: Меню
 
-menu_item:
+menu_entry:
     action:
         delete:
             confirm: Подтвердите удаление пункта меню

@@ -1,15 +1,15 @@
 parameters:
-    darvin_menu.fixture.menu_item.class:     Darvin\MenuBundle\DataFixtures\ORM\Menu\LoadItemData
-    darvin_menu.fixture.menu_item.min_count: 10
-    darvin_menu.fixture.menu_item.max_count: 20
-    darvin_menu.fixture.menu_item.max_level: 3
+    darvin_menu.fixture.menu_entry.class:     Darvin\MenuBundle\DataFixtures\ORM\Menu\LoadMenuEntryData
+    darvin_menu.fixture.menu_entry.min_count: 10
+    darvin_menu.fixture.menu_entry.max_count: 20
+    darvin_menu.fixture.menu_entry.max_level: 3
 
 services:
-    darvin_menu.fixture.menu_item:
-        class: '%darvin_menu.fixture.menu_item.class%'
+    darvin_menu.fixture.menu_entry:
+        class: '%darvin_menu.fixture.menu_entry.class%'
         arguments:
-            - '%darvin_menu.fixture.menu_item.min_count%'
-            - '%darvin_menu.fixture.menu_item.max_count%'
-            - '%darvin_menu.fixture.menu_item.max_level%'
+            - '%darvin_menu.fixture.menu_entry.min_count%'
+            - '%darvin_menu.fixture.menu_entry.max_count%'
+            - '%darvin_menu.fixture.menu_entry.max_level%'
         tags:
             - { name: doctrine.fixture.orm, group: menu }
