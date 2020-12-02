@@ -24,7 +24,7 @@ order_by:
 view:
     index:
         fields:
-            menuTitle:
+            menu:
                 size:   sm
                 widget: menu_title
             position:

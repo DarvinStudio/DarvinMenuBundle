@@ -1,10 +1,10 @@
 entity_name:
     multiple:
         menu_entry: 'Menu Items'
-        menu_entry_translation: 'Menu Items (translations)'
+        menu_entry_translation: 'Menu Item (Translations)'
     single:
         menu_entry: 'Menu Item'
-        menu_entry_translation: 'Menu Item (translation)'
+        menu_entry_translation: 'Menu Item (Translation)'
 menu:
     group:
         menu:
@@ -12,33 +12,28 @@ menu:
 menu_entry:
     action:
         delete:
-            confirm: 'Confirm Menu Item Removal'
+            confirm: 'Confirm menu item removal'
             submit: 'Remove Menu Item'
-            success: 'Menu Item Successfully Removed'
+            success: 'Menu item successfully removed'
         edit:
             link: 'Edit Menu Item'
-            success: 'Menu Item Successfully Updated'
+            success: 'Menu item successfully updated'
             title: 'Edit Menu Item "%entity%"'
         index:
             link: Menu
             title: 'Menu Items'
         new:
             link: 'Create Menu Item'
-            success: 'Menu Item Successfully Created'
+            success: 'Menu item successfully created'
             title: 'New Menu Item'
         show:
             title: 'Menu Item "%entity%"'
     entity:
-        associated: Object
-        associated_class: Object
         enabled: Enabled
         image: Image
         menu: Menu
-        menu_title: Menu
         parent: Parent
         position: Position
-        position_from: 'Position (From)'
-        position_to: 'Position (To)'
         show_children: 'Show Children'
         slug_map_item: Object
         title: Title
