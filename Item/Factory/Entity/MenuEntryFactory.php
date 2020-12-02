@@ -100,8 +100,7 @@ class MenuEntryFactory extends AbstractEntityItemFactory
         /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
         $entry = $source;
 
-        $image      = $entry->getImage();
-        $hoverImage = $entry->getHoverImage();
+        $image  = $entry->getImage();
         $object = $objectId = $objectName = null;
 
         if (null !== $entry->getSlugMapItem() && null !== $entry->getSlugMapItem()->getObject()) {
@@ -112,14 +111,12 @@ class MenuEntryFactory extends AbstractEntityItemFactory
             $objectName = $this->objectNamer->name($slugMapItem->getObjectClass());
 
             if (null === $image && $object instanceof ImageableInterface) {
-                $image      = $object->getImage();
-                $hoverImage = null !== $hoverImage ? $hoverImage : $object->getImage();
+                $image = $object->getImage();
             }
         }
 
         return array_merge(parent::getExtras($entry), [
             'entry'      => $entry,
-            'hoverImage' => $hoverImage,
             'image'      => $image,
             'object'     => $object,
             'objectId'   => $objectId,

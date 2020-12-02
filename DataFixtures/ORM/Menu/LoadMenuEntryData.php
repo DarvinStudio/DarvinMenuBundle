@@ -104,10 +104,6 @@ class LoadMenuEntryData extends AbstractFixture
         }
         if ($this->getFaker()->boolean(80)) {
             $entry->setImage($this->createImage(true));
-
-            if ($this->getFaker()->boolean(90)) {
-                $entry->setHoverImage($this->createImage());
-            }
         }
         foreach ($this->getFakerLocales() as $locale => $fakerLocale) {
             $entry->addTranslation($this->createTranslation($entry, $locale, $fakerLocale));

@@ -34,7 +34,6 @@ menu_entry:
         associated:       Объект
         associated_class: Объект
         enabled:          Активен
-        hover_image:      Изображение при наведении
         image:            Изображение
         menu:             Меню
         menu_title:       Меню

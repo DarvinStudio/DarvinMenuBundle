@@ -120,7 +120,6 @@ abstract class AbstractItemFactory implements ItemFactoryInterface
     {
         foreach ([
             'entry'      => MenuEntry::class,
-            'hoverImage' => AbstractImage::class,
             'image'      => AbstractImage::class,
             'object'     => 'object',
             'objectId'   => null,

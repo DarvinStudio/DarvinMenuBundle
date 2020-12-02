@@ -85,16 +85,6 @@ class MenuEntry
     protected $image;
 
     /**
-     * @var \Darvin\MenuBundle\Entity\MenuEntryImage|null
-     *
-     * @ORM\OneToOne(targetEntity="Darvin\MenuBundle\Entity\MenuEntryImage", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     *
-     * @Assert\Valid
-     */
-    protected $hoverImage;
-
-    /**
      * @var string
      *
      * @ORM\Column
@@ -261,26 +251,6 @@ class MenuEntry
     public function setImage(?MenuEntryImage $image): MenuEntry
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    /**
-     * @return \Darvin\MenuBundle\Entity\MenuEntryImage|null
-     */
-    public function getHoverImage(): ?MenuEntryImage
-    {
-        return $this->hoverImage;
-    }
-
-    /**
-     * @param \Darvin\MenuBundle\Entity\MenuEntryImage|null $hoverImage hoverImage
-     *
-     * @return MenuEntry
-     */
-    public function setHoverImage(?MenuEntryImage $hoverImage): MenuEntry
-    {
-        $this->hoverImage = $hoverImage;
 
         return $this;
     }

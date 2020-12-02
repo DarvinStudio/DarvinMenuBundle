@@ -18,11 +18,9 @@
 
         {% if item.uri is not same as(null) %}
             <a href="{{ item.uri }}">{{ _self.image(item, item.extras.image) }}</a>
-            <a href="{{ item.uri }}">{{ _self.image(item, item.extras.hoverImage) }}</a>
             <a href="{{ item.uri }}">{{ item.label }}</a>
         {% else %}
             <span>{{ _self.image(item, item.extras.image) }}</span>
-            <span>{{ _self.image(item, item.extras.hoverImage) }}</span>
             <span>{{ item.label }}</span>
         {% endif %}
 

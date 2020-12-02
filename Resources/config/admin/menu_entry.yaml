@@ -13,7 +13,6 @@ sorter:
     method: sort
 
 joins:
-    hover_image:   hoverImage
     image:         image
     slug_map_item: slugMapItem
 
@@ -38,9 +37,6 @@ view:
                 size:   xxxl
                 widget: slug_map_item
             image:
-                size:   xxs
-                widget: image_link
-            hoverImage:
                 size:   xxs
                 widget: image_link
             title:
@@ -100,8 +96,3 @@ form:
                 options:
                     data_class: Darvin\MenuBundle\Entity\MenuEntryImage
                     filters:    menu_main
-            hoverImage:
-                type: Darvin\ImageBundle\Form\Type\ImageType
-                options:
-                    data_class: Darvin\MenuBundle\Entity\MenuEntryImage
-                    filters:    menu_hover

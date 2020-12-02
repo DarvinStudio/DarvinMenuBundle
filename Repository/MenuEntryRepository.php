@@ -99,7 +99,6 @@ class MenuEntryRepository extends EntityRepository
             ->addOrderBy('o.position');
         $this
             ->joinImage($qb, $locale)
-            ->joinImage($qb, $locale, true, 'o.hoverImage', 'hover_image')
             ->joinSlugMapItem($qb)
             ->joinTranslations($qb, $locale)
             ->addEnabledFilter($qb)

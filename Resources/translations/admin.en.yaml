@@ -32,7 +32,6 @@ menu_entry:
         associated: Object
         associated_class: Object
         enabled: Enabled
-        hover_image: 'Hover Image'
         image: Image
         menu: Menu
         menu_title: Menu
