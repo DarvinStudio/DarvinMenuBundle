@@ -34,7 +34,7 @@ services:
     darvin_menu.admin.form.type.menu_choice:
         class: '%darvin_menu.admin.form.type.menu_choice.class%'
         arguments:
-            - '@darvin_menu.configuration.menu'
+            - '@darvin_menu.provider_registry'
             - '@darvin_admin.metadata.manager'
             - '@request_stack'
         tags:
@@ -52,7 +52,7 @@ services:
         arguments:
             - '@darvin_admin.router'
             - '@security.authorization_checker'
-            - '@darvin_menu.configuration.menu'
+            - '@darvin_menu.provider_registry'
             - '@darvin_admin.metadata.manager'
         tags:
             - { name: darvin_admin.menu_item_factory }
@@ -68,6 +68,6 @@ services:
         class:  '%darvin_menu.admin.view.widget.menu_title.class%'
         parent: darvin_admin.view.widget.abstract
         arguments:
-            - '@darvin_menu.configuration.menu'
+            - '@darvin_menu.provider_registry'
         tags:
             - { name: darvin_admin.view_widget }

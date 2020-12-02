@@ -11,8 +11,8 @@
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
 use Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface;
-use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,9 +27,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MenuChoiceType extends AbstractType
 {
     /**
-     * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
+     * @var \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface
      */
-    private $menuConfig;
+    private $menuProvider;
 
     /**
      * @var \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface
@@ -42,16 +42,16 @@ class MenuChoiceType extends AbstractType
     private $requestStack;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig      Menu configuration
-     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface  $metadataManager Metadata manager
-     * @param \Symfony\Component\HttpFoundation\RequestStack              $requestStack    Request stack
+     * @param \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface $menuProvider    Menu provider
+     * @param \Darvin\AdminBundle\Metadata\AdminMetadataManagerInterface         $metadataManager Metadata manager
+     * @param \Symfony\Component\HttpFoundation\RequestStack                     $requestStack    Request stack
      */
     public function __construct(
-        MenuConfigurationInterface $menuConfig,
+        MenuProviderRegistryInterface $menuProvider,
         AdminMetadataManagerInterface $metadataManager,
         RequestStack $requestStack
     ) {
-        $this->menuConfig = $menuConfig;
+        $this->menuProvider = $menuProvider;
         $this->metadataManager = $metadataManager;
         $this->requestStack = $requestStack;
     }
@@ -116,7 +116,7 @@ class MenuChoiceType extends AbstractType
     {
         $choices = [];
 
-        foreach ($this->menuConfig->getMenus() as $menu) {
+        foreach ($this->menuProvider->getMenuCollection() as $menu) {
             $choices[$menu->getTitle()] = $menu->getName();
         }
 

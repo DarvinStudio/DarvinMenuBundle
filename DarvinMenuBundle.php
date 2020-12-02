@@ -10,8 +10,9 @@
 
 namespace Darvin\MenuBundle;
 
-use Darvin\MenuBundle\DependencyInjection\Compiler\AddKnpItemFactoriesPass;
 use Darvin\MenuBundle\DependencyInjection\Compiler\OverrideMatcherPass;
+use Darvin\MenuBundle\DependencyInjection\Compiler\RegisterKnpItemFactoriesPass;
+use Darvin\MenuBundle\DependencyInjection\Compiler\RegisterProvidersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -28,7 +29,8 @@ class DarvinMenuBundle extends Bundle
     public function build(ContainerBuilder $container): void
     {
         $container
-            ->addCompilerPass(new AddKnpItemFactoriesPass())
-            ->addCompilerPass(new OverrideMatcherPass());
+            ->addCompilerPass(new OverrideMatcherPass())
+            ->addCompilerPass(new RegisterKnpItemFactoriesPass())
+            ->addCompilerPass(new RegisterProvidersPass());
     }
 }

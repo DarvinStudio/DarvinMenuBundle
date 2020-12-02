@@ -149,3 +149,5 @@ but in the last case alias may be defined in runtime.
 - Add menu entry entity interface.
 
 - Rename "item factory" => "KNP item factory".
+
+- Replace menu configuration service with menu provider registry one.

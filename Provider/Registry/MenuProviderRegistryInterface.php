@@ -1,25 +1,28 @@
 <?php declare(strict_types=1);
 /**
  * @author    Igor Nikolaev <igor.sv.n@gmail.com>
- * @copyright Copyright (c) 2019, Darvin Studio
+ * @copyright Copyright (c) 2020, Darvin Studio
  * @link      https://www.darvin-studio.ru
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Configuration;
+namespace Darvin\MenuBundle\Provider\Registry;
+
+use Darvin\MenuBundle\Provider\Model\Menu;
 
 /**
- * Menu configuration
+ * Menu provider registry
  */
-interface MenuConfigurationInterface
+interface MenuProviderRegistryInterface
 {
     /**
      * @param string $name Menu name
      *
-     * @return \Darvin\MenuBundle\Configuration\Menu
+     * @return \Darvin\MenuBundle\Provider\Model\Menu
      * @throws \InvalidArgumentException
+     * @throws \LogicException
      */
     public function getMenu(string $name): Menu;
 
@@ -27,13 +30,13 @@ interface MenuConfigurationInterface
      * @param string $name Menu name
      *
      * @return bool
-     */
-    public function hasMenu(string $name): bool;
-
-    /**
-     * @return \Darvin\MenuBundle\Configuration\Menu[]
-     *
      * @throws \LogicException
      */
-    public function getMenus(): array;
+    public function exists(string $name): bool;
+
+    /**
+     * @return \Darvin\MenuBundle\Provider\Model\Menu[]
+     * @throws \LogicException
+     */
+    public function getMenuCollection(): array;
 }

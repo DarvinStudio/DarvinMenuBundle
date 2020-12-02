@@ -1,3 +1,16 @@
+parameters:
+    darvin_menu.provider.config.class: Darvin\MenuBundle\Provider\Provider\ConfigMenuProvider
+
+    darvin_menu.provider_registry.class: Darvin\MenuBundle\Provider\Registry\MenuProviderRegistry
+
 services:
-    darvin_menu.provider:
-        alias: knp_menu.menu_provider
+    darvin_menu.provider.config:
+        class: '%darvin_menu.provider.config.class%'
+        arguments:
+            - '%darvin_menu.menus%'
+        tags:
+            - { name: darvin_menu.provider }
+
+    darvin_menu.provider_registry:
+        class:  '%darvin_menu.provider_registry.class%'
+        public: true

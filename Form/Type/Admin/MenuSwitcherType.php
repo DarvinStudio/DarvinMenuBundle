@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Form\Type\Admin;
 
-use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
+use Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface;
 use Darvin\MenuBundle\Switcher\MenuSwitcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -27,9 +27,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MenuSwitcherType extends AbstractType
 {
     /**
-     * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
+     * @var \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface
      */
-    private $menuConfig;
+    private $menuProvider;
 
     /**
      * @var \Darvin\MenuBundle\Switcher\MenuSwitcherInterface
@@ -37,12 +37,12 @@ class MenuSwitcherType extends AbstractType
     private $menuSwitcher;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig   Menu configuration
-     * @param \Darvin\MenuBundle\Switcher\MenuSwitcherInterface           $menuSwitcher Menu switcher
+     * @param \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface $menuProvider Menu provider
+     * @param \Darvin\MenuBundle\Switcher\MenuSwitcherInterface                  $menuSwitcher Menu switcher
      */
-    public function __construct(MenuConfigurationInterface $menuConfig, MenuSwitcherInterface $menuSwitcher)
+    public function __construct(MenuProviderRegistryInterface $menuProvider, MenuSwitcherInterface $menuSwitcher)
     {
-        $this->menuConfig = $menuConfig;
+        $this->menuProvider = $menuProvider;
         $this->menuSwitcher = $menuSwitcher;
     }
 
@@ -51,16 +51,16 @@ class MenuSwitcherType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $menuConfig   = $this->menuConfig;
+        $menuProvider = $this->menuProvider;
         $menuSwitcher = $this->menuSwitcher;
 
         $builder
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($menuProvider, $menuSwitcher) {
                 $parentForm = $event->getForm()->getParent();
 
-                $menus = $menuConfig->getMenus();
+                $menuCollection = $menuProvider->getMenuCollection();
 
-                if (empty($menus)) {
+                if (empty($menuCollection)) {
                     $parentForm->remove($event->getForm()->getName());
 
                     return;
@@ -72,7 +72,7 @@ class MenuSwitcherType extends AbstractType
                     ? $menuSwitcher->getDefaultMenus($entity)
                     : [];
 
-                foreach ($menus as $menu) {
+                foreach ($menuCollection as $menu) {
                     $attr = [];
 
                     if (in_array($menu->getName(), $defaultMenuNames)) {
@@ -87,7 +87,7 @@ class MenuSwitcherType extends AbstractType
 
                 $data = [];
 
-                foreach ($menus as $menu) {
+                foreach ($menuCollection as $menu) {
                     if ($menuSwitcher->isMenuEnabled($entity, $menu->getName())
                         || in_array($menu->getName(), $defaultMenuNames)
                     ) {
@@ -97,11 +97,11 @@ class MenuSwitcherType extends AbstractType
 
                 $event->setData($data);
             })
-            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($menuConfig, $menuSwitcher) {
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($menuProvider, $menuSwitcher) {
                 $data   = $event->getData();
                 $entity = $event->getForm()->getParent()->getData();
 
-                foreach ($menuConfig->getMenus() as $menu) {
+                foreach ($menuProvider->getMenuCollection() as $menu) {
                     $menuSwitcher->toggleMenu($entity, $menu->getName(), $data[$menu->getName()]);
                 }
             });

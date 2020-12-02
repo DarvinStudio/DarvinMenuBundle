@@ -11,11 +11,11 @@
 namespace Darvin\MenuBundle\DataFixtures\ORM\Menu;
 
 use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Darvin\MenuBundle\Entity\MenuEntry;
 use Darvin\MenuBundle\Entity\MenuEntryImage;
 use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Entity\MenuEntryTranslation;
+use Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface;
 use Darvin\Utils\DataFixtures\ORM\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -63,7 +63,7 @@ class LoadMenuEntryData extends AbstractFixture
      */
     public function load(ObjectManager $manager): void
     {
-        foreach ($this->getMenuConfig()->getMenus() as $menu) {
+        foreach ($this->getMenuProvider()->getMenuCollection() as $menu) {
             $this->entries[$menu->getName()] = [];
 
             $count = $this->getFaker()->numberBetween($this->minCount, $this->maxCount);
@@ -175,10 +175,10 @@ class LoadMenuEntryData extends AbstractFixture
     }
 
     /**
-     * @return \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
+     * @return \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface
      */
-    private function getMenuConfig(): MenuConfigurationInterface
+    private function getMenuProvider(): MenuProviderRegistryInterface
     {
-        return $this->container->get('darvin_menu.configuration.menu');
+        return $this->container->get('darvin_menu.provider_registry');
     }
 }

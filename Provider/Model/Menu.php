@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Darvin\MenuBundle\Configuration;
+namespace Darvin\MenuBundle\Provider\Model;
 
 /**
  * Menu

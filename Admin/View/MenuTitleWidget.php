@@ -12,8 +12,8 @@ namespace Darvin\MenuBundle\Admin\View;
 
 use Darvin\AdminBundle\Security\Permissions\Permission;
 use Darvin\AdminBundle\View\Widget\Widget\AbstractWidget;
-use Darvin\MenuBundle\Configuration\MenuConfigurationInterface;
 use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface;
 
 /**
  * Menu title admin view widget
@@ -21,16 +21,16 @@ use Darvin\MenuBundle\Entity\MenuEntry;
 class MenuTitleWidget extends AbstractWidget
 {
     /**
-     * @var \Darvin\MenuBundle\Configuration\MenuConfigurationInterface
+     * @var \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface
      */
-    private $menuConfig;
+    private $menuProvider;
 
     /**
-     * @param \Darvin\MenuBundle\Configuration\MenuConfigurationInterface $menuConfig Menu config
+     * @param \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface $menuProvider Menu provider
      */
-    public function __construct(MenuConfigurationInterface $menuConfig)
+    public function __construct(MenuProviderRegistryInterface $menuProvider)
     {
-        $this->menuConfig = $menuConfig;
+        $this->menuProvider = $menuProvider;
     }
 
     /**
@@ -41,8 +41,8 @@ class MenuTitleWidget extends AbstractWidget
         /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
         $entry = $entity;
 
-        if ($this->menuConfig->hasMenu($entry->getMenu())) {
-            return $this->menuConfig->getMenu($entry->getMenu())->getTitle();
+        if ($this->menuProvider->exists($entry->getMenu())) {
+            return $this->menuProvider->getMenu($entry->getMenu())->getTitle();
         }
 
         return $entry->getMenu();

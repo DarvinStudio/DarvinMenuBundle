@@ -16,9 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Add KNP menu item factories to registry compiler pass
+ * Register KNP menu item factories compiler pass
  */
-class AddKnpItemFactoriesPass implements CompilerPassInterface
+class RegisterKnpItemFactoriesPass implements CompilerPassInterface
 {
     /**
      * {@inheritDoc}
