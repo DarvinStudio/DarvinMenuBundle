@@ -73,7 +73,7 @@ form:
             url:
                 compare_strict: false
     edit:
-        type: Darvin\MenuBundle\Form\Type\Admin\MenuItemType
+        type: Darvin\MenuBundle\Form\Type\Admin\MenuEntryType
         fields:
             menu:
                 type: Darvin\MenuBundle\Form\Type\Admin\MenuType
@@ -81,7 +81,7 @@ form:
                     attr:
                         class: menu
             parent:
-                type: Darvin\MenuBundle\Form\Type\Admin\MenuItemParentType
+                type: Darvin\MenuBundle\Form\Type\Admin\MenuEntryParentType
             slugMapItem:
                 type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
             showChildren:
@@ -98,10 +98,10 @@ form:
             image:
                 type: Darvin\ImageBundle\Form\Type\ImageType
                 options:
-                    data_class: Darvin\MenuBundle\Entity\MenuItemImage
+                    data_class: Darvin\MenuBundle\Entity\MenuEntryImage
                     filters:    menu_main
             hoverImage:
                 type: Darvin\ImageBundle\Form\Type\ImageType
                 options:
-                    data_class: Darvin\MenuBundle\Entity\MenuItemImage
+                    data_class: Darvin\MenuBundle\Entity\MenuEntryImage
                     filters:    menu_hover

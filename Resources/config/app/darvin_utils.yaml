@@ -3,5 +3,5 @@ darvin_utils:
         DarvinMenuBundle:
             menu_item:
                 entities:
-                    - MenuItem
-                    - MenuItemTranslation
+                    - MenuEntry
+                    - MenuEntryTranslation

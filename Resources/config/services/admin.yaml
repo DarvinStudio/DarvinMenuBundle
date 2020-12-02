@@ -1,9 +1,9 @@
 parameters:
     darvin_menu.admin.form_type.menu.class: Darvin\MenuBundle\Form\Type\Admin\MenuType
 
-    darvin_menu.admin.form_type.menu_item.class: Darvin\MenuBundle\Form\Type\Admin\MenuItemType
+    darvin_menu.admin.form_type.menu_item.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryType
 
-    darvin_menu.admin.form_type.menu_item_parent.class: Darvin\MenuBundle\Form\Type\Admin\MenuItemParentType
+    darvin_menu.admin.form_type.menu_item_parent.class: Darvin\MenuBundle\Form\Type\Admin\MenuEntryParentType
 
     darvin_menu.admin.form_type.slug_map_item.choice.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
 

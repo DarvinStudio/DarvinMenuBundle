@@ -2,10 +2,10 @@ darvin_image:
     imagine:
         filter_sets:
             menu_hover:
-                entities: Darvin\MenuBundle\Entity\MenuItemImage
+                entities: Darvin\MenuBundle\Entity\MenuEntryImage
                 filters:
                     thumbnail: { size: [ 50, 50 ], mode: outbound }
             menu_main:
-                entities: Darvin\MenuBundle\Entity\MenuItemImage
+                entities: Darvin\MenuBundle\Entity\MenuEntryImage
                 filters:
                     thumbnail: { size: [ 50, 50 ], mode: outbound }

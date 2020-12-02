@@ -10,8 +10,8 @@
 
 namespace Darvin\MenuBundle\Switcher;
 
-use Darvin\MenuBundle\Entity\MenuItem;
-use Darvin\MenuBundle\Repository\MenuItemRepository;
+use Darvin\MenuBundle\Entity\MenuEntry;
+use Darvin\MenuBundle\Repository\MenuEntryRepository;
 use Darvin\Utils\ORM\EntityResolverInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
@@ -39,7 +39,7 @@ class MenuSwitcher implements MenuSwitcherInterface
     /**
      * @var array
      */
-    private $menuItems;
+    private $menuEntries;
 
     /**
      * @var array
@@ -62,7 +62,7 @@ class MenuSwitcher implements MenuSwitcherInterface
         $this->entityResolver = $entityResolver;
         $this->defaultMenuNames = $defaultMenuNames;
 
-        $this->menuItems = null;
+        $this->menuEntries = null;
         $this->menusToEnable = $this->menusToDisable = [];
     }
 
@@ -101,7 +101,7 @@ class MenuSwitcher implements MenuSwitcherInterface
      */
     public function hasEnabledMenus($entity): bool
     {
-        foreach (array_keys($this->getMenuItems()) as $menuName) {
+        foreach (array_keys($this->getMenuEntries()) as $menuName) {
             if ($this->isMenuEnabled($entity, $menuName)) {
                 return true;
             }
@@ -115,14 +115,14 @@ class MenuSwitcher implements MenuSwitcherInterface
      */
     public function isMenuEnabled($entity, string $menuName): bool
     {
-        $menuItems   = $this->getMenuItems();
         $entityClass = ClassUtils::getClass($entity);
         $entityIds   = $this->em->getClassMetadata($entityClass)->getIdentifierValues($entity);
+        $menuEntries = $this->getMenuEntries();
 
         $entityId = reset($entityIds);
 
         foreach ([$entityClass, $this->entityResolver->reverseResolve($entityClass)] as $class) {
-            if (isset($menuItems[$menuName][$class][$entityId])) {
+            if (isset($menuEntries[$menuName][$class][$entityId])) {
                 return true;
             }
         }
@@ -173,20 +173,20 @@ class MenuSwitcher implements MenuSwitcherInterface
     /**
      * @return array
      */
-    private function getMenuItems(): array
+    private function getMenuEntries(): array
     {
-        if (null === $this->menuItems) {
-            $this->menuItems = $this->getMenuItemRepository()->getForMenuSwitcher();
+        if (null === $this->menuEntries) {
+            $this->menuEntries = $this->getMenuEntryRepository()->getForMenuSwitcher();
         }
 
-        return $this->menuItems;
+        return $this->menuEntries;
     }
 
     /**
-     * @return \Darvin\MenuBundle\Repository\MenuItemRepository
+     * @return \Darvin\MenuBundle\Repository\MenuEntryRepository
      */
-    private function getMenuItemRepository(): MenuItemRepository
+    private function getMenuEntryRepository(): MenuEntryRepository
     {
-        return $this->em->getRepository(MenuItem::class);
+        return $this->em->getRepository(MenuEntry::class);
     }
 }

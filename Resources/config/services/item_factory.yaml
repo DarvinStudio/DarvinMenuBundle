@@ -5,7 +5,7 @@ parameters:
 
     darvin_menu.item_factory.abstract_entity.class: Darvin\MenuBundle\Item\Factory\Entity\AbstractEntityItemFactory
 
-    darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\MenuItemFactory
+    darvin_menu.item_factory.menu_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\MenuEntryFactory
 
     darvin_menu.item_factory.slug_map_item_entity.class: Darvin\MenuBundle\Item\Factory\Entity\SlugMapItemFactory
 
