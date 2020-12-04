@@ -12,6 +12,7 @@ namespace Darvin\MenuBundle\Entity;
 
 use Darvin\ContentBundle\Traits\TranslationTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
 
 /**
  * Menu entry translation
@@ -20,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\Table(name="menu_entry_translation")
  */
-class MenuEntryTranslation
+class MenuEntryTranslation implements TranslationInterface
 {
     use TranslationTrait;
 

@@ -16,6 +16,7 @@ use Darvin\MenuBundle\Validation\Constraints as DarvinMenuAssert;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -34,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @method \Darvin\MenuBundle\Entity\MenuEntryTranslation[]|Collection getTranslations()
  */
-class MenuEntry implements MenuEntryInterface
+class MenuEntry implements MenuEntryInterface, TranslatableInterface
 {
     use TranslatableTrait;
 
