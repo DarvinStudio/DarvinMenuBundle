@@ -132,7 +132,7 @@ class LoadMenuEntryData extends AbstractFixture
      * @param string                              $locale      Locale
      * @param string                              $fakerLocale Faker locale
      *
-     * @return \Darvin\MenuBundle\Entity\MenuEntryTranslation|\Knp\DoctrineBehaviors\Model\Translatable\Translation
+     * @return \Darvin\MenuBundle\Entity\MenuEntryTranslation
      */
     private function createTranslation(MenuEntry $entry, string $locale, string $fakerLocale): MenuEntryTranslation
     {
