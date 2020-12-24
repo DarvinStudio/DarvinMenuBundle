@@ -31,9 +31,9 @@ services:
         parent:   darvin_menu.knp.item.factory.abstract
         abstract: true
         calls:
-            - [ setEntityManager, [ '@doctrine.orm.entity_manager' ] ]
-            - [ setObjectNamer,   [ '@darvin_utils.object_namer' ] ]
-            - [ setSlugMapRouter, [ '@darvin_content.router.slug_map' ] ]
+            - [ setContentReferenceRouter, [ '@darvin_content.router.content_reference' ] ]
+            - [ setEntityManager,          [ '@doctrine.orm.entity_manager' ] ]
+            - [ setObjectNamer,            [ '@darvin_utils.object_namer' ] ]
 
     darvin_menu.knp.item.factory.entity.menu_entry:
         class:  '%darvin_menu.knp.item.factory.entity.menu_entry.class%'

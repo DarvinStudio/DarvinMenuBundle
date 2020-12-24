@@ -10,19 +10,19 @@
 
 namespace Darvin\MenuBundle\Knp\Item\Factory\Entity;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 
 /**
- * Slug map item KNP menu item factory
+ * Content reference KNP menu item factory
  */
-class SlugMapItemFactory extends AbstractEntityFactory
+class ContentReferenceFactory extends AbstractEntityFactory
 {
     /**
      * {@inheritDoc}
      */
     public function supports($source): bool
     {
-        return $source instanceof SlugMapItem;
+        return $source instanceof ContentReference;
     }
 
     /**
@@ -30,10 +30,10 @@ class SlugMapItemFactory extends AbstractEntityFactory
      */
     protected function getLabel($source): ?string
     {
-        /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
-        $slugMapItem = $source;
+        /** @var \Darvin\ContentBundle\Entity\ContentReference $contentReference */
+        $contentReference = $source;
 
-        return (string)$slugMapItem->getObject();
+        return (string)$contentReference->getObject();
     }
 
     /**
@@ -41,7 +41,7 @@ class SlugMapItemFactory extends AbstractEntityFactory
      */
     protected function getUri($source): ?string
     {
-        return $this->slugMapRouter->generateUrl($source);
+        return $this->contentReferenceRouter->generateUrl($source);
     }
 
     /**
@@ -49,13 +49,13 @@ class SlugMapItemFactory extends AbstractEntityFactory
      */
     protected function getExtras($source): array
     {
-        /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem */
-        $slugMapItem = $source;
+        /** @var \Darvin\ContentBundle\Entity\ContentReference $contentReference */
+        $contentReference = $source;
 
         return [
-            'object'     => $slugMapItem->getObject(),
-            'objectId'   => $slugMapItem->getObjectId(),
-            'objectName' => $this->objectNamer->name($slugMapItem->getObjectClass()),
+            'object'     => $contentReference->getObject(),
+            'objectId'   => $contentReference->getObjectId(),
+            'objectName' => $this->objectNamer->name($contentReference->getObjectClass()),
         ];
     }
 }

@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Knp\Item\Factory\Entity;
 
-use Darvin\ContentBundle\Router\SlugMapRouterInterface;
+use Darvin\ContentBundle\Router\ContentReferenceRouterInterface;
 use Darvin\MenuBundle\Knp\Item\Factory\AbstractFactory;
 use Darvin\Utils\ObjectNamer\ObjectNamerInterface;
 use Doctrine\Common\Util\ClassUtils;
@@ -22,6 +22,11 @@ use Doctrine\ORM\EntityManager;
 abstract class AbstractEntityFactory extends AbstractFactory
 {
     /**
+     * @var \Darvin\ContentBundle\Router\ContentReferenceRouterInterface
+     */
+    protected $contentReferenceRouter;
+
+    /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
@@ -32,9 +37,12 @@ abstract class AbstractEntityFactory extends AbstractFactory
     protected $objectNamer;
 
     /**
-     * @var \Darvin\ContentBundle\Router\SlugMapRouterInterface
+     * @param \Darvin\ContentBundle\Router\ContentReferenceRouterInterface $contentReferenceRouter Content reference router
      */
-    protected $slugMapRouter;
+    public function setContentReferenceRouter(ContentReferenceRouterInterface $contentReferenceRouter): void
+    {
+        $this->contentReferenceRouter = $contentReferenceRouter;
+    }
 
     /**
      * @param \Doctrine\ORM\EntityManager $em Entity manager
@@ -50,14 +58,6 @@ abstract class AbstractEntityFactory extends AbstractFactory
     public function setObjectNamer(ObjectNamerInterface $objectNamer): void
     {
         $this->objectNamer = $objectNamer;
-    }
-
-    /**
-     * @param \Darvin\ContentBundle\Router\SlugMapRouterInterface $slugMapRouter Slug map router
-     */
-    public function setSlugMapRouter(SlugMapRouterInterface $slugMapRouter): void
-    {
-        $this->slugMapRouter = $slugMapRouter;
     }
 
     /**

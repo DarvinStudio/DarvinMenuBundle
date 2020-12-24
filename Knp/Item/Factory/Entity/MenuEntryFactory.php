@@ -53,11 +53,11 @@ class MenuEntryFactory extends AbstractEntityFactory
         if (null !== $title) {
             return $title;
         }
-        if (null === $entry->getSlugMapItem()) {
+        if (null === $entry->getContentReference()) {
             return $entry->getUrl();
         }
 
-        return (string)$entry->getSlugMapItem()->getObject();
+        return (string)$entry->getContentReference()->getObject();
     }
 
     /**
@@ -71,7 +71,7 @@ class MenuEntryFactory extends AbstractEntityFactory
         $url = $entry->getUrl();
 
         if (null === $url) {
-            return $this->slugMapRouter->generateUrl($entry->getSlugMapItem());
+            return $this->contentReferenceRouter->generateUrl($entry->getContentReference());
         }
         if (0 !== strpos($url, '/') || 0 === strpos($url, '//')) {
             return $url;
@@ -103,12 +103,12 @@ class MenuEntryFactory extends AbstractEntityFactory
         $image  = $entry->getImage();
         $object = $objectId = $objectName = null;
 
-        if (null !== $entry->getSlugMapItem() && null !== $entry->getSlugMapItem()->getObject()) {
-            $slugMapItem = $entry->getSlugMapItem();
+        if (null !== $entry->getContentReference() && null !== $entry->getContentReference()->getObject()) {
+            $contentReference = $entry->getContentReference();
 
-            $object     = $slugMapItem->getObject();
-            $objectId   = $slugMapItem->getObjectId();
-            $objectName = $this->objectNamer->name($slugMapItem->getObjectClass());
+            $object     = $contentReference->getObject();
+            $objectId   = $contentReference->getObjectId();
+            $objectName = $this->objectNamer->name($contentReference->getObjectClass());
 
             if (null === $image && $object instanceof ImageableInterface) {
                 $image = $object->getImage();
