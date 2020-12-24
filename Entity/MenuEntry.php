@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Entity;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Darvin\ContentBundle\Traits\TranslatableTrait;
 use Darvin\MenuBundle\Validation\Constraints as DarvinMenuAssert;
 use Doctrine\Common\Collections\Collection;
@@ -68,12 +68,12 @@ class MenuEntry implements MenuEntryInterface, TranslatableInterface
     protected $children;
 
     /**
-     * @var \Darvin\ContentBundle\Entity\SlugMapItem|null
+     * @var \Darvin\ContentBundle\Entity\ContentReference|null
      *
-     * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\SlugMapItem")
+     * @ORM\ManyToOne(targetEntity="Darvin\ContentBundle\Entity\ContentReference")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $slugMapItem;
+    protected $contentReference;
 
     /**
      * @var \Darvin\MenuBundle\Entity\MenuEntryImage|null
@@ -150,8 +150,8 @@ class MenuEntry implements MenuEntryInterface, TranslatableInterface
         if (null !== $title) {
             return $prefix.$title;
         }
-        if (null !== $this->slugMapItem && null !== $this->slugMapItem->getObject()) {
-            return $prefix.$this->slugMapItem->getObject();
+        if (null !== $this->contentReference && null !== $this->contentReference->getObject()) {
+            return $prefix.$this->contentReference->getObject();
         }
         if (null !== $url) {
             return $url;
@@ -209,21 +209,21 @@ class MenuEntry implements MenuEntryInterface, TranslatableInterface
     }
 
     /**
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
+     * @return \Darvin\ContentBundle\Entity\ContentReference|null
      */
-    public function getSlugMapItem(): ?SlugMapItem
+    public function getContentReference(): ?ContentReference
     {
-        return $this->slugMapItem;
+        return $this->contentReference;
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem|null $slugMapItem slugMapItem
+     * @param \Darvin\ContentBundle\Entity\ContentReference|null $contentReference contentReference
      *
      * @return MenuEntry
      */
-    public function setSlugMapItem(?SlugMapItem $slugMapItem): MenuEntry
+    public function setContentReference(?ContentReference $contentReference): MenuEntry
     {
-        $this->slugMapItem = $slugMapItem;
+        $this->contentReference = $contentReference;
 
         return $this;
     }
