@@ -63,7 +63,7 @@ services:
         class:  '%darvin_menu.admin.sorter.menu_entry.class%'
         public: true
         arguments:
-            - '@darvin_content.slug_map.object_loader'
+            - '@darvin_content.reference.object.loader'
             - '@darvin_utils.tree.sorter'
 
     darvin_menu.admin.view.widget.menu_title:

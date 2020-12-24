@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Admin\Sorter;
 
-use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
+use Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface;
 use Darvin\Utils\Tree\TreeSorterInterface;
 
 /**
@@ -19,9 +19,9 @@ use Darvin\Utils\Tree\TreeSorterInterface;
 class MenuEntrySorter implements MenuEntrySorterInterface
 {
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface
      */
-    private $slugMapObjectLoader;
+    private $contentReferenceObjectLoader;
 
     /**
      * @var \Darvin\Utils\Tree\TreeSorterInterface
@@ -29,12 +29,12 @@ class MenuEntrySorter implements MenuEntrySorterInterface
     private $treeSorter;
 
     /**
-     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface $slugMapObjectLoader Slug map object loader
-     * @param \Darvin\Utils\Tree\TreeSorterInterface                  $treeSorter          Tree sorter
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader Content reference object loader
+     * @param \Darvin\Utils\Tree\TreeSorterInterface                                $treeSorter                   Tree sorter
      */
-    public function __construct(SlugMapObjectLoaderInterface $slugMapObjectLoader, TreeSorterInterface $treeSorter)
+    public function __construct(ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader, TreeSorterInterface $treeSorter)
     {
-        $this->slugMapObjectLoader = $slugMapObjectLoader;
+        $this->contentReferenceObjectLoader = $contentReferenceObjectLoader;
         $this->treeSorter = $treeSorter;
     }
 
@@ -47,15 +47,15 @@ class MenuEntrySorter implements MenuEntrySorterInterface
             return $entries;
         }
 
-        $slugMapItems = [];
+        $contentReferences = [];
 
         foreach ($entries as $entry) {
             if (null !== $entry->getSlugMapItem()) {
-                $slugMapItems[] = $entry->getSlugMapItem();
+                $contentReferences[] = $entry->getContentReference();
             }
         }
 
-        $this->slugMapObjectLoader->loadObjects($slugMapItems);
+        $this->contentReferenceObjectLoader->loadObjects($contentReferences);
 
         return $this->treeSorter->sortTree($entries);
     }
