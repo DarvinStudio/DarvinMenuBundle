@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\Form\Type\Admin\Entry;
 
-use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
+use Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface;
 use Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface;
 use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Repository\MenuEntryRepository;
@@ -29,6 +29,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ParentChoiceType extends AbstractType
 {
     /**
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface
+     */
+    private $contentReferenceObjectLoader;
+
+    /**
      * @var \Darvin\Utils\ORM\EntityResolverInterface
      */
     private $entityResolver;
@@ -44,26 +49,21 @@ class ParentChoiceType extends AbstractType
     private $menuEntrySorter;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
-     */
-    private $slugMapObjectLoader;
-
-    /**
-     * @param \Darvin\Utils\ORM\EntityResolverInterface                $entityResolver      Entity resolver
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface             $localeProvider      Locale provider
-     * @param \Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface $menuEntrySorter     Menu entry sorter
-     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface  $slugMapObjectLoader Slug map object loader
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader Content reference object loader
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                             $entityResolver               Entity resolver
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                          $localeProvider               Locale provider
+     * @param \Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface              $menuEntrySorter              Menu entry sorter
      */
     public function __construct(
+        ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader,
         EntityResolverInterface $entityResolver,
         LocaleProviderInterface $localeProvider,
-        MenuEntrySorterInterface $menuEntrySorter,
-        SlugMapObjectLoaderInterface $slugMapObjectLoader
+        MenuEntrySorterInterface $menuEntrySorter
     ) {
+        $this->contentReferenceObjectLoader = $contentReferenceObjectLoader;
         $this->entityResolver = $entityResolver;
         $this->localeProvider = $localeProvider;
         $this->menuEntrySorter = $menuEntrySorter;
-        $this->slugMapObjectLoader = $slugMapObjectLoader;
     }
 
     /**
@@ -71,7 +71,7 @@ class ParentChoiceType extends AbstractType
      */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
-        $entries = $slugMapItems = [];
+        $entries = $contentReferences = [];
 
         /** @var \Symfony\Component\Form\ChoiceList\View\ChoiceView $choice */
         foreach ($view->vars['choices'] as $choice) {
@@ -79,8 +79,8 @@ class ParentChoiceType extends AbstractType
             $entry = $choice->data;
             $entries[] = $entry;
 
-            if (null !== $entry->getSlugMapItem()) {
-                $slugMapItems[] = $entry->getSlugMapItem();
+            if (null !== $entry->getContentReference()) {
+                $contentReferences[] = $entry->getContentReference();
             }
 
             $choice->attr = array_merge($choice->attr, [
@@ -90,7 +90,7 @@ class ParentChoiceType extends AbstractType
             ]);
         }
 
-        $this->slugMapObjectLoader->loadObjects($slugMapItems);
+        $this->contentReferenceObjectLoader->loadObjects($contentReferences);
 
         $choices = [];
 

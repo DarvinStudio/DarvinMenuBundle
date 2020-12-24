@@ -26,10 +26,10 @@ services:
     darvin_menu.admin.form.type.entry.parent_choice:
         class: '%darvin_menu.admin.form.type.entry.parent_choice.class%'
         arguments:
+            - '@darvin_content.reference.object.loader'
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_utils.locale.provider'
             - '@darvin_menu.admin.sorter.menu_entry'
-            - '@darvin_content.slug_map.object_loader'
         tags:
             - { name: form.type }
 

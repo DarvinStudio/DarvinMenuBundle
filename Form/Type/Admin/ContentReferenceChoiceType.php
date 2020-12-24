@@ -14,9 +14,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Slug map item choice admin form type
+ * Content reference choice admin form type
  */
-class SlugMapItemChoiceType extends AbstractType
+class ContentReferenceChoiceType extends AbstractType
 {
     /**
      * @var array
@@ -52,7 +52,7 @@ class SlugMapItemChoiceType extends AbstractType
      */
     public function getParent(): string
     {
-        return \Darvin\ContentBundle\Form\Type\Admin\SlugMapItemChoiceType::class;
+        return \Darvin\ContentBundle\Form\Type\Admin\ContentReferenceChoiceType::class;
     }
 
     /**
@@ -60,6 +60,6 @@ class SlugMapItemChoiceType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'darvin_menu_admin_slug_map_item_choice';
+        return 'darvin_menu_admin_content_reference_choice';
     }
 }
