@@ -44,13 +44,13 @@ class MenuEntrySorter implements MenuEntrySorterInterface
     public function sort(array $entries): array
     {
         if (empty($entries)) {
-            return $entries;
+            return [];
         }
 
         $contentReferences = [];
 
         foreach ($entries as $entry) {
-            if (null !== $entry->getSlugMapItem()) {
+            if (null !== $entry->getContentReference()) {
                 $contentReferences[] = $entry->getContentReference();
             }
         }
