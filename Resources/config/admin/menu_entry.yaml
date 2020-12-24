@@ -5,8 +5,8 @@ pagination:
     enabled: false
 
 joins:
-    image:         image
-    slug_map_item: slugMapItem
+    content_reference: contentReference
+    image:             image
 
 searchable_fields:
     - title
@@ -33,9 +33,9 @@ view:
                 type: checkbox
             showChildren:
                 type: checkbox
-            slugMapItem:
+            contentReference:
                 size:   xxxl
-                widget: slug_map_item
+                widget: content_reference
             image:
                 size:   xxs
                 widget: image_link
@@ -74,8 +74,8 @@ form:
                         class: menu
             parent:
                 type: Darvin\MenuBundle\Form\Type\Admin\Entry\ParentChoiceType
-            slugMapItem:
-                type: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
+            contentReference:
+                type: Darvin\MenuBundle\Form\Type\Admin\ContentReferenceChoiceType
             showChildren:
                 options:
                     required: false

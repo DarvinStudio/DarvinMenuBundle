@@ -1,11 +1,11 @@
 parameters:
+    darvin_menu.admin.form.type.content_reference_choice.class: Darvin\MenuBundle\Form\Type\Admin\ContentReferenceChoiceType
+
     darvin_menu.admin.form.type.entry.entity.class: Darvin\MenuBundle\Form\Type\Admin\Entry\EntityType
 
     darvin_menu.admin.form.type.entry.parent_choice.class: Darvin\MenuBundle\Form\Type\Admin\Entry\ParentChoiceType
 
     darvin_menu.admin.form.type.menu_choice.class: Darvin\MenuBundle\Form\Type\Admin\MenuChoiceType
-
-    darvin_menu.admin.form.type.slug_map_item_choice.class: Darvin\MenuBundle\Form\Type\Admin\SlugMapItemChoiceType
 
     darvin_menu.admin.menu.item_factory.class: Darvin\MenuBundle\Admin\Menu\MenuItemFactory
 
@@ -15,6 +15,13 @@ parameters:
 
 services:
     Darvin\MenuBundle\Admin\Sorter\MenuEntrySorterInterface: '@darvin_menu.admin.sorter.menu_entry'
+
+    darvin_menu.admin.form.type.content_reference_choice:
+        class: '%darvin_menu.admin.form.type.content_reference_choice.class%'
+        arguments:
+            - '%darvin_menu.entities%'
+        tags:
+            - { name: form.type }
 
     darvin_menu.admin.form.type.entry.entity:
         class:  '%darvin_menu.admin.form.type.entry.entity.class%'
@@ -39,13 +46,6 @@ services:
             - '@darvin_menu.provider_registry'
             - '@darvin_admin.metadata.manager'
             - '@request_stack'
-        tags:
-            - { name: form.type }
-
-    darvin_menu.admin.form.type.slug_map_item_choice:
-        class: '%darvin_menu.admin.form.type.slug_map_item_choice.class%'
-        arguments:
-            - '%darvin_menu.entities%'
         tags:
             - { name: form.type }
 

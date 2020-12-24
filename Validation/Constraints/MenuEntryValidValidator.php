@@ -39,7 +39,7 @@ class MenuEntryValidValidator extends ConstraintValidator
 
             throw new \InvalidArgumentException($message);
         }
-        if (null !== $entry->getSlugMapItem()) {
+        if (null !== $entry->getContentReference()) {
             return;
         }
         foreach ($entry->getTranslations() as $translation) {

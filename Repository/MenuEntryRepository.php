@@ -33,7 +33,7 @@ class MenuEntryRepository extends EntityRepository
     {
         $qb = $this->createDefaultBuilder();
         $this
-            ->joinSlugMapItem($qb)
+            ->joinContentReference($qb)
             ->joinTranslations($qb, $locale);
         $this->addMenuFilter($qb, $menu);
 
@@ -51,8 +51,8 @@ class MenuEntryRepository extends EntityRepository
     {
         $qb = $this->createDefaultBuilder();
         $this
+            ->joinContentReference($qb)
             ->joinImage($qb, $locale)
-            ->joinSlugMapItem($qb)
             ->joinTranslations($qb, $locale);
         $this
             ->addDepthFilter($qb, $depth)
@@ -71,9 +71,9 @@ class MenuEntryRepository extends EntityRepository
         $qb = $this->createDefaultBuilder();
         $qb
             ->select('o.menu')
-            ->addSelect('slug_map_item.objectClass class')
-            ->addSelect('slug_map_item.objectId id');
-        $this->joinSlugMapItem($qb, false, true);
+            ->addSelect('content_reference.objectClass class')
+            ->addSelect('content_reference.objectId id');
+        $this->joinContentReference($qb, false, true);
 
         $ids = [];
 
@@ -105,7 +105,7 @@ class MenuEntryRepository extends EntityRepository
     public function getForSwitchMenuSubscriber(array $classes, $id, ?string $menu = null): array
     {
         $qb = $this->createDefaultBuilder();
-        $this->joinSlugMapItem($qb);
+        $this->joinContentReference($qb);
         $this
             ->addMenuFilter($qb, $menu)
             ->addObjectFilter($qb, $classes, $id);
@@ -120,14 +120,14 @@ class MenuEntryRepository extends EntityRepository
      *
      * @return MenuEntryRepository
      */
-    protected function joinSlugMapItem(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): MenuEntryRepository
+    protected function joinContentReference(QueryBuilder $qb, bool $addSelect = true, bool $inner = false): MenuEntryRepository
     {
         $inner
-            ? $qb->innerJoin('o.slugMapItem', 'slug_map_item')
-            : $qb->leftJoin('o.slugMapItem', 'slug_map_item');
+            ? $qb->innerJoin('o.contentReference', 'content_reference')
+            : $qb->leftJoin('o.contentReference', 'content_reference');
 
         if ($addSelect) {
-            $qb->addSelect('slug_map_item');
+            $qb->addSelect('content_reference');
         }
 
         return $this;
@@ -182,7 +182,7 @@ class MenuEntryRepository extends EntityRepository
      */
     protected function addNotEmptyFilter(QueryBuilder $qb): MenuEntryRepository
     {
-        $qb->andWhere('o.slugMapItem IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL');
+        $qb->andWhere('o.contentReference IS NOT NULL OR translations.title IS NOT NULL OR translations.url IS NOT NULL');
 
         return $this;
     }
@@ -202,7 +202,7 @@ class MenuEntryRepository extends EntityRepository
         }
 
         $qb
-            ->andWhere('slug_map_item.objectId = :object_id')
+            ->andWhere('content_reference.objectId = :object_id')
             ->setParameter('object_id', $id);
 
         $classExpr = $qb->expr()->orX();
@@ -210,7 +210,7 @@ class MenuEntryRepository extends EntityRepository
         foreach (array_values(array_unique($classes)) as $i => $class) {
             $param = sprintf('object_class_%d', $i);
 
-            $classExpr->add(sprintf('slug_map_item.objectClass = :%s', $param));
+            $classExpr->add(sprintf('content_reference.objectClass = :%s', $param));
 
             $qb->setParameter($param, $class);
         }

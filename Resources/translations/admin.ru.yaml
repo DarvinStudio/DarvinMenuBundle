@@ -31,15 +31,15 @@ menu_entry:
         show:
             title: Пункт меню «%entity%»
     entity:
-        enabled:       Активен
-        image:         Изображение
-        menu:          Меню
-        parent:        Родитель
-        position:      Позиция
-        show_children: Показывать потомков
-        slug_map_item: Объект
-        title:         Название
-        url:           Ссылка
+        content_reference: Объект
+        enabled:           Активен
+        image:             Изображение
+        menu:              Меню
+        parent:            Родитель
+        position:          Позиция
+        show_children:     Показывать потомков
+        title:             Название
+        url:               Ссылка
 
 menu_switcher:
     title: Показывать в меню

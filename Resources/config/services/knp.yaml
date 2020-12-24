@@ -5,9 +5,9 @@ parameters:
 
     darvin_menu.knp.item.factory.entity.abstract.class: Darvin\MenuBundle\Knp\Item\Factory\Entity\AbstractEntityFactory
 
-    darvin_menu.knp.item.factory.entity.menu_entry.class: Darvin\MenuBundle\Knp\Item\Factory\Entity\MenuEntryFactory
+    darvin_menu.knp.item.factory.entity.content_reference.class: Darvin\MenuBundle\Knp\Item\Factory\Entity\ContentReferenceFactory
 
-    darvin_menu.knp.item.factory.entity.slug_map_item.class: Darvin\MenuBundle\Knp\Item\Factory\Entity\SlugMapItemFactory
+    darvin_menu.knp.item.factory.entity.menu_entry.class: Darvin\MenuBundle\Knp\Item\Factory\Entity\MenuEntryFactory
 
     darvin_menu.knp.item.factory_registry.class: Darvin\MenuBundle\Knp\Item\Factory\Registry\Registry
 
@@ -35,17 +35,17 @@ services:
             - [ setEntityManager,          [ '@doctrine.orm.entity_manager' ] ]
             - [ setObjectNamer,            [ '@darvin_utils.object_namer' ] ]
 
+    darvin_menu.knp.item.factory.entity.content_reference:
+        class:  '%darvin_menu.knp.item.factory.entity.content_reference.class%'
+        parent: darvin_menu.knp.item.factory.entity.abstract
+        tags:
+            - { name: darvin_menu.knp.item.factory }
+
     darvin_menu.knp.item.factory.entity.menu_entry:
         class:  '%darvin_menu.knp.item.factory.entity.menu_entry.class%'
         parent: darvin_menu.knp.item.factory.entity.abstract
         arguments:
             - '@request_stack'
-        tags:
-            - { name: darvin_menu.knp.item.factory }
-
-    darvin_menu.knp.item.factory.entity.slug_map_item:
-        class:  '%darvin_menu.knp.item.factory.entity.slug_map_item.class%'
-        parent: darvin_menu.knp.item.factory.entity.abstract
         tags:
             - { name: darvin_menu.knp.item.factory }
 

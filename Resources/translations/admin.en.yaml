@@ -29,13 +29,13 @@ menu_entry:
         show:
             title: 'Menu Item "%entity%"'
     entity:
+        content_reference: Object
         enabled: Enabled
         image: Image
         menu: Menu
         parent: Parent
         position: Position
         show_children: 'Show Children'
-        slug_map_item: Object
         title: Title
         url: URL
 menu_switcher:
