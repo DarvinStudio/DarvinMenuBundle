@@ -10,8 +10,8 @@
 
 namespace Darvin\MenuBundle\EventListener;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\ContentBundle\Translatable\TranslationInitializerInterface;
 use Darvin\MenuBundle\Entity\MenuEntry;
 use Darvin\MenuBundle\Entity\MenuEntryInterface;
@@ -95,16 +95,16 @@ class SwitchMenuSubscriber implements EventSubscriber
 
         $computeChangeSets = false;
 
-        foreach ($uow->getScheduledEntityInsertions() as $slugMapItem) {
-            if (!$slugMapItem instanceof SlugMapItem) {
+        foreach ($uow->getScheduledEntityInsertions() as $contentReference) {
+            if (!$contentReference instanceof ContentReference) {
                 continue;
             }
             foreach ($this->menuSwitcher->getMenusToEnable() as $menu => $entities) {
                 foreach ($entities as $entity) {
-                    if ($slugMapItem->getObjectClass() === ClassUtils::getClass($entity)
-                        && (string)$slugMapItem->getObjectId() === (string)$this->getEntityId($entity)
+                    if ($contentReference->getObjectClass() === ClassUtils::getClass($entity)
+                        && (string)$contentReference->getObjectId() === (string)$this->getEntityId($entity)
                     ) {
-                        $em->persist($this->createEntry($menu, $slugMapItem));
+                        $em->persist($this->createEntry($menu, $contentReference));
 
                         $computeChangeSets = true;
                     }
@@ -133,10 +133,10 @@ class SwitchMenuSubscriber implements EventSubscriber
 
         foreach ($this->menuSwitcher->getMenusToEnable() as $menu => $entities) {
             foreach ($entities as $entity) {
-                $slugMapItem = $this->getSlugMapItem($entity);
+                $contentReference = $this->getContentReference($entity);
 
-                if (null !== $slugMapItem) {
-                    $em->persist($this->createEntry($menu, $slugMapItem));
+                if (null !== $contentReference) {
+                    $em->persist($this->createEntry($menu, $contentReference));
                 }
             }
         }
@@ -150,20 +150,20 @@ class SwitchMenuSubscriber implements EventSubscriber
     }
 
     /**
-     * @param string                                   $menu        Menu name
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     * @param string                                        $menu             Menu name
+     * @param \Darvin\ContentBundle\Entity\ContentReference $contentReference Content reference
      *
      * @return \Darvin\MenuBundle\Entity\MenuEntry
      */
-    private function createEntry(string $menu, SlugMapItem $slugMapItem): MenuEntry
+    private function createEntry(string $menu, ContentReference $contentReference): MenuEntry
     {
         $class = $this->entityResolver->resolve(MenuEntryInterface::class);
 
         /** @var \Darvin\MenuBundle\Entity\MenuEntry $entry */
         $entry = new $class();
         $entry
-            ->setMenu($menu)
-            ->setSlugMapItem($slugMapItem);
+            ->setContentReference($contentReference)
+            ->setMenu($menu);
 
         $this->translationInitializer->initializeTranslations($entry, $this->locales);
 
@@ -190,13 +190,13 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * @param object $entity Entity
      *
-     * @return \Darvin\ContentBundle\Entity\SlugMapItem|null
+     * @return \Darvin\ContentBundle\Entity\ContentReference|null
      */
-    private function getSlugMapItem(object $entity): ?SlugMapItem
+    private function getContentReference(object $entity): ?ContentReference
     {
         $class = ClassUtils::getClass($entity);
 
-        return $this->getSlugMapItemRepository()->getOneByClassesAndId(
+        return $this->getContentReferenceRepository()->getOneByClassesAndId(
             [$class, $this->entityResolver->reverseResolve($class)],
             $this->getEntityId($entity)
         );
@@ -215,18 +215,18 @@ class SwitchMenuSubscriber implements EventSubscriber
     }
 
     /**
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
+     */
+    private function getContentReferenceRepository(): ContentReferenceRepository
+    {
+        return $this->em->getRepository(ContentReference::class);
+    }
+
+    /**
      * @return \Darvin\MenuBundle\Repository\MenuEntryRepository
      */
     private function getMenuEntryRepository(): MenuEntryRepository
     {
         return $this->em->getRepository(MenuEntryInterface::class);
-    }
-
-    /**
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
-     */
-    private function getSlugMapItemRepository(): SlugMapItemRepository
-    {
-        return $this->em->getRepository(SlugMapItem::class);
     }
 }

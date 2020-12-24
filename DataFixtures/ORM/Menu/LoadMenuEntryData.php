@@ -10,7 +10,7 @@
 
 namespace Darvin\MenuBundle\DataFixtures\ORM\Menu;
 
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Darvin\MenuBundle\Entity\MenuEntry;
 use Darvin\MenuBundle\Entity\MenuEntryImage;
 use Darvin\MenuBundle\Entity\MenuEntryInterface;
@@ -101,7 +101,7 @@ class LoadMenuEntryData extends AbstractFixture
         }
         if (1 === $entry->getLevel()) {
             $entry->setShowChildren($this->getFaker()->boolean());
-            $entry->setSlugMapItem($this->getRandomEntity(SlugMapItem::class));
+            $entry->setContentReference($this->getRandomEntity(ContentReference::class));
         }
         if ($this->getFaker()->boolean(80)) {
             $entry->setImage($this->createImage(true));
@@ -142,7 +142,7 @@ class LoadMenuEntryData extends AbstractFixture
 
         $translation->setLocale($locale);
 
-        if (null === $entry->getSlugMapItem()) {
+        if (null === $entry->getContentReference()) {
             $translation->setTitle($faker->sentence(3));
 
             if ($faker->boolean(80)) {
