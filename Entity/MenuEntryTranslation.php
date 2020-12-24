@@ -19,7 +19,6 @@ use Knp\DoctrineBehaviors\Contract\Entity\TranslationInterface;
  *
  * @ORM\Entity
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\Table(name="menu_entry_translation")
  */
 class MenuEntryTranslation implements TranslationInterface
 {

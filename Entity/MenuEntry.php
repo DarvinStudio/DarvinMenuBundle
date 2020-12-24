@@ -24,7 +24,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="Darvin\MenuBundle\Repository\MenuEntryRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\Table(name="menu_entry")
  *
  * @Gedmo\Tree(type="materializedPath")
  *
