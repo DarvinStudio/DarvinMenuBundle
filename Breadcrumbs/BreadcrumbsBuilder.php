@@ -11,9 +11,9 @@
 namespace Darvin\MenuBundle\Breadcrumbs;
 
 use Darvin\ContentBundle\Disableable\DisableableInterface;
-use Darvin\ContentBundle\Entity\SlugMapItem;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
+use Darvin\ContentBundle\Entity\ContentReference;
+use Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface;
 use Darvin\Utils\Homepage\HomepageRouterInterface;
 use Darvin\Utils\Mapping\MetadataFactoryInterface;
@@ -30,6 +30,11 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     private const HOMEPAGE_LABEL = 'breadcrumbs.homepage';
     private const MENU_NAME      = 'breadcrumbs';
     private const SLUG_PARAM     = 'slug';
+
+    /**
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface
+     */
+    private $contentReferenceObjectLoader;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -57,39 +62,34 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     private $requestStack;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
-     */
-    private $slugMapObjectLoader;
-
-    /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param \Doctrine\ORM\EntityManager                                                  $em                     Entity manager
-     * @param \Darvin\Utils\Homepage\HomepageRouterInterface                               $homepageRouter         Homepage router
-     * @param \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface $knpItemFactoryRegistry KNP menu item factory registry
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                               $metadataFactory        Extended metadata factory
-     * @param \Symfony\Component\HttpFoundation\RequestStack                               $requestStack           Request stack
-     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface                      $slugMapObjectLoader    Slug map object loader
-     * @param \Symfony\Contracts\Translation\TranslatorInterface                           $translator             Translator
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface        $contentReferenceObjectLoader Content reference object loader
+     * @param \Doctrine\ORM\EntityManager                                                  $em                           Entity manager
+     * @param \Darvin\Utils\Homepage\HomepageRouterInterface                               $homepageRouter               Homepage router
+     * @param \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface $knpItemFactoryRegistry       KNP menu item factory registry
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                               $metadataFactory              Extended metadata factory
+     * @param \Symfony\Component\HttpFoundation\RequestStack                               $requestStack                 Request stack
+     * @param \Symfony\Contracts\Translation\TranslatorInterface                           $translator                   Translator
      */
     public function __construct(
+        ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader,
         EntityManager $em,
         HomepageRouterInterface $homepageRouter,
         KnpItemFactoryRegistryInterface $knpItemFactoryRegistry,
         MetadataFactoryInterface $metadataFactory,
         RequestStack $requestStack,
-        SlugMapObjectLoaderInterface $slugMapObjectLoader,
         TranslatorInterface $translator
     ) {
+        $this->contentReferenceObjectLoader = $contentReferenceObjectLoader;
         $this->em = $em;
         $this->homepageRouter = $homepageRouter;
         $this->knpItemFactoryRegistry = $knpItemFactoryRegistry;
         $this->metadataFactory = $metadataFactory;
         $this->requestStack = $requestStack;
-        $this->slugMapObjectLoader = $slugMapObjectLoader;
         $this->translator = $translator;
     }
 
@@ -155,53 +155,53 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
 
         $slug = $routeParams[self::SLUG_PARAM];
 
-        $currentSlugMapItem = $this->getSlugMapItemRepository()->findOneBy([
+        $currentContentReference = $this->getContentReferenceRepository()->findOneBy([
             'slug' => $slug,
         ]);
 
-        if (null === $currentSlugMapItem) {
+        if (null === $currentContentReference) {
             return $parent;
         }
 
-        $parentSlugMapItems = [];
+        $parentContentReferences = [];
 
-        foreach ($this->getSlugMapItemRepository()->getParentsBySlug($slug) as $parentSlugMapItem) {
-            $meta = $this->metadataFactory->getExtendedMetadata($parentSlugMapItem->getObjectClass());
+        foreach ($this->getContentReferenceRepository()->getParentsBySlug($slug) as $parentContentReference) {
+            $meta = $this->metadataFactory->getExtendedMetadata($parentContentReference->getObjectClass());
 
-            if (!isset($meta['slugs'][$parentSlugMapItem->getProperty()]['separator'])) {
+            if (!isset($meta['slugs'][$parentContentReference->getProperty()]['separator'])) {
                 continue;
             }
 
-            $separator = $meta['slugs'][$parentSlugMapItem->getProperty()]['separator'];
+            $separator = $meta['slugs'][$parentContentReference->getProperty()]['separator'];
 
-            if (0 !== strpos($slug, $parentSlugMapItem->getSlug().$separator)) {
+            if (0 !== strpos($slug, $parentContentReference->getSlug().$separator)) {
                 continue;
             }
 
-            $parentSlugMapItems[] = [
-                'object'          => $parentSlugMapItem,
-                'separator_count' => substr_count($parentSlugMapItem->getSlug(), $separator),
+            $parentContentReferences[] = [
+                'object'          => $parentContentReference,
+                'separator_count' => substr_count($parentContentReference->getSlug(), $separator),
             ];
         }
 
-        usort($parentSlugMapItems, function (array $a, array $b): int {
+        usort($parentContentReferences, function (array $a, array $b): int {
             return $a['separator_count'] <=> $b['separator_count'];
         });
 
-        /** @var \Darvin\ContentBundle\Entity\SlugMapItem[] $slugMapItems */
-        $slugMapItems   = array_column($parentSlugMapItems, 'object');
-        $slugMapItems[] = $currentSlugMapItem;
+        /** @var \Darvin\ContentBundle\Entity\ContentReference[] $contentReferences */
+        $contentReferences   = array_column($parentContentReferences, 'object');
+        $contentReferences[] = $currentContentReference;
 
-        $this->slugMapObjectLoader->loadObjects($slugMapItems);
+        $this->contentReferenceObjectLoader->loadObjects($contentReferences);
 
-        foreach ($slugMapItems as $slugMapItem) {
-            if (null === $slugMapItem->getObject()) {
+        foreach ($contentReferences as $contentReference) {
+            if (null === $contentReference->getObject()) {
                 continue;
             }
 
-            $child = $this->knpItemFactoryRegistry->createItem($slugMapItem);
+            $child = $this->knpItemFactoryRegistry->createItem($contentReference);
 
-            $object = $slugMapItem->getObject();
+            $object = $contentReference->getObject();
 
             if ($object instanceof DisableableInterface && !$object->isEnabled()) {
                 $child->setUri(null);
@@ -271,10 +271,10 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
     }
 
     /**
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
      */
-    private function getSlugMapItemRepository(): SlugMapItemRepository
+    private function getContentReferenceRepository(): ContentReferenceRepository
     {
-        return $this->em->getRepository(SlugMapItem::class);
+        return $this->em->getRepository(ContentReference::class);
     }
 }
