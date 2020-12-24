@@ -11,10 +11,10 @@
 namespace Darvin\MenuBundle\Builder;
 
 use Darvin\ContentBundle\Disableable\DisableableInterface;
-use Darvin\ContentBundle\Entity\SlugMapItem;
+use Darvin\ContentBundle\Entity\ContentReference;
 use Darvin\ContentBundle\Hideable\HideableInterface;
-use Darvin\ContentBundle\Repository\SlugMapItemRepository;
-use Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface;
+use Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface;
+use Darvin\ContentBundle\Repository\ContentReferenceRepository;
 use Darvin\MenuBundle\Entity\MenuEntryInterface;
 use Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface;
 use Darvin\MenuBundle\Provider\Model\Menu;
@@ -35,6 +35,11 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 class MenuBuilder implements MenuBuilderInterface
 {
+    /**
+     * @var \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface
+     */
+    private $contentReferenceObjectLoader;
+
     /**
      * @var \Doctrine\ORM\EntityManagerInterface
      */
@@ -71,11 +76,6 @@ class MenuBuilder implements MenuBuilderInterface
     private $propertyAccessor;
 
     /**
-     * @var \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface
-     */
-    private $slugMapObjectLoader;
-
-    /**
      * @var \Gedmo\Sortable\SortableListener
      */
     private $sortableListener;
@@ -96,18 +96,19 @@ class MenuBuilder implements MenuBuilderInterface
     private $slugPartSeparators;
 
     /**
-     * @param \Doctrine\ORM\EntityManagerInterface                                         $em                     Entity manager
-     * @param \Darvin\Utils\ORM\EntityResolverInterface                                    $entityResolver         Entity resolver
-     * @param \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface $knpItemFactoryRegistry KNP menu item factory registry
-     * @param \Darvin\Utils\Locale\LocaleProviderInterface                                 $localeProvider         Locale provider
-     * @param \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface           $menuProvider           Menu provider
-     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                               $metadataFactory        Extended metadata factory
-     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface                  $propertyAccessor       Property accessor
-     * @param \Darvin\ContentBundle\Slug\SlugMapObjectLoaderInterface                      $slugMapObjectLoader    Slug map object loader
-     * @param \Gedmo\Sortable\SortableListener                                             $sortableListener       Sortable event listener
-     * @param array                                                                        $entityConfig           Entity configuration
+     * @param \Darvin\ContentBundle\Reference\ContentReferenceObjectLoaderInterface        $contentReferenceObjectLoader Content reference object loader
+     * @param \Doctrine\ORM\EntityManagerInterface                                         $em                           Entity manager
+     * @param \Darvin\Utils\ORM\EntityResolverInterface                                    $entityResolver               Entity resolver
+     * @param \Darvin\MenuBundle\Knp\Item\Factory\Registry\KnpItemFactoryRegistryInterface $knpItemFactoryRegistry       KNP menu item factory registry
+     * @param \Darvin\Utils\Locale\LocaleProviderInterface                                 $localeProvider               Locale provider
+     * @param \Darvin\MenuBundle\Provider\Registry\MenuProviderRegistryInterface           $menuProvider                 Menu provider
+     * @param \Darvin\Utils\Mapping\MetadataFactoryInterface                               $metadataFactory              Extended metadata factory
+     * @param \Symfony\Component\PropertyAccess\PropertyAccessorInterface                  $propertyAccessor             Property accessor
+     * @param \Gedmo\Sortable\SortableListener                                             $sortableListener             Sortable event listener
+     * @param array                                                                        $entityConfig                 Entity configuration
      */
     public function __construct(
+        ContentReferenceObjectLoaderInterface $contentReferenceObjectLoader,
         EntityManagerInterface $em,
         EntityResolverInterface $entityResolver,
         KnpItemFactoryRegistryInterface $knpItemFactoryRegistry,
@@ -115,10 +116,10 @@ class MenuBuilder implements MenuBuilderInterface
         MenuProviderRegistryInterface $menuProvider,
         MetadataFactoryInterface $metadataFactory,
         PropertyAccessorInterface $propertyAccessor,
-        SlugMapObjectLoaderInterface $slugMapObjectLoader,
         SortableListener $sortableListener,
         array $entityConfig
     ) {
+        $this->contentReferenceObjectLoader = $contentReferenceObjectLoader;
         $this->em = $em;
         $this->entityResolver = $entityResolver;
         $this->knpItemFactoryRegistry = $knpItemFactoryRegistry;
@@ -126,7 +127,6 @@ class MenuBuilder implements MenuBuilderInterface
         $this->menuProvider = $menuProvider;
         $this->metadataFactory = $metadataFactory;
         $this->propertyAccessor = $propertyAccessor;
-        $this->slugMapObjectLoader = $slugMapObjectLoader;
         $this->sortableListener = $sortableListener;
         $this->entityConfig = $entityConfig;
 
@@ -163,10 +163,10 @@ class MenuBuilder implements MenuBuilderInterface
         $items = $parentSlugs = $separatorCounts = [];
 
         foreach ($entries as $key => $entry) {
-            $slugMapItem = $entry->getSlugMapItem();
+            $contentReference = $entry->getContentReference();
 
-            if (null !== $slugMapItem) {
-                $separator = $this->getSlugPartsSeparator($slugMapItem->getObjectClass(), $slugMapItem->getProperty());
+            if (null !== $contentReference) {
+                $separator = $this->getSlugPartsSeparator($contentReference->getObjectClass(), $contentReference->getProperty());
 
                 if (false === $separator) {
                     unset($entries[$key]);
@@ -174,7 +174,7 @@ class MenuBuilder implements MenuBuilderInterface
                     continue;
                 }
                 if ($entry->isShowChildren() && (null === $options['depth'] || $entry->getLevel() < $options['depth'])) {
-                    $parentSlug = $slugMapItem->getSlug().$separator;
+                    $parentSlug = $contentReference->getSlug().$separator;
                     $parentSlugs[$entry->getId()] = $parentSlug;
 
                     $separatorCounts[$entry->getId()] = substr_count($parentSlug, $separator);
@@ -207,37 +207,37 @@ class MenuBuilder implements MenuBuilderInterface
                 $classBlacklist = array_merge($classBlacklist, [$class, $this->entityResolver->resolve($class)]);
             }
         }
-        foreach ($this->getSlugMapItemRepository()->getChildrenBySlugs(array_unique($parentSlugs), $classBlacklist) as $parentSlug => $childSlugMapItems) {
+        foreach ($this->getContentReferenceRepository()->getChildrenBySlugs(array_unique($parentSlugs), $classBlacklist) as $parentSlug => $childContentReferences) {
             foreach (array_keys($parentSlugs, $parentSlug) as $entityId) {
-                $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childSlugMapItems, $options);
+                $this->addChildren($items[$entityId], $separatorCounts[$entityId], $childContentReferences, $options);
             }
         }
     }
 
     /**
-     * @param \Knp\Menu\ItemInterface                    $parent            Parent item
-     * @param int                                        $separatorCount    Count of separators in the parent item's slug
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
-     * @param array                                      $options           Options
+     * @param \Knp\Menu\ItemInterface                         $parent                 Parent item
+     * @param int                                             $separatorCount         Count of separators in the parent item's slug
+     * @param \Darvin\ContentBundle\Entity\ContentReference[] $childContentReferences Child content references
+     * @param array                                           $options                Options
      */
-    private function addChildren(ItemInterface $parent, int $separatorCount, array $childSlugMapItems, array $options): void
+    private function addChildren(ItemInterface $parent, int $separatorCount, array $childContentReferences, array $options): void
     {
-        $childSlugMapItems = $this->prepareChildSlugMapItems(
-            $childSlugMapItems,
+        $childContentReferences = $this->prepareChildContentReferences(
+            $childContentReferences,
             null !== $options['depth'] ? $separatorCount + $options['depth'] - $parent->getLevel() : null
         );
 
         /** @var \Knp\Menu\ItemInterface[] $items */
         $items = [];
 
-        foreach ($childSlugMapItems as $id => $slugMapItem) {
-            $item = $this->knpItemFactoryRegistry->createItem($slugMapItem['object']);
+        foreach ($childContentReferences as $id => $contentReference) {
+            $item = $this->knpItemFactoryRegistry->createItem($contentReference['object']);
             $items[$id] = $item;
 
-            $parentId = $slugMapItem['parent_id'];
+            $parentId = $contentReference['parent_id'];
 
             if (null === $parentId) {
-                if (1 === $slugMapItem['separator_count'] - $separatorCount) {
+                if (1 === $contentReference['separator_count'] - $separatorCount) {
                     $parent->addChild($item);
                 }
 
@@ -263,18 +263,18 @@ class MenuBuilder implements MenuBuilderInterface
             return $entries;
         }
 
-        $slugMapItems = [];
+        $contentReferences = [];
 
         foreach ($entries as $entry) {
-            if (null !== $entry->getSlugMapItem()) {
-                $slugMapItems[$entry->getId()] = $entry->getSlugMapItem();
+            if (null !== $entry->getContentReference()) {
+                $contentReferences[$entry->getId()] = $entry->getContentReference();
             }
         }
 
-        $this->slugMapObjectLoader->loadObjects($slugMapItems);
+        $this->contentReferenceObjectLoader->loadObjects($contentReferences);
 
         foreach ($entries as $key => $entry) {
-            if (null !== $entry->getSlugMapItem() && !$this->isSlugMapItemActive($entry->getSlugMapItem())) {
+            if (null !== $entry->getContentReference() && !$this->isContentReferenceActive($entry->getContentReference())) {
                 unset($entries[$key]);
             }
         }
@@ -283,20 +283,20 @@ class MenuBuilder implements MenuBuilderInterface
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem[] $childSlugMapItems Child slug map items
-     * @param int|null                                   $maxSeparatorCount Maximum separator count
+     * @param \Darvin\ContentBundle\Entity\ContentReference[] $childContentReferences Child content references
+     * @param int|null                                        $maxSeparatorCount      Maximum separator count
      *
      * @return array
      */
-    private function prepareChildSlugMapItems(array $childSlugMapItems, ?int $maxSeparatorCount): array
+    private function prepareChildContentReferences(array $childContentReferences, ?int $maxSeparatorCount): array
     {
         $children = [];
 
-        if (empty($childSlugMapItems)) {
+        if (empty($childContentReferences)) {
             return $children;
         }
 
-        $separator = $this->getSlugPartsSeparator($childSlugMapItems[0]->getObjectClass(), $childSlugMapItems[0]->getProperty());
+        $separator = $this->getSlugPartsSeparator($childContentReferences[0]->getObjectClass(), $childContentReferences[0]->getProperty());
 
         if (false === $separator) {
             return $children;
@@ -304,31 +304,31 @@ class MenuBuilder implements MenuBuilderInterface
 
         $separatorCounts = [];
 
-        foreach ($childSlugMapItems as $key => $slugMapItem) {
-            $separatorCount = substr_count($slugMapItem->getSlug(), $separator) + 1;
+        foreach ($childContentReferences as $key => $contentReference) {
+            $separatorCount = substr_count($contentReference->getSlug(), $separator) + 1;
 
             if (null !== $maxSeparatorCount && $separatorCount > $maxSeparatorCount) {
-                unset($childSlugMapItems[$key]);
+                unset($childContentReferences[$key]);
 
                 continue;
             }
 
-            $separatorCounts[$slugMapItem->getId()] = $separatorCount;
+            $separatorCounts[$contentReference->getId()] = $separatorCount;
         }
 
-        $this->slugMapObjectLoader->loadObjects($childSlugMapItems);
+        $this->contentReferenceObjectLoader->loadObjects($childContentReferences);
 
-        foreach ($childSlugMapItems as $key => $slugMapItem) {
-            if (!$this->isSlugMapItemActive($slugMapItem)) {
-                unset($childSlugMapItems[$key]);
+        foreach ($childContentReferences as $key => $contentReference) {
+            if (!$this->isContentReferenceActive($contentReference)) {
+                unset($childContentReferences[$key]);
 
                 continue;
             }
 
-            $children[$slugMapItem->getId()] = [
-                'object'          => $slugMapItem,
-                'slug'            => $slugMapItem->getSlug(),
-                'separator_count' => $separatorCounts[$slugMapItem->getId()],
+            $children[$contentReference->getId()] = [
+                'object'          => $contentReference,
+                'slug'            => $contentReference->getSlug(),
+                'separator_count' => $separatorCounts[$contentReference->getId()],
                 'parent_id'       => null,
             ];
         }
@@ -350,13 +350,13 @@ class MenuBuilder implements MenuBuilderInterface
                 return $a['separator_count'] > $b['separator_count'] ? 1 : -1;
             }
 
-            /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItemA */
-            $slugMapItemA = $a['object'];
-            /** @var \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItemB */
-            $slugMapItemB = $b['object'];
+            /** @var \Darvin\ContentBundle\Entity\ContentReference $contentReferenceA */
+            $contentReferenceA = $a['object'];
+            /** @var \Darvin\ContentBundle\Entity\ContentReference $contentReferenceB */
+            $contentReferenceB = $b['object'];
 
-            $classA = $entityResolver->resolve($slugMapItemA->getObjectClass());
-            $classB = $entityResolver->resolve($slugMapItemB->getObjectClass());
+            $classA = $entityResolver->resolve($contentReferenceA->getObjectClass());
+            $classB = $entityResolver->resolve($contentReferenceB->getObjectClass());
 
             if ($classA !== $classB) {
                 return $classA > $classB ? 1 : -1;
@@ -368,8 +368,8 @@ class MenuBuilder implements MenuBuilderInterface
                 return 0;
             }
 
-            $positionA = $propertyAccessor->getValue($slugMapItemA->getObject(), $sortableConfig['position']);
-            $positionB = $propertyAccessor->getValue($slugMapItemB->getObject(), $sortableConfig['position']);
+            $positionA = $propertyAccessor->getValue($contentReferenceA->getObject(), $sortableConfig['position']);
+            $positionB = $propertyAccessor->getValue($contentReferenceB->getObject(), $sortableConfig['position']);
 
             return $positionA <=> $positionB;
         });
@@ -398,13 +398,13 @@ class MenuBuilder implements MenuBuilderInterface
     }
 
     /**
-     * @param \Darvin\ContentBundle\Entity\SlugMapItem $slugMapItem Slug map item
+     * @param \Darvin\ContentBundle\Entity\ContentReference $contentReference Content reference
      *
      * @return bool
      */
-    private function isSlugMapItemActive(SlugMapItem $slugMapItem): bool
+    private function isContentReferenceActive(ContentReference $contentReference): bool
     {
-        $customObject = $slugMapItem->getObject();
+        $customObject = $contentReference->getObject();
 
         if (null === $customObject) {
             return false;
@@ -458,18 +458,18 @@ class MenuBuilder implements MenuBuilderInterface
     }
 
     /**
+     * @return \Darvin\ContentBundle\Repository\ContentReferenceRepository
+     */
+    private function getContentReferenceRepository(): ContentReferenceRepository
+    {
+        return $this->em->getRepository(ContentReference::class);
+    }
+
+    /**
      * @return \Darvin\MenuBundle\Repository\MenuEntryRepository
      */
     private function getMenuEntryRepository(): MenuEntryRepository
     {
         return $this->em->getRepository(MenuEntryInterface::class);
-    }
-
-    /**
-     * @return \Darvin\ContentBundle\Repository\SlugMapItemRepository
-     */
-    private function getSlugMapItemRepository(): SlugMapItemRepository
-    {
-        return $this->em->getRepository(SlugMapItem::class);
     }
 }

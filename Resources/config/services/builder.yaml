@@ -5,6 +5,7 @@ services:
     darvin_menu.builder:
         class: '%darvin_menu.builder.class%'
         arguments:
+            - '@darvin_content.reference.object.loader'
             - '@doctrine.orm.entity_manager'
             - '@darvin_utils.orm.entity_resolver'
             - '@darvin_menu.knp.item.factory_registry'
@@ -12,7 +13,6 @@ services:
             - '@darvin_menu.provider_registry'
             - '@darvin_utils.mapping.metadata_factory'
             - '@property_accessor'
-            - '@darvin_content.slug_map.object_loader'
             - '@stof_doctrine_extensions.listener.sortable'
             - '%darvin_menu.entities%'
         tags:
