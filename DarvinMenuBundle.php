@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class DarvinMenuBundle extends Bundle
 {
-    public const MAJOR_VERSION = 8;
+    public const MAJOR_VERSION = 9;
 
     /**
      * {@inheritDoc}
