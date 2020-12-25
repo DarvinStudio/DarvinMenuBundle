@@ -153,3 +153,5 @@ but in the last case alias may be defined in runtime.
 - Replace menu configuration service with menu provider registry one.
 
 8.0.1: Validate builder's "menu" option.
+
+9.0.0: Compatibility with Content bundle 9.
