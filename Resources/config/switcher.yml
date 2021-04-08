@@ -30,6 +30,7 @@ services:
         arguments:
             - "@darvin_menu.switcher"
             - "@darvin_content.translatable.translations_initializer"
+            - "%darvin_admin.entity_override%"
             - "%locales%"
         tags:
             - { name: doctrine.event_subscriber, priority: 100 }

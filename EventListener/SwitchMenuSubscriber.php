@@ -36,6 +36,11 @@ class SwitchMenuSubscriber implements EventSubscriber
     private $translationsInitializer;
 
     /**
+     * @var array
+     */
+    private $entityOverride;
+
+    /**
      * @var string[]
      */
     private $locales;
@@ -48,12 +53,18 @@ class SwitchMenuSubscriber implements EventSubscriber
     /**
      * @param \Darvin\MenuBundle\Switcher\MenuSwitcher                            $menuSwitcher            Menu switcher
      * @param \Darvin\ContentBundle\Translatable\TranslationsInitializerInterface $translationsInitializer Translations initializer
+     * @param array                                                               $entityOverride          Entity override
      * @param string[]                                                            $locales                 Locales
      */
-    public function __construct(MenuSwitcher $menuSwitcher, TranslationsInitializerInterface $translationsInitializer, array $locales)
-    {
+    public function __construct(
+        MenuSwitcher $menuSwitcher,
+        TranslationsInitializerInterface $translationsInitializer,
+        array $entityOverride,
+        array $locales
+    ) {
         $this->menuSwitcher = $menuSwitcher;
         $this->translationsInitializer = $translationsInitializer;
+        $this->entityOverride = $entityOverride;
         $this->locales = $locales;
 
         $this->em = null;
@@ -142,7 +153,16 @@ class SwitchMenuSubscriber implements EventSubscriber
      */
     private function createMenuItem($menuAlias, SlugMapItem $slugMapItem)
     {
-        $menuItem = (new Item())
+        $class = Item::class;
+
+        if (isset($this->entityOverride[$class])) {
+            $class = $this->entityOverride[$class];
+        }
+
+        /** @var \Darvin\MenuBundle\Entity\Menu\Item $menuItem */
+        $menuItem = new $class();
+
+        $menuItem
             ->setMenu($menuAlias)
             ->setSlugMapItem($slugMapItem);
 
