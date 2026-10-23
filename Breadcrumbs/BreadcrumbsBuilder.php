@@ -148,7 +148,10 @@ class BreadcrumbsBuilder implements BreadcrumbsBuilderInterface
      */
     private function addCurrent(ItemInterface $parent): ItemInterface
     {
-        $request = $this->requestStack->getMasterRequest();
+        // RequestStack::getMasterRequest() is deprecated since Symfony 5.3 and removed in 6.0
+        $request = method_exists($this->requestStack, 'getMainRequest')
+            ? $this->requestStack->getMainRequest()
+            : $this->requestStack->getMasterRequest();
 
         if (null === $request) {
             return $parent;
