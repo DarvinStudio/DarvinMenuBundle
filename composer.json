@@ -18,9 +18,8 @@
         "darvinstudio/darvin-page-bundle":  "*"
     },
     "require-dev": {
-        "andyftw/image-faker":               "^1.1",
         "doctrine/doctrine-fixtures-bundle": "^2.3",
-        "fzaninotto/faker":                  "^1.6"
+        "fakerphp/faker":                    "^1.9"
     },
     "autoload": {
         "psr-4": { "Darvin\\MenuBundle\\": "" }
