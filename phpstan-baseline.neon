@@ -1,0 +1,32 @@
+parameters:
+    ignoreErrors:
+        -
+            message: '#^Parameter \#1 \$object of static method Doctrine\\Common\\Util\\ClassUtils::getClass\(\) contains unresolvable type\.$#'
+            identifier: argument.unresolvableType
+            count: 1
+            path: Validation/Constraints/MenuEntryValidValidator.php
+        -
+            message: '#^Property Darvin\\MenuBundle\\EventListener\\SwitchMenuSubscriber::\$em \(Doctrine\\ORM\\EntityManager\) does not accept null\.$#'
+            identifier: assign.propertyType
+            count: 1
+            path: EventListener/SwitchMenuSubscriber.php
+        -
+            message: '#^Property Darvin\\MenuBundle\\Switcher\\MenuSwitcher::\$menuEntries \(array\) does not accept null\.$#'
+            identifier: assign.propertyType
+            count: 1
+            path: Switcher/MenuSwitcher.php
+        -
+            message: '#^Class Darvin\\MenuBundle\\Matcher\\Matcher extends @final class Knp\\Menu\\Matcher\\Matcher\.$#'
+            identifier: class.extendsFinalByPhpDoc
+            count: 1
+            path: Matcher/Matcher.php
+        -
+            message: '#^Strict comparison using === between null and mixed will always evaluate to false\.$#'
+            identifier: identical.alwaysFalse
+            count: 1
+            path: Breadcrumbs/BreadcrumbsBuilder.php
+        -
+            message: '#^Instanceof between object and mixed results in an error\.$#'
+            identifier: instanceof.invalidExprType
+            count: 1
+            path: Switcher/MenuSwitcher.php
