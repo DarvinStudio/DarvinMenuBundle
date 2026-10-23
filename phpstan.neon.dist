@@ -1,0 +1,48 @@
+includes:
+    - phpstan-baseline.neon
+parameters:
+    level: 5
+    phpVersion:
+        min: 70200
+        max: 80400
+    excludePaths:
+        - */Tests/*
+        - */vendor/*
+        # Development-only fixtures written for doctrine/doctrine-fixtures-bundle 2.x (Doctrine\Common\Persistence\ObjectManager,
+        # removed in doctrine/persistence 2); never loaded in production.
+        - DataFixtures/*
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Doctrine ORM >= 2.14 types EntityManager::getRepository() as EntityRepository<T>/ObjectRepository<T>; a docblock narrowing it to a project
+        # repository class (custom repositoryClass in the mapping) is not provable. Third-party generics, no runtime effect.
+        -
+            message: '#^Method \S+::\w*[rR]epository\(\) should return \S+Repository but returns Doctrine\\\S+\.$#'
+            identifier: return.type
+            reportUnmatched: false
+            paths:
+                - Breadcrumbs/BreadcrumbsBuilder.php
+                - Builder/Builder.php
+                - Form/Type/Admin/SlugMapItemType.php
+                - EventListener/SwitchMenuSubscriber.php
+                - Switcher/MenuSwitcher.php
+        # Doctrine passes EntityManagerInterface, while private helpers/properties are typed with the concrete EntityManager. Pre-existing narrowing, not
+        # PHP 8 related; left unchanged for BC.
+        -
+            message: '#^(Parameter \#1 \$em of method \S+ expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManagerInterface given|Property \S+::\$em \(Doctrine\\ORM\\EntityManager\) does not accept Doctrine\\ORM\\EntityManagerInterface)\.$#'
+            reportUnmatched: false
+            paths:
+                - EventListener/SwitchMenuSubscriber.php
+        # TreeBuilder::getRootNode() is documented as returning NodeDefinition|ArrayNodeDefinition in symfony/config 5.x; it is always an ArrayNodeDefinition here.
+        -
+            message: '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\(NodeDefinition|NodeParentInterface)\:\:\w+\(\)\.$#'
+            identifier: method.notFound
+            reportUnmatched: false
+            paths:
+                - DependencyInjection/Configuration.php
+        # Constraint validators receive their own constraint class (here with the public $message); the signature only declares the base Constraint.
+        -
+            message: '#^Access to an undefined property Symfony\\Component\\Validator\\Constraint\:\:\$message\.$#'
+            identifier: property.notFound
+            reportUnmatched: false
+            paths:
+                - Validation/Constraints/MenuItemValidValidator.php
